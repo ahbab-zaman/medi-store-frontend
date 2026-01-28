@@ -3,37 +3,27 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { registerUser } from "@/services/auth.service";
-
-type Role = "CUSTOMER" | "SELLER";
+import { useAuth } from "@/hooks";
+import { Role } from "@/types";
 
 export default function RegisterPage() {
   const router = useRouter();
+  const { register, isLoading, registerError } = useAuth();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState<Role>("CUSTOMER");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  // Role is an enum
+  const [role, setRole] = useState<Role>(Role.CUSTOMER);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setError(null);
-    setLoading(true);
     try {
       // Backend register expects a User-like payload; keep it minimal & extendable.
-      await registerUser({ name, email, password, role });
+      await register({ name, email, password, role });
       router.push("/login");
-    } catch (err: any) {
-      const message =
-        err?.message ||
-        err?.error?.message ||
-        err?.data?.message ||
-        "Registration failed";
-      setError(message);
-    } finally {
-      setLoading(false);
+    } catch (err) {
+      // Error handling managed by useAuth hook and registerError
     }
   }
 
@@ -91,23 +81,23 @@ export default function RegisterPage() {
               onChange={(e) => setRole(e.target.value as Role)}
               className="mt-2 w-full rounded-xl border border-black/10 bg-transparent px-4 py-3 text-sm outline-none focus:border-black/30 dark:border-white/10 dark:focus:border-white/30"
             >
-              <option value="CUSTOMER">Customer</option>
-              <option value="SELLER">Seller</option>
+              <option value={Role.CUSTOMER}>Customer</option>
+              <option value={Role.SELLER}>Seller</option>
             </select>
           </div>
 
-          {error ? (
+          {registerError ? (
             <p className="rounded-xl border border-red-500/20 bg-red-500/10 px-3 py-2 text-sm text-red-700 dark:text-red-300">
-              {error}
+              {(registerError as any)?.message || "Registration failed"}
             </p>
           ) : null}
 
           <button
             type="submit"
-            disabled={loading}
+            disabled={isLoading}
             className="w-full rounded-xl bg-black px-4 py-3 text-sm font-medium text-white hover:bg-black/90 disabled:opacity-60 dark:bg-white dark:text-black dark:hover:bg-white/90"
           >
-            {loading ? "Creating..." : "Create account"}
+            {isLoading ? "Creating..." : "Create account"}
           </button>
         </form>
 

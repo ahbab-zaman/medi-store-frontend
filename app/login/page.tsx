@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
-import { loginUser, getMe } from "@/services/auth.service";
+import { useAuth } from "@/hooks";
 
 function roleHome(role?: string) {
   if (role === "ADMIN") return "/admin/dashboard";
@@ -16,45 +16,39 @@ export default function LoginPage() {
   const searchParams = useSearchParams();
   const next = useMemo(() => searchParams.get("next") ?? "", [searchParams]);
 
+  const { login, isLoading, user, loginError } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+
+  // Redirect if already authenticated and user data is available
+  if (user) {
+    const target = next || roleHome(user.role);
+    router.replace(target);
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setError(null);
-    setLoading(true);
     try {
-      await loginUser({ email, password });
-      const me = await getMe();
-      const role = me?.data?.role as string | undefined;
+      const response = await login({ email, password });
+      // useAuth hook updates the store. We just need to handle redirection
+      // response.data.user has the user info
+      const role = response.data?.user?.role;
       router.push(next || roleHome(role));
     } catch (err: any) {
-      const message =
-        err?.message ||
-        err?.error?.message ||
-        err?.data?.message ||
-        "Login failed";
+      // Error handling is managed by useAuth hook notifications for generic errors
+      // But we can check for specific "already logged in" case if needed.
+      // useAuth onError shows notification.
 
-      // Backend can return 400 "already logged in" if refresh cookie exists
+      const message = err?.message || err?.data?.message || "";
       if (
         typeof message === "string" &&
         message.includes("already logged in")
       ) {
-        try {
-          const me = await getMe();
-          const role = me?.data?.role as string | undefined;
-          router.push(next || roleHome(role));
-          return;
-        } catch {
-          // fall through
-        }
+        // If already logged in, redirect based on whatever role we can surmise or default
+        // Or just let the user effect above handle it next render?
+        // Refreshing page or just redirecting to default dashboard might be safest
+        router.push("/customer/dashboard");
       }
-
-      setError(message);
-    } finally {
-      setLoading(false);
     }
   }
 
@@ -91,18 +85,18 @@ export default function LoginPage() {
             />
           </div>
 
-          {error ? (
+          {loginError ? (
             <p className="rounded-xl border border-red-500/20 bg-red-500/10 px-3 py-2 text-sm text-red-700 dark:text-red-300">
-              {error}
+              {(loginError as any)?.message || "Login failed"}
             </p>
           ) : null}
 
           <button
             type="submit"
-            disabled={loading}
+            disabled={isLoading}
             className="w-full rounded-xl bg-black px-4 py-3 text-sm font-medium text-white hover:bg-black/90 disabled:opacity-60 dark:bg-white dark:text-black dark:hover:bg-white/90"
           >
-            {loading ? "Logging in..." : "Login"}
+            {isLoading ? "Logging in..." : "Login"}
           </button>
         </form>
 

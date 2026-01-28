@@ -1,4 +1,4 @@
-import apiClient from "@/lib/axios";
+import axios from "axios";
 import {
   LoginPayload,
   RegisterPayload,
@@ -6,10 +6,17 @@ import {
   MeResponse,
 } from "@/types";
 
+// Use standard axios for Next.js API routes (relative paths)
+const nextAuthClient = axios.create({
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
 export async function registerUser(
   payload: RegisterPayload,
 ): Promise<AuthResponse> {
-  const response = await apiClient.post<AuthResponse>(
+  const response = await nextAuthClient.post<AuthResponse>(
     "/api/auth/register",
     payload,
   );
@@ -17,7 +24,7 @@ export async function registerUser(
 }
 
 export async function loginUser(payload: LoginPayload): Promise<AuthResponse> {
-  const response = await apiClient.post<AuthResponse>(
+  const response = await nextAuthClient.post<AuthResponse>(
     "/api/auth/login",
     payload,
   );
@@ -28,11 +35,11 @@ export async function logoutUser(): Promise<{
   success: boolean;
   message: string;
 }> {
-  const response = await apiClient.post("/api/auth/logout");
+  const response = await nextAuthClient.post("/api/auth/logout");
   return response.data;
 }
 
 export async function getMe(): Promise<MeResponse> {
-  const response = await apiClient.get<MeResponse>("/api/auth/me");
+  const response = await nextAuthClient.get<MeResponse>("/api/auth/me");
   return response.data;
 }
