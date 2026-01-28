@@ -28,15 +28,33 @@ export function useAuth() {
   // Login mutation
   const loginMutation = useMutation({
     mutationFn: authService.loginUser,
-    onSuccess: (data) => {
-      if (data.data?.user) {
-        setUser(data.data.user);
-        queryClient.setQueryData(["auth", "me"], data);
-        addNotification({
-          type: "success",
-          message: "Login successful!",
+    onSuccess: async () => {
+      try {
+        // Login successful, now fetch the user profile immediately
+        // We force a fetch because the cache might be empty or stale
+        // and the login response typically only contains tokens.
+        const meData = await queryClient.fetchQuery({
+          queryKey: ["auth", "me"],
+          queryFn: authService.getMe,
+          staleTime: 0,
         });
-        // Navigation handled by component
+
+        if (meData?.data) {
+          setUser(meData.data);
+          addNotification({
+            type: "success",
+            message: "Login successful!",
+          });
+        }
+      } catch (error) {
+        console.error("Failed to fetch user after login", error);
+        // Still notify success of login, but maybe sidebar won't update?
+        // Actually if getMe fails, we might not be truly logged in or token issue.
+        addNotification({
+          type: "warning",
+          message:
+            "Login successful, but profile loading failed. Please refresh.",
+        });
       }
     },
     onError: (error: any) => {
