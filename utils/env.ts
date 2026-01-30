@@ -1,5 +1,5 @@
 export const env = {
-  backendApiBaseUrl: process.env.BACKEND_API_BASE_URL ?? "",
+  backendApiBaseUrl: process.env.NEXT_PUBLIC_BACKEND_API_BASE_URL ?? "",
 } as const;
 
 export function assertServerEnv() {
@@ -9,4 +9,3 @@ export function assertServerEnv() {
     );
   }
 }
-
