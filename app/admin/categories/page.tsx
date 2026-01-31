@@ -6,7 +6,7 @@ import {
   useAdminUpdateCategory,
   useAdminDeleteCategory,
 } from "@/hooks";
-import { Trash2, Edit, Plus, X } from "lucide-react";
+import { Trash2, Edit, Plus, X, Upload } from "lucide-react";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { useState } from "react";
 
@@ -18,6 +18,7 @@ export default function AdminCategoriesPage() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState<any | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const handleDelete = (id: string) => {
     if (confirm("Are you sure you want to delete this category?")) {
@@ -28,6 +29,18 @@ export default function AdminCategoriesPage() {
   const closeModal = () => {
     setIsModalOpen(false);
     setEditingCategory(null);
+    setImagePreview(null);
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -46,6 +59,12 @@ export default function AdminCategoriesPage() {
         onSuccess: () => closeModal(),
       });
     }
+  };
+
+  const openEditModal = (category: any) => {
+    setEditingCategory(category);
+    setImagePreview(category.image);
+    setIsModalOpen(true);
   };
 
   return (
@@ -84,6 +103,10 @@ export default function AdminCategoriesPage() {
                   src={category.image}
                   alt={category.name}
                   className="h-48 w-full object-cover"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src =
+                      "https://via.placeholder.com/400x300?text=No+Image";
+                  }}
                 />
                 <div className="p-4">
                   <h3 className="mb-3 text-lg font-semibold text-black dark:text-white">
@@ -91,10 +114,7 @@ export default function AdminCategoriesPage() {
                   </h3>
                   <div className="flex gap-2">
                     <button
-                      onClick={() => {
-                        setEditingCategory(category);
-                        setIsModalOpen(true);
-                      }}
+                      onClick={() => openEditModal(category)}
                       className="flex-1 rounded-lg border border-black/10 px-3 py-2 text-sm font-medium hover:bg-black/5 dark:border-white/10 dark:hover:bg-white/5"
                     >
                       <Edit className="mx-auto h-4 w-4" />
@@ -145,14 +165,48 @@ export default function AdminCategoriesPage() {
                 <label className="mb-2 block text-sm font-medium">
                   Category Image
                 </label>
-                <input
-                  type="file"
-                  name="image"
-                  accept="image/*"
-                  required={!editingCategory}
-                  className="w-full rounded-lg border border-black/10 bg-transparent px-4 py-2 outline-none focus:border-black/30 dark:border-white/10 dark:focus:border-white/30"
-                />
-                {editingCategory && (
+
+                {/* Image Preview */}
+                {imagePreview && (
+                  <div className="mb-3 relative">
+                    <img
+                      src={imagePreview}
+                      alt="Preview"
+                      className="h-48 w-full rounded-lg object-cover"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setImagePreview(null)}
+                      className="absolute top-2 right-2 rounded-full bg-red-500 p-1.5 text-white hover:bg-red-600"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  </div>
+                )}
+
+                {/* File Input */}
+                <div className="relative">
+                  <input
+                    type="file"
+                    name="image"
+                    accept="image/*"
+                    required={!editingCategory && !imagePreview}
+                    onChange={handleImageChange}
+                    className="hidden"
+                    id="category-image"
+                  />
+                  <label
+                    htmlFor="category-image"
+                    className="flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-dashed border-black/20 bg-black/5 px-4 py-8 text-sm hover:bg-black/10 dark:border-white/20 dark:bg-white/5 dark:hover:bg-white/10"
+                  >
+                    <Upload className="h-5 w-5" />
+                    <span>
+                      {imagePreview ? "Change Image" : "Upload Image"}
+                    </span>
+                  </label>
+                </div>
+
+                {editingCategory && !imagePreview && (
                   <p className="mt-1 text-xs text-black/50 dark:text-white/50">
                     Leave empty to keep current image
                   </p>

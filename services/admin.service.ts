@@ -70,7 +70,14 @@ export const AdminAppService = {
     const res = await fetch(`${env.backendApiBaseUrl}/categories`);
     if (!res.ok) throw new Error("Failed to fetch categories");
     const data = await res.json();
-    return data.data;
+    // Transform image URLs to absolute URLs
+    const categories = data.data.map((cat: any) => ({
+      ...cat,
+      image: cat.imageUrl?.startsWith("http")
+        ? cat.imageUrl
+        : `${env.backendApiBaseUrl}${cat.imageUrl}`,
+    }));
+    return categories;
   },
 
   async createCategory(token: string, formData: FormData) {

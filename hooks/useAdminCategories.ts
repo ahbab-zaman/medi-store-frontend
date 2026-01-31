@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { AdminAppService } from "@/services/admin.service";
 import { useAuthStore } from "@/store";
-import { useUIStore } from "@/store";
+import { toast } from "sonner";
 
 export function useAdminCategories() {
   return useQuery({
@@ -14,7 +14,6 @@ export function useAdminCategories() {
 export function useCreateCategory() {
   const queryClient = useQueryClient();
   const { accessToken } = useAuthStore();
-  const { addNotification } = useUIStore();
 
   return useMutation({
     mutationFn: (formData: FormData) =>
@@ -22,15 +21,13 @@ export function useCreateCategory() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "categories"] });
       queryClient.invalidateQueries({ queryKey: ["categories"] });
-      addNotification({
-        type: "success",
-        message: "Category created successfully",
+      toast.success("Category created successfully", {
+        description: "The new category has been added to your store",
       });
     },
     onError: (error: any) => {
-      addNotification({
-        type: "error",
-        message: error.message || "Failed to create category",
+      toast.error("Failed to create category", {
+        description: error.message || "Please try again later",
       });
     },
   });
@@ -39,7 +36,6 @@ export function useCreateCategory() {
 export function useUpdateCategory() {
   const queryClient = useQueryClient();
   const { accessToken } = useAuthStore();
-  const { addNotification } = useUIStore();
 
   return useMutation({
     mutationFn: ({ id, formData }: { id: string; formData: FormData }) =>
@@ -47,15 +43,13 @@ export function useUpdateCategory() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "categories"] });
       queryClient.invalidateQueries({ queryKey: ["categories"] });
-      addNotification({
-        type: "success",
-        message: "Category updated successfully",
+      toast.success("Category updated successfully", {
+        description: "Changes have been saved",
       });
     },
     onError: (error: any) => {
-      addNotification({
-        type: "error",
-        message: error.message || "Failed to update category",
+      toast.error("Failed to update category", {
+        description: error.message || "Please try again later",
       });
     },
   });
@@ -64,7 +58,6 @@ export function useUpdateCategory() {
 export function useDeleteCategory() {
   const queryClient = useQueryClient();
   const { accessToken } = useAuthStore();
-  const { addNotification } = useUIStore();
 
   return useMutation({
     mutationFn: (id: string) =>
@@ -72,15 +65,13 @@ export function useDeleteCategory() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "categories"] });
       queryClient.invalidateQueries({ queryKey: ["categories"] });
-      addNotification({
-        type: "success",
-        message: "Category deleted successfully",
+      toast.success("Category deleted successfully", {
+        description: "The category has been removed from your store",
       });
     },
     onError: (error: any) => {
-      addNotification({
-        type: "error",
-        message: error.message || "Failed to delete category",
+      toast.error("Failed to delete category", {
+        description: error.message || "Please try again later",
       });
     },
   });
