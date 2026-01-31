@@ -2,7 +2,6 @@
 
 import { useMedicine } from "@/hooks/useMedicines";
 import { useParams } from "next/navigation";
-import Image from "next/image";
 import {
   ArrowLeft,
   Minus,
@@ -15,6 +14,7 @@ import {
 import Link from "next/link";
 import { useState } from "react";
 import { Skeleton } from "@/components/ui/Skeleton";
+import { getImageUrl } from "@/utils/image-url";
 
 export default function MedicineDetailsPage() {
   const params = useParams();
@@ -70,12 +70,11 @@ export default function MedicineDetailsPage() {
           <div className="space-y-4">
             <div className="relative aspect-square overflow-hidden rounded-2xl bg-gray-50 border border-gray-100">
               {medicine.imageUrl ? (
-                <Image
-                  src={medicine.imageUrl}
+                <img
+                  src={getImageUrl(medicine.imageUrl)}
                   alt={medicine.name}
-                  fill
-                  className="object-cover"
-                  priority
+                  className="absolute inset-0 h-full w-full object-cover"
+                  loading="eager"
                 />
               ) : (
                 <div className="flex h-full w-full items-center justify-center text-gray-400">

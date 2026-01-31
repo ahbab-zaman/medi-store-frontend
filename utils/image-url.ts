@@ -2,10 +2,12 @@ export const getImageUrl = (imagePath: string | null | undefined): string => {
   if (!imagePath) return "";
   if (imagePath.startsWith("http")) return imagePath;
 
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
-  const baseUrl = API_BASE_URL?.split("/api")[0] || "http://localhost:4000";
+  // Support both env vars (production may use NEXT_PUBLIC_BACKEND_API_BASE_URL only)
+  const apiUrl =
+    process.env.NEXT_PUBLIC_API_URL ||
+    process.env.NEXT_PUBLIC_BACKEND_API_BASE_URL;
+  const baseUrl = apiUrl?.replace(/\/api\/?$/, "") || "http://127.0.0.1:4000";
 
-  // Ensure we don't double slash
   const cleanPath = imagePath.startsWith("/") ? imagePath : `/${imagePath}`;
   return `${baseUrl}${cleanPath}`;
 };

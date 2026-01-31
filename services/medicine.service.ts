@@ -33,13 +33,12 @@ export async function createMedicine(
   payload: FormData | CreateMedicinePayload,
 ): Promise<ApiResponse<Medicine>> {
   const isFormData = payload instanceof FormData;
+  // Remove Content-Type so axios sets multipart/form-data with boundary for FormData
   const response = await apiClient.post<ApiResponse<Medicine>>(
     "/api/medicines/seller",
     payload,
     {
-      headers: isFormData
-        ? { "Content-Type": "multipart/form-data" }
-        : undefined,
+      headers: isFormData ? { "Content-Type": undefined } : undefined,
     },
   );
   return response.data;
@@ -56,9 +55,7 @@ export async function updateMedicine(payload: {
     `/api/medicines/seller/${id}`,
     data,
     {
-      headers: isFormData
-        ? { "Content-Type": "multipart/form-data" }
-        : undefined,
+      headers: isFormData ? { "Content-Type": undefined } : undefined,
     },
   );
   return response.data;

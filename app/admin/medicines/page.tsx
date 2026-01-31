@@ -4,8 +4,8 @@ import { useState } from "react";
 import { useAdminMedicines } from "@/hooks/useAdminMedicines";
 import { useDeleteMedicine } from "@/hooks/useMedicines";
 import { Search, Loader2, AlertCircle, Trash2, Store } from "lucide-react";
-import Image from "next/image";
 import { ConfirmationDialog } from "@/components/ui/ConfirmationDialog";
+import { getImageUrl } from "@/utils/image-url";
 
 export default function AdminMedicinesPage() {
   const [search, setSearch] = useState("");
@@ -80,11 +80,10 @@ export default function AdminMedicinesPage() {
                     <div className="flex items-center gap-3">
                       <div className="relative h-10 w-10 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100">
                         {medicine.imageUrl ? (
-                          <Image
-                            src={medicine.imageUrl}
+                          <img
+                            src={getImageUrl(medicine.imageUrl)}
                             alt={medicine.name}
-                            fill
-                            className="object-cover"
+                            className="h-full w-full object-cover"
                           />
                         ) : (
                           <div className="flex h-full w-full items-center justify-center text-xs">

@@ -12,7 +12,6 @@ import {
   MoreVertical,
   AlertCircle,
 } from "lucide-react";
-import Image from "next/image";
 import { ConfirmationDialog } from "@/components/ui/ConfirmationDialog";
 import { Modal } from "@/components/ui/Modal";
 import { MedicineForm } from "@/components/seller/MedicineForm";
@@ -103,11 +102,10 @@ export default function SellerMedicinesPage() {
                     <div className="flex items-center gap-3">
                       <div className="relative h-10 w-10 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100/50">
                         {medicine.imageUrl ? (
-                          <Image
+                          <img
                             src={getImageUrl(medicine.imageUrl)}
                             alt={medicine.name}
-                            fill
-                            className="object-cover"
+                            className="h-full w-full object-cover"
                           />
                         ) : (
                           <div className="flex h-full w-full items-center justify-center text-[10px] text-gray-400">

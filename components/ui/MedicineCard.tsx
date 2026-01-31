@@ -1,7 +1,7 @@
 import Link from "next/link";
-import Image from "next/image";
 import { ShoppingCart } from "lucide-react";
 import { Medicine } from "@/types/medicine.types";
+import { getImageUrl } from "@/utils/image-url";
 
 interface MedicineCardProps {
   medicine: Medicine;
@@ -16,11 +16,10 @@ export function MedicineCard({ medicine }: MedicineCardProps) {
         className="block relative aspect-square overflow-hidden bg-gray-50"
       >
         {medicine.imageUrl ? (
-          <Image
-            src={medicine.imageUrl}
+          <img
+            src={getImageUrl(medicine.imageUrl)}
             alt={medicine.name}
-            fill
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center bg-gray-100 text-gray-400">

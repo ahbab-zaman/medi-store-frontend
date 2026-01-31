@@ -19,8 +19,13 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "via.placeholder.com",
       },
+      {
+        protocol: "https",
+        hostname: "medi-store-backend-ytk1.onrender.com",
+        pathname: "/uploads/**",
+      },
     ],
-    unoptimized: true, // Allow any image sources
+    unoptimized: true,
   },
 };
 

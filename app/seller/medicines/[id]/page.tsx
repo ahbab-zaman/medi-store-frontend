@@ -8,9 +8,9 @@ import { useUpdateMedicine, useMedicine } from "@/hooks/useMedicines";
 import { useCategories } from "@/hooks/useCategories";
 import { Loader2, Upload, ArrowLeft, X } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
 import { useState, useEffect } from "react";
 import { Skeleton } from "@/components/ui/Skeleton";
+import { getImageUrl } from "@/utils/image-url";
 
 const medicineSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -62,7 +62,7 @@ export default function EditMedicinePage() {
           : undefined,
       });
       if (medicine.imageUrl) {
-        setImagePreview(medicine.imageUrl);
+        setImagePreview(getImageUrl(medicine.imageUrl));
       }
     }
   }, [medicine, reset]);
@@ -262,11 +262,10 @@ export default function EditMedicinePage() {
             <div className="flex items-center gap-6">
               {imagePreview && (
                 <div className="relative h-32 w-32 overflow-hidden rounded-lg border border-gray-200">
-                  <Image
+                  <img
                     src={imagePreview}
                     alt="Preview"
-                    fill
-                    className="object-cover"
+                    className="h-full w-full object-cover"
                   />
                   <button
                     type="button"
