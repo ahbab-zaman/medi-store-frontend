@@ -70,13 +70,23 @@ export const AdminAppService = {
     const res = await fetch(`${env.backendApiBaseUrl}/categories`);
     if (!res.ok) throw new Error("Failed to fetch categories");
     const data = await res.json();
+
     // Transform image URLs to absolute URLs
-    const categories = data.data.map((cat: any) => ({
-      ...cat,
-      image: cat.imageUrl?.startsWith("http")
-        ? cat.imageUrl
-        : `${env.backendApiBaseUrl}${cat.imageUrl}`,
-    }));
+    // Backend serves images from root /uploads, not /api/uploads
+    const backendRootUrl = env.backendApiBaseUrl.replace("/api", "");
+
+    const categories = data.data.map((cat: any) => {
+      let image = null;
+      if (cat.imageUrl) {
+        image = cat.imageUrl.startsWith("http")
+          ? cat.imageUrl
+          : `${backendRootUrl}${cat.imageUrl}`;
+      }
+      return {
+        ...cat,
+        image,
+      };
+    });
     return categories;
   },
 
