@@ -9,6 +9,8 @@ import { Trash2, CheckCircle, Clock, Truck } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/utils/cn";
 import { Skeleton } from "@/components/ui/Skeleton";
+import { useState } from "react";
+import { ConfirmationDialog } from "@/components/ui/ConfirmationDialog";
 
 export default function AdminOrdersPage() {
   const { data: orders, isLoading } = useAdminOrders();
@@ -19,9 +21,18 @@ export default function AdminOrdersPage() {
     updateOrderStatus({ id: orderId, status });
   };
 
+  const [deleteConfirmation, setDeleteConfirmation] = useState<string | null>(
+    null,
+  );
+
   const handleDelete = (orderId: string) => {
-    if (confirm("Are you sure you want to delete this order?")) {
-      deleteOrder(orderId);
+    setDeleteConfirmation(orderId);
+  };
+
+  const confirmDelete = () => {
+    if (deleteConfirmation) {
+      deleteOrder(deleteConfirmation);
+      setDeleteConfirmation(null);
     }
   };
 
@@ -155,6 +166,13 @@ export default function AdminOrdersPage() {
           </tbody>
         </table>
       </div>
+      <ConfirmationDialog
+        isOpen={!!deleteConfirmation}
+        onClose={() => setDeleteConfirmation(null)}
+        onConfirm={confirmDelete}
+        title="Delete Order"
+        description="Are you sure you want to delete this order? This action cannot be undone."
+      />
     </div>
   );
 }

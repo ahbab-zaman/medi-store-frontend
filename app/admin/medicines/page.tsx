@@ -4,6 +4,7 @@ import { Trash2, Search } from "lucide-react";
 import { cn } from "@/utils/cn";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { useState } from "react";
+import { ConfirmationDialog } from "@/components/ui/ConfirmationDialog";
 
 export default function AdminMedicinesPage() {
   const [search, setSearch] = useState("");
@@ -11,9 +12,18 @@ export default function AdminMedicinesPage() {
   const medicines = medicinesRes?.data || [];
   const { mutate: deleteMedicine } = useDeleteAdminMedicine();
 
+  const [deleteConfirmation, setDeleteConfirmation] = useState<string | null>(
+    null,
+  );
+
   const handleDelete = (id: string) => {
-    if (confirm("Are you sure you want to delete this medicine?")) {
-      deleteMedicine(id);
+    setDeleteConfirmation(id);
+  };
+
+  const confirmDelete = () => {
+    if (deleteConfirmation) {
+      deleteMedicine(deleteConfirmation);
+      setDeleteConfirmation(null);
     }
   };
 
@@ -125,6 +135,13 @@ export default function AdminMedicinesPage() {
           </tbody>
         </table>
       </div>
+      <ConfirmationDialog
+        isOpen={!!deleteConfirmation}
+        onClose={() => setDeleteConfirmation(null)}
+        onConfirm={confirmDelete}
+        title="Delete Medicine"
+        description="Are you sure you want to delete this medicine? This action cannot be undone."
+      />
     </div>
   );
 }

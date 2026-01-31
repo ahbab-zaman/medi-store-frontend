@@ -9,6 +9,8 @@ import {
 import { Trash2, Ban, CheckCircle } from "lucide-react";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { cn } from "@/utils/cn";
+import { useState } from "react";
+import { ConfirmationDialog } from "@/components/ui/ConfirmationDialog";
 
 export default function AdminUsersPage() {
   const { data: users, isLoading } = useAdminUsers();
@@ -27,9 +29,18 @@ export default function AdminUsersPage() {
     updateRole({ userId, role });
   };
 
+  const [deleteConfirmation, setDeleteConfirmation] = useState<string | null>(
+    null,
+  );
+
   const handleDelete = (userId: string) => {
-    if (confirm("Are you sure you want to delete this user?")) {
-      deleteUser(userId);
+    setDeleteConfirmation(userId);
+  };
+
+  const confirmDelete = () => {
+    if (deleteConfirmation) {
+      deleteUser(deleteConfirmation);
+      setDeleteConfirmation(null);
     }
   };
 
@@ -139,6 +150,13 @@ export default function AdminUsersPage() {
           </tbody>
         </table>
       </div>
+      <ConfirmationDialog
+        isOpen={!!deleteConfirmation}
+        onClose={() => setDeleteConfirmation(null)}
+        onConfirm={confirmDelete}
+        title="Delete User"
+        description="Are you sure you want to delete this user? This action cannot be undone."
+      />
     </div>
   );
 }

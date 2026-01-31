@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { AdminAppService } from "@/services/admin.service";
 import { useAuthStore } from "@/store";
-import { useUIStore } from "@/store";
+import { toast } from "sonner";
 
 export function useAdminUsers() {
   const { accessToken } = useAuthStore();
@@ -17,22 +17,19 @@ export function useAdminUsers() {
 export function useUpdateUserBanStatus() {
   const queryClient = useQueryClient();
   const { accessToken } = useAuthStore();
-  const { addNotification } = useUIStore();
 
   return useMutation({
     mutationFn: ({ userId, isBanned }: { userId: string; isBanned: boolean }) =>
       AdminAppService.updateUserBanStatus(accessToken!, userId, isBanned),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "users"] });
-      addNotification({
-        type: "success",
-        message: "User status updated successfully",
+      toast.success("User status updated successfully", {
+        description: "The user's ban status has been changed",
       });
     },
     onError: (error: any) => {
-      addNotification({
-        type: "error",
-        message: error.message || "Failed to update user status",
+      toast.error("Failed to update user status", {
+        description: error.message || "Please try again later",
       });
     },
   });
@@ -41,7 +38,6 @@ export function useUpdateUserBanStatus() {
 export function useUpdateUserRole() {
   const queryClient = useQueryClient();
   const { accessToken } = useAuthStore();
-  const { addNotification } = useUIStore();
 
   return useMutation({
     mutationFn: ({
@@ -53,15 +49,13 @@ export function useUpdateUserRole() {
     }) => AdminAppService.updateUserRole(accessToken!, userId, role),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "users"] });
-      addNotification({
-        type: "success",
-        message: "User role updated successfully",
+      toast.success("User role updated successfully", {
+        description: "The user's role has been changed",
       });
     },
     onError: (error: any) => {
-      addNotification({
-        type: "error",
-        message: error.message || "Failed to update user role",
+      toast.error("Failed to update user role", {
+        description: error.message || "Please try again later",
       });
     },
   });
@@ -70,22 +64,19 @@ export function useUpdateUserRole() {
 export function useDeleteUser() {
   const queryClient = useQueryClient();
   const { accessToken } = useAuthStore();
-  const { addNotification } = useUIStore();
 
   return useMutation({
     mutationFn: (userId: string) =>
       AdminAppService.deleteUser(accessToken!, userId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "users"] });
-      addNotification({
-        type: "success",
-        message: "User deleted successfully",
+      toast.success("User deleted successfully", {
+        description: "The user has been permanently removed",
       });
     },
     onError: (error: any) => {
-      addNotification({
-        type: "error",
-        message: error.message || "Failed to delete user",
+      toast.error("Failed to delete user", {
+        description: error.message || "Please try again later",
       });
     },
   });

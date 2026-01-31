@@ -8,6 +8,7 @@ import {
 } from "@/hooks";
 import { Trash2, Edit, Plus, X, Upload, Loader2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/Skeleton";
+import { ConfirmationDialog } from "@/components/ui/ConfirmationDialog";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -25,10 +26,13 @@ export default function AdminCategoriesPage() {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
-  const handleDelete = (id: string) => {
-    if (confirm("Are you sure you want to delete this category?")) {
-      setDeletingId(id);
-      deleteCategory(id, {
+  const handleDeleteClick = (id: string) => {
+    setDeletingId(id);
+  };
+
+  const confirmDelete = () => {
+    if (deletingId) {
+      deleteCategory(deletingId, {
         onSettled: () => setDeletingId(null),
       });
     }
@@ -166,7 +170,7 @@ export default function AdminCategoriesPage() {
                       <Edit className="mx-auto h-4 w-4" />
                     </button>
                     <button
-                      onClick={() => handleDelete(category.id)}
+                      onClick={() => handleDeleteClick(category.id)}
                       disabled={isDeleting || deletingId === category.id}
                       className="flex-1 rounded-lg border border-red-600/20 px-3 py-2 text-sm font-medium text-red-600 transition-all hover:bg-red-50 disabled:opacity-50 dark:border-red-400/20 dark:text-red-400 dark:hover:bg-red-900/20"
                     >
@@ -298,6 +302,14 @@ export default function AdminCategoriesPage() {
           </div>
         </div>
       )}
+      <ConfirmationDialog
+        isOpen={!!deletingId}
+        onClose={() => setDeletingId(null)}
+        onConfirm={confirmDelete}
+        title="Delete Category"
+        description="Are you sure you want to delete this category? This action cannot be undone."
+        isLoading={isDeleting}
+      />
     </div>
   );
 }
