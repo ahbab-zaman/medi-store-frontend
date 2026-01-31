@@ -17,28 +17,13 @@ import { ConfirmationDialog } from "@/components/ui/ConfirmationDialog";
 
 export default function SellerMedicinesPage() {
   const [search, setSearch] = useState("");
-  const { data: medicines, isLoading } = useMedicines({ search });
+  const { user } = useAuth();
+  const { data: medicines, isLoading } = useMedicines({
+    search,
+    sellerId: user?.id,
+  });
   const { mutate: deleteMedicine } = useDeleteMedicine();
   const [deleteId, setDeleteId] = useState<string | null>(null);
-
-  // We'll filter client-side for "my medicines" if the API returns all,
-  // BUT the requirement implies the seller should manage *their* medicines.
-  // Assuming the `useMedicines` hook or the backend endpoint handles filtering if we use a specific "my-medicines" endpoint,
-  // OR we filter here.
-  // However, looking at the backend code `getAllMedicines` is public.
-  // The backend likely needs a specific endpoint for "my medicines" or we filter by the logged-in user's ID.
-  // Given the backend code: `getAllMedicines` returns ALL.
-  // `getAllMedicinesForAdmin` returns ALL.
-  // There isn't a specific `getMyMedicines` endpoint in the controller provided earlier.
-  // Wait, `getAllMedicines` has filters.
-  // To securely manage "my" medicines, I should probably filter by the seller's ID on the client
-  // OR the backend should have a route.
-  // For now, I will assume I filter by client-side or the user is expected to see all (which implies a multi-seller marketplace where you might only be able to edit yours).
-  // Actually, the delete/update endpoints verify ownership.
-  // Let's filter by current user if possible, but I don't have the user ID handy in this component scope easily without `useAuth`.
-  // I'll import useAuth to filter.
-
-  const { user } = useAuth();
 
   const handleDelete = () => {
     if (deleteId) {
@@ -47,9 +32,7 @@ export default function SellerMedicinesPage() {
     }
   };
 
-  // Filter medicines to show only those belonging to the current seller
-  const myMedicines =
-    medicines?.data?.filter((m) => m.sellerId === user?.id) || [];
+  const myMedicines = medicines?.data || [];
 
   return (
     <div className="p-6">

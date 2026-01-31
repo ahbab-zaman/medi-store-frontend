@@ -1,9 +1,10 @@
 import axios from "axios";
+import { useAuthStore } from "@/store";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export const apiClient = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: API_BASE_URL?.split("/api")[0],
   headers: {
     "Content-Type": "application/json",
   },
@@ -13,8 +14,11 @@ export const apiClient = axios.create({
 // Request interceptor - Add auth token if available
 apiClient.interceptors.request.use(
   (config) => {
-    // Cookies are automatically sent with withCredentials: true
-    // If you need to add custom headers, do it here
+    // Get token from zustand store directly
+    const token = useAuthStore.getState().accessToken;
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
     return config;
   },
   (error) => {

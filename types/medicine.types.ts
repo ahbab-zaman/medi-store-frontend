@@ -51,6 +51,7 @@ export interface GetMedicinesParams {
   maxPrice?: number;
   sortBy?: "price" | "name" | "createdAt";
   sortOrder?: "asc" | "desc";
+  sellerId?: string;
 }
 
 export interface CreateMedicinePayload {

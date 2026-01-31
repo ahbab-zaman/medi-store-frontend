@@ -161,8 +161,13 @@ export default function EditMedicinePage() {
               <select
                 {...register("categoryId")}
                 className="w-full rounded-lg border border-gray-200 px-4 py-2 text-sm focus:border-black focus:outline-none bg-white"
+                disabled={!categories?.data}
               >
-                <option value="">Select Category</option>
+                <option value="">
+                  {categories?.data
+                    ? "Select Category"
+                    : "Loading categories..."}
+                </option>
                 {categories?.data?.map((cat) => (
                   <option key={cat.id} value={cat.id}>
                     {cat.name}

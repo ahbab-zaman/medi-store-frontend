@@ -3,7 +3,8 @@ import { assertServerEnv, env } from "@/utils/env";
 
 export function backendUrl(pathname: string) {
   assertServerEnv();
-  return `${env.backendApiBaseUrl}${pathname}`;
+  const url = `${env.backendApiBaseUrl}${pathname}`;
+  return url;
 }
 
 export function forwardSetCookie(from: Response, to: NextResponse) {

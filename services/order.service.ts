@@ -19,6 +19,23 @@ export async function getOrders(
   return response.data;
 }
 
+export async function getSellerOrders(): Promise<ApiResponse<Order[]>> {
+  const response =
+    await apiClient.get<ApiResponse<Order[]>>("/api/orders/seller");
+  return response.data;
+}
+
+export async function updateSellerOrderStatus(
+  id: string,
+  status: string,
+): Promise<ApiResponse<Order>> {
+  const response = await apiClient.patch<ApiResponse<Order>>(
+    `/api/orders/seller/${id}`,
+    { status },
+  );
+  return response.data;
+}
+
 export async function getOrderById(id: string): Promise<ApiResponse<Order>> {
   const response = await apiClient.get<ApiResponse<Order>>(`/api/orders/${id}`);
   return response.data;
