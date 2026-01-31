@@ -6,7 +6,7 @@ import UserDropdown from "./UserDropdown";
 import { useCart } from "@/hooks";
 
 const NAV_LINKS = [
-  { name: "All Products", href: "/products" },
+  { name: "All Products", href: "/medicine" },
   { name: "Categories", href: "/categories" },
   { name: "About", href: "/about" },
   { name: "Contact", href: "/contact" },

@@ -14,6 +14,10 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { ConfirmationDialog } from "@/components/ui/ConfirmationDialog";
+import { Modal } from "@/components/ui/Modal";
+import { MedicineForm } from "@/components/seller/MedicineForm";
+import { Medicine } from "@/types";
+import { getImageUrl } from "@/utils/image-url";
 
 export default function SellerMedicinesPage() {
   const [search, setSearch] = useState("");
@@ -25,11 +29,19 @@ export default function SellerMedicinesPage() {
   const { mutate: deleteMedicine } = useDeleteMedicine();
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
+  // Modal states
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [editingMedicine, setEditingMedicine] = useState<Medicine | null>(null);
+
   const handleDelete = () => {
     if (deleteId) {
       deleteMedicine(deleteId);
       setDeleteId(null);
     }
+  };
+
+  const handleEdit = (medicine: Medicine) => {
+    setEditingMedicine(medicine);
   };
 
   const myMedicines = medicines?.data || [];
@@ -41,13 +53,13 @@ export default function SellerMedicinesPage() {
           <h1 className="text-2xl font-bold text-gray-900">My Medicines</h1>
           <p className="text-sm text-gray-500">Manage your product inventory</p>
         </div>
-        <Link
-          href="/seller/medicines/add"
+        <button
+          onClick={() => setIsAddModalOpen(true)}
           className="flex items-center gap-2 rounded-lg bg-black px-4 py-2 text-sm font-medium text-white hover:bg-gray-800"
         >
           <Plus className="h-4 w-4" />
           Add Medicine
-        </Link>
+        </button>
       </div>
 
       {/* Filters */}
@@ -89,16 +101,16 @@ export default function SellerMedicinesPage() {
                 <tr key={medicine.id} className="hover:bg-gray-50/50">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <div className="relative h-10 w-10 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100">
+                      <div className="relative h-10 w-10 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100/50">
                         {medicine.imageUrl ? (
                           <Image
-                            src={medicine.imageUrl}
+                            src={getImageUrl(medicine.imageUrl)}
                             alt={medicine.name}
                             fill
                             className="object-cover"
                           />
                         ) : (
-                          <div className="flex h-full w-full items-center justify-center text-xs">
+                          <div className="flex h-full w-full items-center justify-center text-[10px] text-gray-400">
                             No Img
                           </div>
                         )}
@@ -131,13 +143,13 @@ export default function SellerMedicinesPage() {
                   </td>
                   <td className="px-6 py-4 text-right">
                     <div className="flex justify-end gap-2">
-                      <Link
-                        href={`/seller/medicines/${medicine.id}`}
+                      <button
+                        onClick={() => handleEdit(medicine)}
                         className="rounded p-1 text-gray-500 hover:bg-gray-100 hover:text-black"
                         title="Edit"
                       >
                         <Edit className="h-4 w-4" />
-                      </Link>
+                      </button>
                       <button
                         onClick={() => setDeleteId(medicine.id)}
                         className="rounded p-1 text-gray-500 hover:bg-red-50 hover:text-red-600"
@@ -155,12 +167,12 @@ export default function SellerMedicinesPage() {
                   <div className="flex flex-col items-center justify-center gap-2">
                     <AlertCircle className="h-8 w-8 text-gray-300" />
                     <p className="text-gray-500">No medicines found.</p>
-                    <Link
-                      href="/seller/medicines/add"
+                    <button
+                      onClick={() => setIsAddModalOpen(true)}
                       className="text-sm font-medium text-blue-600 hover:underline"
                     >
                       Add your first medicine
-                    </Link>
+                    </button>
                   </div>
                 </td>
               </tr>
@@ -168,6 +180,37 @@ export default function SellerMedicinesPage() {
           </tbody>
         </table>
       </div>
+
+      {/* Add Medicine Modal */}
+      <Modal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        title="Add New Medicine"
+        description="Fill in the details to list a new product."
+        maxWidth="2xl"
+      >
+        <MedicineForm
+          onSuccess={() => setIsAddModalOpen(false)}
+          onCancel={() => setIsAddModalOpen(false)}
+        />
+      </Modal>
+
+      {/* Edit Medicine Modal */}
+      <Modal
+        isOpen={!!editingMedicine}
+        onClose={() => setEditingMedicine(null)}
+        title="Edit Medicine"
+        description="Update product details and stock."
+        maxWidth="2xl"
+      >
+        {editingMedicine && (
+          <MedicineForm
+            initialData={editingMedicine}
+            onSuccess={() => setEditingMedicine(null)}
+            onCancel={() => setEditingMedicine(null)}
+          />
+        )}
+      </Modal>
 
       <ConfirmationDialog
         isOpen={!!deleteId}
