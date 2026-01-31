@@ -70,46 +70,38 @@ export const AdminAppService = {
     const res = await fetch(`${env.backendApiBaseUrl}/categories`);
     if (!res.ok) throw new Error("Failed to fetch categories");
     const data = await res.json();
-
-    // Transform image URLs to absolute URLs
-    // Backend serves images from root /uploads, not /api/uploads
-    const backendRootUrl = env.backendApiBaseUrl.replace("/api", "");
-
-    const categories = data.data.map((cat: any) => {
-      let image = null;
-      if (cat.imageUrl) {
-        image = cat.imageUrl.startsWith("http")
-          ? cat.imageUrl
-          : `${backendRootUrl}${cat.imageUrl}`;
-      }
-      return {
-        ...cat,
-        image,
-      };
-    });
-    return categories;
+    return data.data;
   },
 
-  async createCategory(token: string, formData: FormData) {
+  async createCategory(
+    token: string,
+    payload: { name: string; description?: string },
+  ) {
     const res = await fetch(`${env.backendApiBaseUrl}/categories`, {
       method: "POST",
       headers: {
+        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: formData,
+      body: JSON.stringify(payload),
     });
     if (!res.ok) throw new Error("Failed to create category");
     const data = await res.json();
     return data.data;
   },
 
-  async updateCategory(token: string, id: string, formData: FormData) {
+  async updateCategory(
+    token: string,
+    id: string,
+    payload: { name?: string; description?: string },
+  ) {
     const res = await fetch(`${env.backendApiBaseUrl}/categories/${id}`, {
       method: "PUT",
       headers: {
+        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: formData,
+      body: JSON.stringify(payload),
     });
     if (!res.ok) throw new Error("Failed to update category");
     const data = await res.json();

@@ -6,7 +6,7 @@ import {
   useAdminUpdateCategory,
   useAdminDeleteCategory,
 } from "@/hooks";
-import { Trash2, Edit, Plus, X, Upload, Loader2 } from "lucide-react";
+import { Trash2, Edit, Plus, X, Loader2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { ConfirmationDialog } from "@/components/ui/ConfirmationDialog";
 import { useState } from "react";
@@ -23,7 +23,6 @@ export default function AdminCategoriesPage() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState<any | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const handleDeleteClick = (id: string) => {
@@ -41,34 +40,6 @@ export default function AdminCategoriesPage() {
   const closeModal = () => {
     setIsModalOpen(false);
     setEditingCategory(null);
-    setImagePreview(null);
-  };
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      // Validate file size (max 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        toast.error("Image too large", {
-          description: "Please select an image smaller than 5MB",
-        });
-        return;
-      }
-
-      // Validate file type
-      if (!file.type.startsWith("image/")) {
-        toast.error("Invalid file type", {
-          description: "Please select an image file",
-        });
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -77,6 +48,8 @@ export default function AdminCategoriesPage() {
 
     // Validate form
     const name = formData.get("name") as string;
+    const description = formData.get("description") as string;
+
     if (!name || name.trim().length < 2) {
       toast.error("Invalid category name", {
         description: "Category name must be at least 2 characters",
@@ -84,15 +57,20 @@ export default function AdminCategoriesPage() {
       return;
     }
 
+    const payload = {
+      name,
+      description: description || undefined,
+    };
+
     if (editingCategory) {
       updateCategory(
-        { id: editingCategory.id, formData },
+        { id: editingCategory.id, payload },
         {
           onSuccess: () => closeModal(),
         },
       );
     } else {
-      createCategory(formData, {
+      createCategory(payload, {
         onSuccess: () => closeModal(),
       });
     }
@@ -100,7 +78,6 @@ export default function AdminCategoriesPage() {
 
   const openEditModal = (category: any) => {
     setEditingCategory(category);
-    setImagePreview(category.image);
     setIsModalOpen(true);
   };
 
@@ -119,71 +96,63 @@ export default function AdminCategoriesPage() {
         </button>
       </div>
 
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {isLoading
-          ? Array.from({ length: 8 }).map((_, i) => (
-              <div
-                key={i}
-                className="overflow-hidden rounded-xl border border-black/10 bg-white dark:border-white/10 dark:bg-white/[.04]"
-              >
-                <Skeleton className="h-48 w-full rounded-none" />
-                <div className="p-4 space-y-2">
-                  <Skeleton className="h-5 w-32" />
-                  <Skeleton className="h-8 w-full rounded-lg" />
-                </div>
-              </div>
-            ))
-          : categories?.map((category: any) => (
-              <div
-                key={category.id}
-                className="group overflow-hidden rounded-xl border border-black/10 bg-white transition-all hover:shadow-lg dark:border-white/10 dark:bg-white/[.04]"
-              >
-                <div className="relative overflow-hidden">
-                  <img
-                    src={
-                      category.image ||
-                      "https://via.placeholder.com/400x300?text=No+Image"
-                    }
-                    alt={category.name}
-                    className="h-48 w-full object-cover transition-transform group-hover:scale-110"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src =
-                        "https://via.placeholder.com/400x300?text=No+Image";
-                    }}
-                  />
-                  {deletingId === category.id && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/50">
-                      <Loader2 className="h-8 w-8 animate-spin text-white" />
-                    </div>
-                  )}
-                </div>
-                <div className="p-4">
-                  <h3 className="mb-3 text-lg font-semibold text-black dark:text-white">
-                    {category.name}
-                  </h3>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => openEditModal(category)}
-                      disabled={isDeleting}
-                      className="flex-1 rounded-lg border border-black/10 px-3 py-2 text-sm font-medium transition-all hover:bg-black/5 disabled:opacity-50 dark:border-white/10 dark:hover:bg-white/5"
-                    >
-                      <Edit className="mx-auto h-4 w-4" />
-                    </button>
-                    <button
-                      onClick={() => handleDeleteClick(category.id)}
-                      disabled={isDeleting || deletingId === category.id}
-                      className="flex-1 rounded-lg border border-red-600/20 px-3 py-2 text-sm font-medium text-red-600 transition-all hover:bg-red-50 disabled:opacity-50 dark:border-red-400/20 dark:text-red-400 dark:hover:bg-red-900/20"
-                    >
-                      {deletingId === category.id ? (
-                        <Loader2 className="mx-auto h-4 w-4 animate-spin" />
-                      ) : (
-                        <Trash2 className="mx-auto h-4 w-4" />
-                      )}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
+      <div className="overflow-hidden rounded-xl border border-black/10 bg-white dark:border-white/10 dark:bg-white/[.04]">
+        <table className="w-full text-left text-sm">
+          <thead className="border-b border-black/10 bg-black/5 dark:border-white/10 dark:bg-white/5">
+            <tr>
+              <th className="px-6 py-4 font-medium">Name</th>
+              <th className="px-6 py-4 font-medium">Description</th>
+              <th className="px-6 py-4 font-medium">Actions</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-black/10 dark:divide-white/10">
+            {isLoading
+              ? Array.from({ length: 5 }).map((_, i) => (
+                  <tr key={i}>
+                    <td className="px-6 py-4">
+                      <Skeleton className="h-4 w-32" />
+                    </td>
+                    <td className="px-6 py-4">
+                      <Skeleton className="h-4 w-64" />
+                    </td>
+                    <td className="px-6 py-4">
+                      <Skeleton className="h-8 w-16 rounded-lg" />
+                    </td>
+                  </tr>
+                ))
+              : categories?.map((category: any) => (
+                  <tr
+                    key={category.id}
+                    className="hover:bg-black/5 dark:hover:bg-white/5"
+                  >
+                    <td className="px-6 py-4 font-medium text-black dark:text-white">
+                      {category.name}
+                    </td>
+                    <td className="px-6 py-4 text-black/70 dark:text-white/70">
+                      {category.description || "-"}
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => openEditModal(category)}
+                          disabled={isDeleting}
+                          className="rounded-lg p-2 text-black/70 hover:bg-black/10 hover:text-black dark:text-white/70 dark:hover:bg-white/10 dark:hover:text-white"
+                        >
+                          <Edit className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteClick(category.id)}
+                          disabled={isDeleting || deletingId === category.id}
+                          className="rounded-lg p-2 text-red-600 hover:bg-red-50 hover:text-red-700 dark:text-red-400 dark:hover:bg-red-900/20 dark:hover:text-red-300"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+          </tbody>
+        </table>
       </div>
 
       {isModalOpen && (
@@ -220,58 +189,15 @@ export default function AdminCategoriesPage() {
 
               <div>
                 <label className="mb-2 block text-sm font-medium">
-                  Category Image
+                  Description
                 </label>
-
-                {/* Image Preview */}
-                {imagePreview && (
-                  <div className="mb-3 relative group">
-                    <img
-                      src={imagePreview}
-                      alt="Preview"
-                      className="h-48 w-full rounded-lg object-cover"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setImagePreview(null)}
-                      disabled={isSubmitting}
-                      className="absolute top-2 right-2 rounded-full bg-red-500 p-1.5 text-white opacity-0 transition-opacity group-hover:opacity-100 hover:bg-red-600 disabled:opacity-50"
-                    >
-                      <X className="h-4 w-4" />
-                    </button>
-                  </div>
-                )}
-
-                {/* File Input */}
-                <div className="relative">
-                  <input
-                    type="file"
-                    name="image"
-                    accept="image/*"
-                    required={!editingCategory && !imagePreview}
-                    onChange={handleImageChange}
-                    disabled={isSubmitting}
-                    className="hidden"
-                    id="category-image"
-                  />
-                  <label
-                    htmlFor="category-image"
-                    className={`flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-dashed border-black/20 bg-black/5 px-4 py-8 text-sm transition-colors hover:bg-black/10 dark:border-white/20 dark:bg-white/5 dark:hover:bg-white/10 ${
-                      isSubmitting ? "opacity-50 cursor-not-allowed" : ""
-                    }`}
-                  >
-                    <Upload className="h-5 w-5" />
-                    <span>
-                      {imagePreview ? "Change Image" : "Upload Image"}
-                    </span>
-                  </label>
-                </div>
-
-                {editingCategory && !imagePreview && (
-                  <p className="mt-1 text-xs text-black/50 dark:text-white/50">
-                    Leave empty to keep current image
-                  </p>
-                )}
+                <textarea
+                  name="description"
+                  defaultValue={editingCategory?.description}
+                  disabled={isSubmitting}
+                  className="w-full rounded-lg border border-black/10 bg-transparent px-4 py-2 outline-none transition-colors focus:border-black/30 disabled:opacity-50 dark:border-white/10 dark:focus:border-white/30 min-h-[100px]"
+                  placeholder="Enter category description (optional)"
+                />
               </div>
 
               <div className="flex gap-3 pt-4">

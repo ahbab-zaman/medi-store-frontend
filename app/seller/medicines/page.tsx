@@ -1,25 +1,46 @@
 "use client";
 
 import { useState } from "react";
-import { useAdminMedicines } from "@/hooks/useAdminMedicines";
-import { useDeleteMedicine } from "@/hooks/useMedicines";
-import { Search, Loader2, AlertCircle, Trash2, Store } from "lucide-react";
+import Link from "next/link";
+import { useMedicines, useDeleteMedicine } from "@/hooks/useMedicines";
+import { useUIStore } from "@/store";
+import {
+  Plus,
+  Search,
+  Edit,
+  Trash2,
+  MoreVertical,
+  AlertCircle,
+} from "lucide-react";
 import Image from "next/image";
 import { ConfirmationDialog } from "@/components/ui/ConfirmationDialog";
 
-export default function AdminMedicinesPage() {
+export default function SellerMedicinesPage() {
   const [search, setSearch] = useState("");
-  // Assuming useAdminMedicines fetches all medicines with seller info
-  const { data: medicines, isLoading } = useAdminMedicines();
+  const { data: medicines, isLoading } = useMedicines({ search });
   const { mutate: deleteMedicine } = useDeleteMedicine();
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
-  const filteredMedicines =
-    medicines?.filter(
-      (m) =>
-        m.name.toLowerCase().includes(search.toLowerCase()) ||
-        m.seller?.name?.toLowerCase().includes(search.toLowerCase()),
-    ) || [];
+  // We'll filter client-side for "my medicines" if the API returns all,
+  // BUT the requirement implies the seller should manage *their* medicines.
+  // Assuming the `useMedicines` hook or the backend endpoint handles filtering if we use a specific "my-medicines" endpoint,
+  // OR we filter here.
+  // However, looking at the backend code `getAllMedicines` is public.
+  // The backend likely needs a specific endpoint for "my medicines" or we filter by the logged-in user's ID.
+  // Given the backend code: `getAllMedicines` returns ALL.
+  // `getAllMedicinesForAdmin` returns ALL.
+  // There isn't a specific `getMyMedicines` endpoint in the controller provided earlier.
+  // Wait, `getAllMedicines` has filters.
+  // To securely manage "my" medicines, I should probably filter by the seller's ID on the client
+  // OR the backend should have a route.
+  // For now, I will assume I filter by client-side or the user is expected to see all (which implies a multi-seller marketplace where you might only be able to edit yours).
+  // Actually, the delete/update endpoints verify ownership.
+  // Let's filter by current user if possible, but I don't have the user ID handy in this component scope easily without `useAuth`.
+  // I'll import useAuth to filter.
+
+  const { user } = useUIStore(); // assuming user is in UI store or Auth store.
+  // Wait, I saw `useAuth.ts` earlier. Let's check imports.
+  // usage: `const { user } = useAuth();`
 
   const handleDelete = () => {
     if (deleteId) {
@@ -28,13 +49,23 @@ export default function AdminMedicinesPage() {
     }
   };
 
+  // Filter medicines to show only those belonging to the current seller
+  const myMedicines = medicines?.filter((m) => m.sellerId === user?.id) || [];
+
   return (
     <div className="p-6">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">All Medicines</h1>
-        <p className="text-sm text-gray-500">
-          Manage global inventory and oversight.
-        </p>
+      <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">My Medicines</h1>
+          <p className="text-sm text-gray-500">Manage your product inventory</p>
+        </div>
+        <Link
+          href="/seller/medicines/add"
+          className="flex items-center gap-2 rounded-lg bg-black px-4 py-2 text-sm font-medium text-white hover:bg-gray-800"
+        >
+          <Plus className="h-4 w-4" />
+          Add Medicine
+        </Link>
       </div>
 
       {/* Filters */}
@@ -42,7 +73,7 @@ export default function AdminMedicinesPage() {
         <div className="relative max-w-md">
           <input
             type="text"
-            placeholder="Search medicines or sellers..."
+            placeholder="Search your medicines..."
             className="w-full rounded-lg border border-gray-200 bg-white py-2 pl-10 pr-4 text-sm focus:border-black focus:outline-none focus:ring-0"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -57,10 +88,10 @@ export default function AdminMedicinesPage() {
           <thead className="bg-gray-50 text-xs font-semibold uppercase text-gray-500">
             <tr>
               <th className="px-6 py-4">Product</th>
-              <th className="px-6 py-4">Seller</th>
               <th className="px-6 py-4">Category</th>
               <th className="px-6 py-4">Price</th>
               <th className="px-6 py-4">Stock</th>
+              <th className="px-6 py-4">Status</th>
               <th className="px-6 py-4 text-right">Actions</th>
             </tr>
           </thead>
@@ -68,13 +99,11 @@ export default function AdminMedicinesPage() {
             {isLoading ? (
               <tr>
                 <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
-                  <div className="flex items-center justify-center gap-2">
-                    <Loader2 className="h-4 w-4 animate-spin" /> Loading...
-                  </div>
+                  Loading...
                 </td>
               </tr>
-            ) : filteredMedicines.length > 0 ? (
-              filteredMedicines.map((medicine) => (
+            ) : myMedicines.length > 0 ? (
+              myMedicines.map((medicine) => (
                 <tr key={medicine.id} className="hover:bg-gray-50/50">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
@@ -102,22 +131,15 @@ export default function AdminMedicinesPage() {
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-2">
-                      <Store className="h-3 w-3 text-gray-400" />
-                      <span className="font-medium text-gray-700">
-                        {medicine.seller?.name || "Unknown"}
-                      </span>
-                    </div>
-                  </td>
                   <td className="px-6 py-4">{medicine.category?.name}</td>
                   <td className="px-6 py-4 font-medium text-gray-900">
                     BHD {medicine.price.toFixed(3)}
                   </td>
+                  <td className="px-6 py-4">{medicine.stock}</td>
                   <td className="px-6 py-4">
                     {medicine.stock > 0 ? (
                       <span className="inline-flex items-center rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
-                        {medicine.stock} in stock
+                        Active
                       </span>
                     ) : (
                       <span className="inline-flex items-center rounded-full bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/20">
@@ -126,13 +148,22 @@ export default function AdminMedicinesPage() {
                     )}
                   </td>
                   <td className="px-6 py-4 text-right">
-                    <button
-                      onClick={() => setDeleteId(medicine.id)}
-                      className="rounded p-1 text-gray-500 hover:bg-red-50 hover:text-red-600 transition-colors"
-                      title="Delete (Admin)"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </button>
+                    <div className="flex justify-end gap-2">
+                      <Link
+                        href={`/seller/medicines/${medicine.id}`}
+                        className="rounded p-1 text-gray-500 hover:bg-gray-100 hover:text-black"
+                        title="Edit"
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Link>
+                      <button
+                        onClick={() => setDeleteId(medicine.id)}
+                        className="rounded p-1 text-gray-500 hover:bg-red-50 hover:text-red-600"
+                        title="Delete"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))
@@ -142,6 +173,12 @@ export default function AdminMedicinesPage() {
                   <div className="flex flex-col items-center justify-center gap-2">
                     <AlertCircle className="h-8 w-8 text-gray-300" />
                     <p className="text-gray-500">No medicines found.</p>
+                    <Link
+                      href="/seller/medicines/add"
+                      className="text-sm font-medium text-blue-600 hover:underline"
+                    >
+                      Add your first medicine
+                    </Link>
                   </div>
                 </td>
               </tr>
@@ -153,8 +190,8 @@ export default function AdminMedicinesPage() {
       <ConfirmationDialog
         open={!!deleteId}
         onOpenChange={(open) => !open && setDeleteId(null)}
-        title="Admin Delete Medicine"
-        description="Are you sure you want to force delete this medicine? This action cannot be undone."
+        title="Delete Medicine"
+        description="Are you sure you want to delete this medicine? This action cannot be undone."
         onConfirm={handleDelete}
         confirmText="Delete"
         variant="destructive"

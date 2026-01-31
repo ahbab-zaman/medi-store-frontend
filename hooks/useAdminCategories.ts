@@ -16,8 +16,8 @@ export function useCreateCategory() {
   const { accessToken } = useAuthStore();
 
   return useMutation({
-    mutationFn: (formData: FormData) =>
-      AdminAppService.createCategory(accessToken!, formData),
+    mutationFn: (payload: { name: string; description?: string }) =>
+      AdminAppService.createCategory(accessToken!, payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "categories"] });
       queryClient.invalidateQueries({ queryKey: ["categories"] });
@@ -38,8 +38,13 @@ export function useUpdateCategory() {
   const { accessToken } = useAuthStore();
 
   return useMutation({
-    mutationFn: ({ id, formData }: { id: string; formData: FormData }) =>
-      AdminAppService.updateCategory(accessToken!, id, formData),
+    mutationFn: ({
+      id,
+      payload,
+    }: {
+      id: string;
+      payload: { name?: string; description?: string };
+    }) => AdminAppService.updateCategory(accessToken!, id, payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "categories"] });
       queryClient.invalidateQueries({ queryKey: ["categories"] });
