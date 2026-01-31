@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useAuth } from "@/hooks";
 
 function roleHome(role?: string) {
@@ -20,11 +20,13 @@ export default function LoginClient() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  // Redirect if already authenticated and user data is available
-  if (user) {
-    const target = next || roleHome(user.role);
-    router.replace(target);
-  }
+  // Redirect if already authenticated - moved to useEffect to avoid setState during render
+  useEffect(() => {
+    if (user) {
+      const target = next || roleHome(user.role);
+      router.replace(target);
+    }
+  }, [user, next, router]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();

@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 export function useAuth() {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const { user, setUser, logout: logoutStore } = useAuthStore();
+  const { user, accessToken, setUser, logout: logoutStore } = useAuthStore();
   const { addNotification } = useUIStore();
 
   // Fetch current user
@@ -17,22 +17,19 @@ export function useAuth() {
     queryFn: authService.getMe,
     enabled: !user, // Only fetch if user is not in store
     retry: false,
-    staleTime: Infinity, // User data doesn't change often
+    staleTime: Infinity,
   });
 
   // Sync user data from query to store
   if (meData?.data && !user) {
-    setUser(meData.data);
+    setUser(meData.data, accessToken);
   }
 
   // Login mutation
   const loginMutation = useMutation({
     mutationFn: authService.loginUser,
-    onSuccess: async () => {
+    onSuccess: async (data) => {
       try {
-        // Login successful, now fetch the user profile immediately
-        // We force a fetch because the cache might be empty or stale
-        // and the login response typically only contains tokens.
         const meData = await queryClient.fetchQuery({
           queryKey: ["auth", "me"],
           queryFn: authService.getMe,
@@ -40,7 +37,7 @@ export function useAuth() {
         });
 
         if (meData?.data) {
-          setUser(meData.data);
+          setUser(meData.data, data.data?.accessToken);
           addNotification({
             type: "success",
             message: "Login successful!",
@@ -48,8 +45,6 @@ export function useAuth() {
         }
       } catch (error) {
         console.error("Failed to fetch user after login", error);
-        // Still notify success of login, but maybe sidebar won't update?
-        // Actually if getMe fails, we might not be truly logged in or token issue.
         addNotification({
           type: "warning",
           message:
@@ -73,7 +68,6 @@ export function useAuth() {
         type: "success",
         message: "Registration successful! Please login.",
       });
-      // Navigation handled by component
     },
     onError: (error: any) => {
       addNotification({
@@ -88,15 +82,14 @@ export function useAuth() {
     mutationFn: authService.logoutUser,
     onSuccess: () => {
       logoutStore();
-      queryClient.clear(); // Clear all cached data
+      queryClient.clear();
       addNotification({
         type: "success",
         message: "Logged out successfully",
       });
-      router.push("/login"); // Logout always goes to login, this is safe to keep or remove. Keeping for convenience.
+      router.push("/login");
     },
     onError: (error: any) => {
-      // Even if API fails, clear local state
       logoutStore();
       queryClient.clear();
       router.push("/login");
@@ -106,6 +99,7 @@ export function useAuth() {
   return {
     // State
     user,
+    accessToken,
     isAuthenticated: !!user,
     isLoading:
       isLoadingMe || loginMutation.isPending || registerMutation.isPending,
