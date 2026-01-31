@@ -29,7 +29,9 @@ export default function EditMedicinePage() {
   const params = useParams();
   const id = params.id as string;
 
-  const { data: medicine, isLoading: isLoadingMedicine } = useMedicine(id);
+  const { data: medicineResponse, isLoading: isLoadingMedicine } =
+    useMedicine(id);
+  const medicine = medicineResponse?.data;
   const { mutate: updateMedicine, isPending: isUpdating } = useUpdateMedicine();
   const { data: categories } = useCategories();
 
@@ -39,10 +41,9 @@ export default function EditMedicinePage() {
   const {
     register,
     handleSubmit,
-    setValue,
     reset,
     formState: { errors },
-  } = useForm<MedicineFormValues>({
+  } = useForm({
     resolver: zodResolver(medicineSchema),
   });
 
@@ -80,7 +81,7 @@ export default function EditMedicinePage() {
     setImagePreview(null);
   };
 
-  const onSubmit = (data: MedicineFormValues) => {
+  const onSubmit = (data: any) => {
     const formData = new FormData();
     formData.append("name", data.name);
     formData.append("description", data.description);
@@ -102,11 +103,14 @@ export default function EditMedicinePage() {
     // Assuming the service `updateMedicine(id, formData)` signature.
     // So the mutation function needs to be called with `{ id, formData }`.
 
-    updateMedicine({ id, data: formData } as any, {
-      onSuccess: () => {
-        router.push("/seller/medicines");
+    updateMedicine(
+      { id, data: formData },
+      {
+        onSuccess: () => {
+          router.push("/seller/medicines");
+        },
       },
-    });
+    );
   };
 
   if (isLoadingMedicine) {
@@ -159,7 +163,7 @@ export default function EditMedicinePage() {
                 className="w-full rounded-lg border border-gray-200 px-4 py-2 text-sm focus:border-black focus:outline-none bg-white"
               >
                 <option value="">Select Category</option>
-                {categories?.map((cat) => (
+                {categories?.data?.map((cat) => (
                   <option key={cat.id} value={cat.id}>
                     {cat.name}
                   </option>

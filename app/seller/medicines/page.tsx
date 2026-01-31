@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useMedicines, useDeleteMedicine } from "@/hooks/useMedicines";
-import { useUIStore } from "@/store";
+import { useAuth } from "@/hooks/useAuth";
 import {
   Plus,
   Search,
@@ -38,9 +38,7 @@ export default function SellerMedicinesPage() {
   // Let's filter by current user if possible, but I don't have the user ID handy in this component scope easily without `useAuth`.
   // I'll import useAuth to filter.
 
-  const { user } = useUIStore(); // assuming user is in UI store or Auth store.
-  // Wait, I saw `useAuth.ts` earlier. Let's check imports.
-  // usage: `const { user } = useAuth();`
+  const { user } = useAuth();
 
   const handleDelete = () => {
     if (deleteId) {
@@ -50,7 +48,8 @@ export default function SellerMedicinesPage() {
   };
 
   // Filter medicines to show only those belonging to the current seller
-  const myMedicines = medicines?.filter((m) => m.sellerId === user?.id) || [];
+  const myMedicines =
+    medicines?.data?.filter((m) => m.sellerId === user?.id) || [];
 
   return (
     <div className="p-6">
@@ -188,13 +187,13 @@ export default function SellerMedicinesPage() {
       </div>
 
       <ConfirmationDialog
-        open={!!deleteId}
-        onOpenChange={(open) => !open && setDeleteId(null)}
+        isOpen={!!deleteId}
+        onClose={() => setDeleteId(null)}
         title="Delete Medicine"
         description="Are you sure you want to delete this medicine? This action cannot be undone."
         onConfirm={handleDelete}
         confirmText="Delete"
-        variant="destructive"
+        variant="danger"
       />
     </div>
   );

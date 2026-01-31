@@ -40,7 +40,11 @@ export function useCreateMedicine() {
   const queryClient = useQueryClient();
   const { addNotification } = useUIStore();
 
-  return useMutation({
+  return useMutation<
+    import("@/types").ApiResponse<import("@/types").Medicine>,
+    Error,
+    FormData | CreateMedicinePayload
+  >({
     mutationFn: medicineService.createMedicine,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["medicines"] });
@@ -63,7 +67,11 @@ export function useUpdateMedicine() {
   const queryClient = useQueryClient();
   const { addNotification } = useUIStore();
 
-  return useMutation({
+  return useMutation<
+    import("@/types").ApiResponse<import("@/types").Medicine>,
+    Error,
+    { id: string; data: FormData | UpdateMedicinePayload }
+  >({
     mutationFn: medicineService.updateMedicine,
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ["medicines"] });

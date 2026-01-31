@@ -15,8 +15,8 @@ export default function AdminMedicinesPage() {
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
   const filteredMedicines =
-    medicines?.filter(
-      (m) =>
+    medicines?.data?.filter(
+      (m: any) =>
         m.name.toLowerCase().includes(search.toLowerCase()) ||
         m.seller?.name?.toLowerCase().includes(search.toLowerCase()),
     ) || [];
@@ -74,7 +74,7 @@ export default function AdminMedicinesPage() {
                 </td>
               </tr>
             ) : filteredMedicines.length > 0 ? (
-              filteredMedicines.map((medicine) => (
+              filteredMedicines.map((medicine: any) => (
                 <tr key={medicine.id} className="hover:bg-gray-50/50">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
@@ -151,13 +151,13 @@ export default function AdminMedicinesPage() {
       </div>
 
       <ConfirmationDialog
-        open={!!deleteId}
-        onOpenChange={(open) => !open && setDeleteId(null)}
+        isOpen={!!deleteId}
+        onClose={() => setDeleteId(null)}
         title="Admin Delete Medicine"
         description="Are you sure you want to force delete this medicine? This action cannot be undone."
         onConfirm={handleDelete}
         confirmText="Delete"
-        variant="destructive"
+        variant="danger"
       />
     </div>
   );

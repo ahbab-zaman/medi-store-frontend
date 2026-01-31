@@ -14,12 +14,15 @@ export default function MedicinePage() {
   );
 
   // Debounce search could be added here, but for simplicity passing directly
-  const { data: medicines, isLoading: isLoadingMedicines } = useMedicines({
-    search,
-    categoryId: selectedCategory,
-    minPrice: priceRange.min,
-    maxPrice: priceRange.max,
-  });
+  const { data: medicinesResponse, isLoading: isLoadingMedicines } =
+    useMedicines({
+      search,
+      categoryId: selectedCategory,
+      minPrice: priceRange.min,
+      maxPrice: priceRange.max,
+    });
+
+  const medicines = medicinesResponse?.data;
 
   const { data: categories } = useCategories();
 
@@ -73,7 +76,7 @@ export default function MedicinePage() {
                   </span>
                 </label>
 
-                {categories?.map((category) => (
+                {categories?.data?.map((category) => (
                   <label
                     key={category.id}
                     className="flex items-center gap-2 cursor-pointer group"

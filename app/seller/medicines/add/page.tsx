@@ -36,7 +36,7 @@ export default function AddMedicinePage() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<MedicineFormValues>({
+  } = useForm({
     resolver: zodResolver(medicineSchema),
   });
 
@@ -54,7 +54,7 @@ export default function AddMedicinePage() {
     setImagePreview(null);
   };
 
-  const onSubmit = (data: MedicineFormValues) => {
+  const onSubmit = (data: any) => {
     // The hook expects a payload, but our service usually handles FormData for files
     // Looking at `useCreateMedicine` -> `medicineService.createMedicine`, it likely takes an object.
     // However, the controller `createMedicine` processes `req.file`.
@@ -78,8 +78,7 @@ export default function AddMedicinePage() {
       formData.append("image", imageFile);
     }
 
-    createMedicine(formData as any, {
-      // leveraging 'any' to bypass strict type if the type definition isn't updated for FormData yet
+    createMedicine(formData, {
       onSuccess: () => {
         router.push("/seller/medicines");
       },
@@ -129,7 +128,7 @@ export default function AddMedicinePage() {
                 className="w-full rounded-lg border border-gray-200 px-4 py-2 text-sm focus:border-black focus:outline-none bg-white"
               >
                 <option value="">Select Category</option>
-                {categories?.map((cat) => (
+                {categories?.data?.map((cat) => (
                   <option key={cat.id} value={cat.id}>
                     {cat.name}
                   </option>

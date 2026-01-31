@@ -19,7 +19,8 @@ import { Skeleton } from "@/components/ui/Skeleton";
 export default function MedicineDetailsPage() {
   const params = useParams();
   const id = params.id as string;
-  const { data: medicine, isLoading } = useMedicine(id);
+  const { data: medicineResponse, isLoading } = useMedicine(id);
+  const medicine = medicineResponse?.data;
   const [quantity, setQuantity] = useState(1);
 
   if (isLoading) {

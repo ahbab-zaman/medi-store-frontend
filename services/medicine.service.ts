@@ -30,28 +30,44 @@ export async function getMedicineById(
 }
 
 export async function createMedicine(
-  payload: CreateMedicinePayload,
+  payload: FormData | CreateMedicinePayload,
 ): Promise<ApiResponse<Medicine>> {
+  const isFormData = payload instanceof FormData;
   const response = await apiClient.post<ApiResponse<Medicine>>(
-    "/api/medicines",
+    "/api/medicines/seller",
     payload,
+    {
+      headers: isFormData
+        ? { "Content-Type": "multipart/form-data" }
+        : undefined,
+    },
   );
   return response.data;
 }
 
-export async function updateMedicine(
-  payload: UpdateMedicinePayload,
-): Promise<ApiResponse<Medicine>> {
-  const { id, ...data } = payload;
-  const response = await apiClient.patch<ApiResponse<Medicine>>(
-    `/api/medicines/${id}`,
+export async function updateMedicine(payload: {
+  id: string;
+  data: FormData | UpdateMedicinePayload;
+}): Promise<ApiResponse<Medicine>> {
+  const { id, data } = payload;
+  const isFormData = data instanceof FormData;
+
+  const response = await apiClient.put<ApiResponse<Medicine>>(
+    `/api/medicines/seller/${id}`,
     data,
+    {
+      headers: isFormData
+        ? { "Content-Type": "multipart/form-data" }
+        : undefined,
+    },
   );
   return response.data;
 }
 
-export async function deleteMedicine(id: string): Promise<ApiResponse> {
-  const response = await apiClient.delete<ApiResponse>(`/api/medicines/${id}`);
+export async function deleteMedicine(id: string): Promise<ApiResponse<null>> {
+  const response = await apiClient.delete<ApiResponse<null>>(
+    `/api/medicines/seller/${id}`,
+  );
   return response.data;
 }
 
