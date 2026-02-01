@@ -122,21 +122,48 @@ export function useAuth() {
     },
   });
 
+  // Update Profile mutation
+  const updateProfileMutation = useMutation({
+    mutationFn: authService.updateProfile,
+    onSuccess: (data) => {
+      if (data.success && data.data) {
+        setUser(data.data, accessToken);
+        addNotification({
+          type: "success",
+          message: "Profile updated successfully!",
+        });
+        queryClient.invalidateQueries({ queryKey: ["auth", "me"] });
+      }
+    },
+    onError: (error: any) => {
+      addNotification({
+        type: "error",
+        message: error.message || "Failed to update profile",
+      });
+    },
+  });
+
   return {
     // State
     user,
     accessToken,
     isAuthenticated: !!user,
     isLoading:
-      isLoadingMe || loginMutation.isPending || registerMutation.isPending,
+      isLoadingMe ||
+      loginMutation.isPending ||
+      registerMutation.isPending ||
+      updateProfileMutation.isPending,
 
     // Actions
     login: loginMutation.mutateAsync,
     register: registerMutation.mutateAsync,
     logout: logoutMutation.mutate,
+    updateProfile: updateProfileMutation.mutateAsync,
 
     // Mutation states
     loginError: loginMutation.error,
     registerError: registerMutation.error,
+    updateProfileError: updateProfileMutation.error,
+    isUpdatingProfile: updateProfileMutation.isPending,
   };
 }

@@ -4,6 +4,7 @@ import {
   RegisterPayload,
   AuthResponse,
   MeResponse,
+  UpdateProfilePayload,
 } from "@/types";
 
 // Use standard axios for Next.js API routes (relative paths)
@@ -41,5 +42,15 @@ export async function logoutUser(): Promise<{
 
 export async function getMe(): Promise<MeResponse> {
   const response = await nextAuthClient.get<MeResponse>("/api/auth/me");
+  return response.data;
+}
+
+export async function updateProfile(
+  payload: UpdateProfilePayload,
+): Promise<MeResponse> {
+  const response = await nextAuthClient.patch<MeResponse>(
+    "/api/users/my-profile",
+    payload,
+  );
   return response.data;
 }

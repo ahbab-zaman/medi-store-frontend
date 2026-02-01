@@ -3,11 +3,14 @@
 import { useAuth } from "@/hooks";
 import { Loader2, Mail, Phone, MapPin, User, Shield } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import EditProfileModal from "@/components/MyAccount/EditProfileModal";
 
 export default function MyAccountPage() {
   const { user, isAuthenticated, isLoading } = useAuth();
   const router = useRouter();
+
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -91,12 +94,18 @@ export default function MyAccountPage() {
         <div className="border-t border-gray-200 bg-gray-50 px-6 py-4 dark:border-gray-800 dark:bg-gray-800/50">
           <button
             className="text-sm font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400"
-            onClick={() => alert("Edit profile functionality coming soon!")}
+            onClick={() => setIsEditModalOpen(true)}
           >
             Edit Profile
           </button>
         </div>
       </div>
+
+      <EditProfileModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        user={user}
+      />
     </div>
   );
 }

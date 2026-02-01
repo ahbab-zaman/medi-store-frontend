@@ -26,6 +26,13 @@ export interface User {
   updatedAt: string;
 }
 
+export interface UpdateProfilePayload {
+  name?: string;
+  email?: string;
+  contactNumber?: string;
+  address?: string;
+}
+
 // Auth types
 export interface LoginPayload {
   email: string;
