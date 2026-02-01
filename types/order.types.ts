@@ -24,19 +24,6 @@ export interface Order {
   updatedAt: string;
 }
 
-// Cart types (client-side only, not in database)
-export interface CartItem {
-  medicineId: string;
-  medicine: Medicine;
-  quantity: number;
-}
-
-export interface Cart {
-  items: CartItem[];
-  totalItems: number;
-  totalAmount: number;
-}
-
 // API request/response types
 export interface CreateOrderPayload {
   shippingAddress: string;

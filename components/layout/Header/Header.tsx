@@ -4,6 +4,7 @@ import { Search, ShoppingBag, Menu, X } from "lucide-react";
 import { useState } from "react";
 import UserDropdown from "./UserDropdown";
 import { useCart } from "@/hooks";
+import { CartSidebar } from "@/components/ui/CartSidebar";
 
 const NAV_LINKS = [
   { name: "All Products", href: "/medicine" },
@@ -14,8 +15,8 @@ const NAV_LINKS = [
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { items } = useCart();
-  const cartItemCount = items.length;
+  const [showCartSidebar, setShowCartSidebar] = useState(false);
+  const { totalItems } = useCart();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-black/5 bg-white/70 backdrop-blur-md dark:border-white/5 dark:bg-black/70">
@@ -61,17 +62,17 @@ export default function Header() {
 
           <UserDropdown />
 
-          <Link
-            href="/cart"
+          <button
+            onClick={() => setShowCartSidebar(true)}
             className="relative text-black/70 hover:text-black dark:text-white/70 dark:hover:text-white"
           >
             <ShoppingBag size={20} />
-            {cartItemCount > 0 && (
+            {totalItems > 0 && (
               <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-blue-600 text-[10px] font-bold text-white">
-                {cartItemCount}
+                {totalItems}
               </span>
             )}
-          </Link>
+          </button>
         </div>
       </div>
 
@@ -92,6 +93,11 @@ export default function Header() {
           </div>
         </div>
       )}
+
+      <CartSidebar
+        isOpen={showCartSidebar}
+        onClose={() => setShowCartSidebar(false)}
+      />
     </header>
   );
 }

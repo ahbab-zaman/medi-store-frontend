@@ -17,12 +17,18 @@ import { Skeleton } from "@/components/ui/Skeleton";
 import { getImageUrl } from "@/utils/image-url";
 import bdtImage from "@/public/BDT.png";
 import Image from "next/image";
+import { useCart } from "@/hooks";
+import { CartModal } from "@/components/ui/CartModal";
+import { toast } from "sonner";
+
 export default function MedicineDetailsPage() {
   const params = useParams();
   const id = params.id as string;
   const { data: medicineResponse, isLoading } = useMedicine(id);
   const medicine = medicineResponse?.data;
   const [quantity, setQuantity] = useState(1);
+  const [showCartModal, setShowCartModal] = useState(false);
+  const { addToCart } = useCart();
 
   if (isLoading) {
     return (
@@ -53,6 +59,18 @@ export default function MedicineDetailsPage() {
   const handleIncrement = () =>
     setQuantity((p) => (p < medicine.stock ? p + 1 : p));
   const handleDecrement = () => setQuantity((p) => (p > 1 ? p - 1 : 1));
+
+  const handleAddToCart = async () => {
+    try {
+      await addToCart(medicine, quantity);
+      setShowCartModal(true);
+      toast.success(
+        `Added ${quantity} ${quantity === 1 ? "item" : "items"} to cart`,
+      );
+    } catch (error: any) {
+      toast.error(error.message || "Failed to add to cart");
+    }
+  };
 
   return (
     <div className="bg-white pb-20 pt-8">
@@ -151,6 +169,7 @@ export default function MedicineDetailsPage() {
 
                 {/* Add to Cart */}
                 <button
+                  onClick={handleAddToCart}
                   className="flex-1 h-12 flex items-center justify-center gap-2 rounded-full bg-black px-8 text-sm font-semibold text-white transition-transform hover:scale-[1.02] active:scale-[0.98] disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed"
                   disabled={medicine.stock <= 0}
                 >
