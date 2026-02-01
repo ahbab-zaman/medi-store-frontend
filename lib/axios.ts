@@ -5,7 +5,7 @@ import {
   refreshAccessToken,
 } from "@/utils/auth/tokenManager.client";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_API_BASE_URL;
 
 export const apiClient = axios.create({
   baseURL: API_BASE_URL?.split("/api")[0],

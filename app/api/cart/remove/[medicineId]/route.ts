@@ -4,10 +4,11 @@ import { getAccessTokenFromCookies } from "@/utils/auth/cookies";
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { medicineId: string } },
+  props: { params: Promise<{ medicineId: string }> },
 ) {
   try {
     const accessToken = await getAccessTokenFromCookies();
+    const params = await props.params;
 
     if (!accessToken) {
       return NextResponse.json(

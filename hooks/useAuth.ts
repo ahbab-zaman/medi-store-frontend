@@ -15,12 +15,12 @@ export function useAuth() {
   const { data: meData, isLoading: isLoadingMe } = useQuery({
     queryKey: ["auth", "me"],
     queryFn: authService.getMe,
-    enabled: !user, // Only fetch if user is not in store
+    enabled: !user && !!accessToken, // Only fetch if we have a token but no user, or on mount check
     retry: false,
     staleTime: Infinity,
   });
 
-  // Sync user data from query to store
+  // Sync user data from query to store if needed
   if (meData?.data && !user) {
     setUser(meData.data, accessToken);
   }
@@ -28,28 +28,43 @@ export function useAuth() {
   // Login mutation
   const loginMutation = useMutation({
     mutationFn: authService.loginUser,
-    onSuccess: async (data) => {
-      try {
-        const meData = await queryClient.fetchQuery({
-          queryKey: ["auth", "me"],
-          queryFn: authService.getMe,
-          staleTime: 0,
-        });
-
-        if (meData?.data) {
-          setUser(meData.data, data.data?.accessToken);
-          addNotification({
-            type: "success",
-            message: "Login successful!",
-          });
-        }
-      } catch (error) {
-        console.error("Failed to fetch user after login", error);
+    onSuccess: (data) => {
+      // Optimization: If the backend returns the user object, use it directly
+      // instead of fetching 'me' separately.
+      if (data.success && data.data?.user) {
+        setUser(data.data.user, data.data.accessToken);
         addNotification({
-          type: "warning",
-          message:
-            "Login successful, but profile loading failed. Please refresh.",
+          type: "success",
+          message: "Login successful!",
         });
+        // Immediate redirect
+        router.push("/");
+      } else {
+        // Fallback to fetch user if not provided in login response
+        // This keeps compatibility if backend changes
+        queryClient
+          .fetchQuery({
+            queryKey: ["auth", "me"],
+            queryFn: authService.getMe,
+            staleTime: 0,
+          })
+          .then((meData) => {
+            if (meData?.data) {
+              setUser(meData.data, data.data?.accessToken);
+              addNotification({
+                type: "success",
+                message: "Login successful!",
+              });
+              router.push("/");
+            }
+          })
+          .catch(() => {
+            addNotification({
+              type: "warning",
+              message:
+                "Login successful, but profile loading failed. Please refresh.",
+            });
+          });
       }
     },
     onError: (error: any) => {
@@ -64,10 +79,21 @@ export function useAuth() {
   const registerMutation = useMutation({
     mutationFn: authService.registerUser,
     onSuccess: (data) => {
-      addNotification({
-        type: "success",
-        message: "Registration successful! Please login.",
-      });
+      // Optimization: Auto-login if registration returns token/user
+      if (data.success && data.data?.user && data.data?.accessToken) {
+        setUser(data.data.user, data.data.accessToken);
+        addNotification({
+          type: "success",
+          message: "Registration successful! Welcome.",
+        });
+        router.push("/");
+      } else {
+        addNotification({
+          type: "success",
+          message: "Registration successful! Please login.",
+        });
+        router.push("/login");
+      }
     },
     onError: (error: any) => {
       addNotification({

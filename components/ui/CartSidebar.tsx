@@ -42,7 +42,7 @@ export function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
     <>
       {/* Overlay */}
       <div
-        className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm animate-in fade-in duration-200"
+        className="fixed inset-0 z-50 bg-black/30 h-screen backdrop-blur-sm animate-in fade-in duration-200"
         onClick={onClose}
       />
 
