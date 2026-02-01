@@ -9,8 +9,7 @@ export async function setAccessTokenCookie(accessToken: string) {
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
     path: "/",
-    // keep short; backend refresh token drives long sessions
-    maxAge: 60 * 15,
+    maxAge: 60 * 15, // 15 minutes
   });
 }
 
@@ -29,4 +28,3 @@ export async function getAccessTokenFromCookies() {
   const jar = await cookies();
   return jar.get(ACCESS_TOKEN_COOKIE)?.value ?? null;
 }
-

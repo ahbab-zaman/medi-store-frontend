@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { useMedicines, useDeleteMedicine } from "@/hooks/useMedicines";
 import { useAuth } from "@/hooks/useAuth";
 import {
@@ -17,7 +16,8 @@ import { Modal } from "@/components/ui/Modal";
 import { MedicineForm } from "@/components/seller/MedicineForm";
 import { Medicine } from "@/types";
 import { getImageUrl } from "@/utils/image-url";
-
+import Image from "next/image";
+import bdtImage from "@/public/BDT.png";
 export default function SellerMedicinesPage() {
   const [search, setSearch] = useState("");
   const { user } = useAuth();
@@ -44,6 +44,7 @@ export default function SellerMedicinesPage() {
   };
 
   const myMedicines = medicines?.data || [];
+  console.log("All my medicines ", myMedicines);
 
   return (
     <div className="p-6">
@@ -100,7 +101,7 @@ export default function SellerMedicinesPage() {
                 <tr key={medicine.id} className="hover:bg-gray-50/50">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <div className="relative h-10 w-10 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100/50">
+                      <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-lg bg-gray-100/50">
                         {medicine.imageUrl ? (
                           <img
                             src={getImageUrl(medicine.imageUrl)}
@@ -124,8 +125,16 @@ export default function SellerMedicinesPage() {
                     </div>
                   </td>
                   <td className="px-6 py-4">{medicine.category?.name}</td>
-                  <td className="px-6 py-4 font-medium text-gray-900">
-                    BHD {medicine.price.toFixed(3)}
+                  <td className="px-6 py-4 font-medium text-gray-900 flex items-center gap-1">
+                    <span>
+                      <Image
+                        src={bdtImage}
+                        width={12}
+                        height={12}
+                        alt="Bangladeshi Taka Symbol"
+                      />
+                    </span>
+                    {medicine.price}
                   </td>
                   <td className="px-6 py-4">{medicine.stock}</td>
                   <td className="px-6 py-4">

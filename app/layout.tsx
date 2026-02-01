@@ -5,6 +5,7 @@ import Header from "@/components/layout/Header/Header";
 import Footer from "@/components/layout/Footer/Footer";
 import { QueryProvider } from "@/providers/QueryProvider";
 import { Toaster } from "sonner";
+import { Providers } from "./providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,20 +32,22 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <QueryProvider>
-          <Toaster
-            position="top-right"
-            richColors
-            expand={false}
-            closeButton
-            theme="system"
-          />
-          <div className="min-h-dvh bg-white text-black dark:bg-black dark:text-white font-sans">
-            <Header />
-            <main className="w-full">{children}</main>
-            <Footer />
-          </div>
-        </QueryProvider>
+        <Providers>
+          <QueryProvider>
+            <Toaster
+              position="top-right"
+              richColors
+              expand={false}
+              closeButton
+              theme="system"
+            />
+            <div className="min-h-dvh bg-white text-black dark:bg-black dark:text-white font-sans">
+              <Header />
+              <main className="w-full">{children}</main>
+              <Footer />
+            </div>
+          </QueryProvider>
+        </Providers>
       </body>
     </html>
   );

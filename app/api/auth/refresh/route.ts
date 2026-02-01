@@ -20,9 +20,12 @@ export async function POST(req: NextRequest) {
   }
 
   const accessToken: string | undefined = data?.data?.accessToken;
-  if (accessToken) await setAccessTokenCookie(accessToken);
+  if (accessToken) {
+    await setAccessTokenCookie(accessToken);
+  }
 
   const res = NextResponse.json(data, { status: upstream.status });
   forwardSetCookie(upstream, res);
+
   return res;
 }

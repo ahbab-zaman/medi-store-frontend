@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingBag } from "lucide-react";
 import { Medicine } from "@/types/medicine.types";
 import { getImageUrl } from "@/utils/image-url";
-
+import bdtImage from "@/public/BDT.png";
+import Image from "next/image";
 interface MedicineCardProps {
   medicine: Medicine;
 }
@@ -58,8 +59,16 @@ export function MedicineCard({ medicine }: MedicineCardProps) {
 
         {/* Price & Action */}
         <div className="flex items-center justify-between mt-3">
-          <p className="text-gray-900 font-semibold">
-            BHD {medicine.price.toFixed(3)}
+          <p className="text-gray-900 font-semibold flex items-center gap-1">
+            <span>
+              <Image
+                src={bdtImage}
+                width={14}
+                height={14}
+                alt="Bangladeshi Taka Symbol"
+              />
+            </span>
+            {medicine.price.toFixed(3)}
           </p>
 
           <button
@@ -70,7 +79,7 @@ export function MedicineCard({ medicine }: MedicineCardProps) {
               // Future cart logic
             }}
           >
-            <ShoppingCart className="h-4 w-4" />
+            <ShoppingBag size={20} />
           </button>
         </div>
       </div>

@@ -15,7 +15,8 @@ import Link from "next/link";
 import { useState } from "react";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { getImageUrl } from "@/utils/image-url";
-
+import bdtImage from "@/public/BDT.png";
+import Image from "next/image";
 export default function MedicineDetailsPage() {
   const params = useParams();
   const id = params.id as string;
@@ -102,8 +103,16 @@ export default function MedicineDetailsPage() {
             </div>
 
             <div className="mb-8">
-              <p className="text-2xl font-semibold text-gray-900">
-                BHD {medicine.price.toFixed(3)}
+              <p className="text-2xl font-semibold text-gray-900 flex items-center gap-1">
+                <span>
+                  <Image
+                    src={bdtImage}
+                    width={18}
+                    height={18}
+                    alt="Bangladeshi Taka Symbol"
+                  />
+                </span>
+                {medicine.price.toFixed(3)}
               </p>
             </div>
 

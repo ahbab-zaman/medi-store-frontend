@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
 import { backendUrl } from "../_shared";
-import { getAccessTokenFromCookies } from "@/utils/auth/cookies";
+import { getValidAccessToken } from "@/utils/auth/tokenManager.server";
 
 export async function GET() {
-  const accessToken = await getAccessTokenFromCookies();
+  const accessToken = await getValidAccessToken();
+
   if (!accessToken) {
     return NextResponse.json({ message: "Not authenticated" }, { status: 401 });
   }
@@ -15,6 +16,7 @@ export async function GET() {
   });
 
   const data = await upstream.json().catch(() => null);
+
   return NextResponse.json(data ?? { message: "Failed to load profile" }, {
     status: upstream.status,
   });
