@@ -10,6 +10,7 @@ import {
   Truck,
   ShieldCheck,
   Clock,
+  Loader2,
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -28,6 +29,7 @@ export default function MedicineDetailsPage() {
   const medicine = medicineResponse?.data;
   const [quantity, setQuantity] = useState(1);
   const [showCartModal, setShowCartModal] = useState(false);
+  const [isAdding, setIsAdding] = useState(false);
   const { addToCart } = useCart();
 
   if (isLoading) {
@@ -171,10 +173,19 @@ export default function MedicineDetailsPage() {
                 <button
                   onClick={handleAddToCart}
                   className="flex-1 h-12 flex items-center justify-center gap-2 rounded-full bg-black px-8 text-sm font-semibold text-white transition-transform hover:scale-[1.02] active:scale-[0.98] disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed"
-                  disabled={medicine.stock <= 0}
+                  disabled={medicine.stock <= 0 || isAdding}
                 >
-                  <ShoppingBag className="h-4 w-4" />
-                  {medicine.stock > 0 ? "Add to Cart" : "Out of Stock"}
+                  {isAdding ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Adding...
+                    </>
+                  ) : (
+                    <>
+                      <ShoppingBag className="h-4 w-4" />
+                      {medicine.stock > 0 ? "Add to Cart" : "Out of Stock"}
+                    </>
+                  )}
                 </button>
               </div>
 
@@ -216,6 +227,11 @@ export default function MedicineDetailsPage() {
           </div>
         </div>
       </div>
+
+      <CartModal
+        isOpen={showCartModal}
+        onClose={() => setShowCartModal(false)}
+      />
     </div>
   );
 }

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { ChevronDown } from "lucide-react";
 
 interface QuantitySelectorProps {
   maxStock: number;
@@ -46,30 +45,21 @@ export function QuantitySelector({
   return (
     <div
       ref={dropdownRef}
-      className="absolute right-0 top-full mt-2 z-50 w-32 rounded-lg bg-white shadow-lg border border-gray-200 py-1 animate-in fade-in slide-in-from-top-2 duration-200"
+      className={`absolute right-0 bottom-0 left-0 z-50 overflow-hidden rounded-t-md bg-[#AA383A] transition-all duration-300 ease-in-out ${
+        isOpen ? "max-h-50" : "h-0"
+      }`}
     >
-      <div className="px-3 py-2 text-xs font-medium text-gray-500 border-b border-gray-100">
-        Select Quantity
-      </div>
-      <div className="max-h-48 overflow-y-auto">
+      <div className="flex flex-col">
         {quantities.map((qty) => (
           <button
             key={qty}
             onClick={() => handleSelect(qty)}
-            className="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 transition-colors flex items-center justify-between group"
+            className="w-full py-2 text-center text-[15px] font-semibold text-white transition hover:bg-[#C95467]"
           >
-            <span className="font-medium text-gray-900">{qty}</span>
-            <span className="text-xs text-gray-400 group-hover:text-gray-600">
-              {qty === 1 ? "item" : "items"}
-            </span>
+            {qty}
           </button>
         ))}
       </div>
-      {maxStock < 5 && (
-        <div className="px-3 py-2 text-xs text-amber-600 border-t border-gray-100">
-          Only {maxStock} available
-        </div>
-      )}
     </div>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { X, ShoppingBag } from "lucide-react";
+import { X, ShoppingBag, Loader2 } from "lucide-react";
 import Image from "next/image";
 import { useCart } from "@/hooks";
 import { getImageUrl } from "@/utils/image-url";
@@ -14,7 +14,7 @@ interface CartSidebarProps {
 }
 
 export function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
-  const { items, totalAmount, totalItems } = useCart();
+  const { items, totalAmount, totalItems, isRemoving, isUpdating } = useCart();
   const router = useRouter();
   const [countdown, setCountdown] = useState(3);
 
@@ -22,20 +22,19 @@ export function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
     if (isOpen && items.length > 0) {
       setCountdown(3);
       const timer = setInterval(() => {
-        setCountdown((prev) => {
-          if (prev <= 1) {
-            clearInterval(timer);
-            onClose();
-            router.push("/cart");
-            return 0;
-          }
-          return prev - 1;
-        });
+        setCountdown((prev) => prev - 1);
       }, 1000);
 
       return () => clearInterval(timer);
     }
-  }, [isOpen, items.length, onClose, router]);
+  }, [isOpen, items.length]);
+
+  useEffect(() => {
+    if (isOpen && countdown === 0 && items.length > 0) {
+      onClose();
+      router.push("/cart");
+    }
+  }, [countdown, isOpen, items.length, onClose, router]);
 
   if (!isOpen) return null;
 
@@ -43,12 +42,12 @@ export function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
     <>
       {/* Overlay */}
       <div
-        className="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm animate-in fade-in duration-200"
+        className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm animate-in fade-in duration-200"
         onClick={onClose}
       />
 
       {/* Sidebar */}
-      <div className="fixed right-0 top-0 z-50 h-full w-full max-w-md bg-white shadow-2xl animate-in slide-in-from-right duration-300">
+      <div className="fixed right-0 top-0 z-50 h-screen w-full max-w-md bg-white shadow-2xl animate-in slide-in-from-right duration-300">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-gray-200 p-6">
           <div className="flex items-center gap-3">
@@ -85,8 +84,13 @@ export function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
                 {items.map((item) => (
                   <div
                     key={item.medicineId}
-                    className="flex gap-4 rounded-lg border border-gray-100 p-4 hover:border-gray-200 transition-colors"
+                    data-loading={isUpdating || isRemoving}
+                    className="flex gap-4 rounded-lg border border-gray-100 p-4 hover:border-gray-200 transition-colors relative group"
                   >
+                    {/* Loading Overlay */}
+                    <div className="absolute inset-0 z-10 hidden items-center justify-center bg-white/60 rounded-lg group-data-[loading=true]:flex">
+                      <Loader2 className="h-6 w-6 animate-spin text-gray-600" />
+                    </div>
                     {/* Image */}
                     <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-lg bg-gray-50">
                       {item.medicine.imageUrl ? (

@@ -1,6 +1,13 @@
 "use client";
 
-import { X, Minus, Plus, ShoppingBag, CheckCircle } from "lucide-react";
+import {
+  X,
+  Minus,
+  Plus,
+  ShoppingBag,
+  CheckCircle,
+  Loader2,
+} from "lucide-react";
 import Image from "next/image";
 import { useCart } from "@/hooks";
 import { getImageUrl } from "@/utils/image-url";
@@ -13,7 +20,14 @@ interface CartModalProps {
 }
 
 export function CartModal({ isOpen, onClose }: CartModalProps) {
-  const { items, totalAmount, updateItemQuantity, totalItems } = useCart();
+  const {
+    items,
+    totalAmount,
+    updateItemQuantity,
+    totalItems,
+    isUpdating,
+    isRemoving,
+  } = useCart();
   const router = useRouter();
 
   if (!isOpen) return null;
@@ -111,7 +125,12 @@ export function CartModal({ isOpen, onClose }: CartModalProps) {
 
                 {/* Quantity Controls */}
                 <div className="flex flex-col items-end justify-between">
-                  <div className="flex items-center gap-2 rounded-full border border-gray-200 bg-gray-50 px-3 py-1">
+                  <div className="flex items-center gap-2 rounded-full border border-gray-200 bg-gray-50 px-3 py-1 relative">
+                    {(isUpdating || isRemoving) && (
+                      <div className="absolute inset-0 flex items-center justify-center bg-white/80 rounded-full">
+                        <Loader2 className="h-4 w-4 animate-spin text-gray-600" />
+                      </div>
+                    )}
                     <button
                       onClick={() =>
                         updateItemQuantity(
@@ -119,7 +138,7 @@ export function CartModal({ isOpen, onClose }: CartModalProps) {
                           Math.max(1, item.quantity - 1),
                         )
                       }
-                      disabled={item.quantity <= 1}
+                      disabled={item.quantity <= 1 || isUpdating || isRemoving}
                       className="text-gray-500 hover:text-black disabled:opacity-30 disabled:cursor-not-allowed"
                     >
                       <Minus className="h-3 w-3" />
@@ -134,7 +153,11 @@ export function CartModal({ isOpen, onClose }: CartModalProps) {
                           Math.min(item.medicine.stock, item.quantity + 1),
                         )
                       }
-                      disabled={item.quantity >= item.medicine.stock}
+                      disabled={
+                        item.quantity >= item.medicine.stock ||
+                        isUpdating ||
+                        isRemoving
+                      }
                       className="text-gray-500 hover:text-black disabled:opacity-30 disabled:cursor-not-allowed"
                     >
                       <Plus className="h-3 w-3" />

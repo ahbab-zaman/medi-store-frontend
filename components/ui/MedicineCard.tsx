@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ShoppingBag } from "lucide-react";
+import { ShoppingBag, Loader2 } from "lucide-react";
 import { Medicine } from "@/types/medicine.types";
 import { getImageUrl } from "@/utils/image-url";
 import bdtImage from "@/public/BDT.png";
@@ -19,10 +19,12 @@ interface MedicineCardProps {
 export function MedicineCard({ medicine }: MedicineCardProps) {
   const [showQuantitySelector, setShowQuantitySelector] = useState(false);
   const [showCartModal, setShowCartModal] = useState(false);
+  const [isAdding, setIsAdding] = useState(false);
   const { addToCart } = useCart();
 
   const handleAddToCart = async (quantity: number) => {
     try {
+      setIsAdding(true);
       await addToCart(medicine, quantity);
       setShowQuantitySelector(false);
       setShowCartModal(true);
@@ -31,6 +33,8 @@ export function MedicineCard({ medicine }: MedicineCardProps) {
       );
     } catch (error: any) {
       toast.error(error.message || "Failed to add to cart");
+    } finally {
+      setIsAdding(false);
     }
   };
 
@@ -100,16 +104,20 @@ export function MedicineCard({ medicine }: MedicineCardProps) {
             <div className="relative">
               <button
                 title="Add to Cart"
-                disabled={medicine.stock <= 0}
-                className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-gray-900 transition-colors hover:bg-black hover:text-white disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-gray-100 disabled:hover:text-gray-900"
+                disabled={medicine.stock <= 0 || isAdding}
+                className="flex h-9.5 w-9.5 items-center justify-center rounded-full bg-[#AA383A] text-white hover:bg-[#8a2c2e] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 onClick={(e) => {
                   e.preventDefault();
-                  if (medicine.stock > 0) {
+                  if (medicine.stock > 0 && !isAdding) {
                     setShowQuantitySelector(!showQuantitySelector);
                   }
                 }}
               >
-                <ShoppingBag size={20} />
+                {isAdding ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <ShoppingBag className="h-5 w-5" />
+                )}
               </button>
 
               {showQuantitySelector && (

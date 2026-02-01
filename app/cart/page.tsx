@@ -1,6 +1,6 @@
 "use client";
 
-import { Trash2, Minus, Plus, ShoppingBag } from "lucide-react";
+import { Trash2, Minus, Plus, ShoppingBag, Loader2 } from "lucide-react";
 import Image from "next/image";
 import { useCart } from "@/hooks";
 import { getImageUrl } from "@/utils/image-url";
@@ -17,6 +17,9 @@ export default function CartPage() {
     removeFromCart,
     clearCart,
     isEmpty,
+    isUpdating,
+    isRemoving,
+    isClearing,
   } = useCart();
   const router = useRouter();
 
@@ -50,10 +53,20 @@ export default function CartPage() {
         </div>
         <button
           onClick={clearCart}
-          className="flex items-center gap-2 rounded-full border-2 border-red-200 px-4 py-2 text-sm font-semibold text-red-600 transition-all hover:bg-red-50 active:scale-95"
+          disabled={isClearing}
+          className="flex items-center gap-2 rounded-full border-2 border-red-200 px-4 py-2 text-sm font-semibold text-red-600 transition-all hover:bg-red-50 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          <Trash2 className="h-4 w-4" />
-          Clear All
+          {isClearing ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Clearing...
+            </>
+          ) : (
+            <>
+              <Trash2 className="h-4 w-4" />
+              Clear All
+            </>
+          )}
         </button>
       </div>
 
@@ -124,7 +137,12 @@ export default function CartPage() {
                   {/* Quantity Controls */}
                   <div className="col-span-1 sm:col-span-3">
                     <div className="flex items-center justify-start gap-4 sm:justify-center">
-                      <div className="flex items-center gap-2 rounded-full border-2 border-gray-200 bg-gray-50 px-4 py-2">
+                      <div className="flex items-center gap-2 rounded-full border-2 border-gray-200 bg-gray-50 px-4 py-2 relative">
+                        {(isUpdating || isRemoving) && (
+                          <div className="absolute inset-0 flex items-center justify-center bg-white/80 rounded-full">
+                            <Loader2 className="h-4 w-4 animate-spin text-gray-600" />
+                          </div>
+                        )}
                         <button
                           onClick={() =>
                             updateItemQuantity(
@@ -132,7 +150,9 @@ export default function CartPage() {
                               Math.max(1, item.quantity - 1),
                             )
                           }
-                          disabled={item.quantity <= 1}
+                          disabled={
+                            item.quantity <= 1 || isUpdating || isRemoving
+                          }
                           className="text-gray-500 hover:text-black disabled:opacity-30 disabled:cursor-not-allowed"
                         >
                           <Minus className="h-4 w-4" />
@@ -147,7 +167,11 @@ export default function CartPage() {
                               Math.min(item.medicine.stock, item.quantity + 1),
                             )
                           }
-                          disabled={item.quantity >= item.medicine.stock}
+                          disabled={
+                            item.quantity >= item.medicine.stock ||
+                            isUpdating ||
+                            isRemoving
+                          }
                           className="text-gray-500 hover:text-black disabled:opacity-30 disabled:cursor-not-allowed"
                         >
                           <Plus className="h-4 w-4" />
@@ -155,9 +179,14 @@ export default function CartPage() {
                       </div>
                       <button
                         onClick={() => removeFromCart(item.medicineId)}
-                        className="hidden text-red-600 hover:text-red-700 sm:block"
+                        disabled={isRemoving}
+                        className="hidden text-red-600 hover:text-red-700 sm:block disabled:opacity-50 disabled:cursor-not-allowed"
                       >
-                        <Trash2 className="h-5 w-5" />
+                        {isRemoving ? (
+                          <Loader2 className="h-5 w-5 animate-spin" />
+                        ) : (
+                          <Trash2 className="h-5 w-5" />
+                        )}
                       </button>
                     </div>
                     {item.quantity >= item.medicine.stock && (
