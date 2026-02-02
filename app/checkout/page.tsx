@@ -127,8 +127,9 @@ function CheckoutContent() {
 
       if (result.success && result.data) {
         setCreatedOrderId(result.data.id);
-        await clearCartHook();
         setIsSuccessModalOpen(true);
+        // Clear cart in background
+        clearCartHook();
       } else {
         throw new Error(result.message || "Order failed");
       }

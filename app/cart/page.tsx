@@ -1,6 +1,7 @@
 "use client";
 
 import { Trash2, Minus, Plus, ShoppingBag, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 import Image from "next/image";
 import { useCart } from "@/hooks";
 import { getImageUrl } from "@/utils/image-url";
@@ -243,7 +244,13 @@ export default function CartPage() {
             </div>
 
             <button
-              onClick={() => router.push("/checkout")}
+              onClick={() => {
+                if (items.length === 0) {
+                  toast.error("Your cart is empty");
+                  return;
+                }
+                router.push("/checkout");
+              }}
               className="w-full rounded-full bg-black px-6 py-3 font-semibold text-white transition-all hover:bg-gray-800 active:scale-95 mb-3"
             >
               Proceed to Checkout
