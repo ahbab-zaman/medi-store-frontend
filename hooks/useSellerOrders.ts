@@ -5,7 +5,7 @@ import * as orderService from "@/services/order.service";
 export function useSellerOrders() {
   return useQuery({
     queryKey: ["orders", "seller"],
-    queryFn: () => orderService.getSellerOrders(),
+    queryFn: () => orderService.getOrders(),
   });
 }
 
@@ -15,7 +15,7 @@ export function useUpdateSellerOrderStatus() {
 
   return useMutation({
     mutationFn: ({ id, status }: { id: string; status: string }) =>
-      orderService.updateSellerOrderStatus(id, status),
+      orderService.updateOrderStatus(id, status),
     onSuccess: () => {
       // Invalidate both general and specific queries
       queryClient.invalidateQueries({ queryKey: ["orders"] });
@@ -28,6 +28,28 @@ export function useUpdateSellerOrderStatus() {
       addNotification({
         type: "error",
         message: error.message || "Failed to update order status",
+      });
+    },
+  });
+}
+
+export function useSellerDeleteOrder() {
+  const queryClient = useQueryClient();
+  const { addNotification } = useUIStore();
+
+  return useMutation({
+    mutationFn: (id: string) => orderService.deleteOrder(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["orders"] });
+      addNotification({
+        type: "success",
+        message: "Order deleted successfully!",
+      });
+    },
+    onError: (error: any) => {
+      addNotification({
+        type: "error",
+        message: error.message || "Failed to delete order",
       });
     },
   });

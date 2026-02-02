@@ -19,7 +19,9 @@ export interface Order {
   status: OrderStatus;
   shippingAddress: string;
   paymentStatus: string;
-  orderItems?: OrderItem[];
+  paymentMethod: string;
+  transactionId?: string;
+  orderItems: OrderItem[];
   createdAt: string;
   updatedAt: string;
 }
@@ -27,10 +29,11 @@ export interface Order {
 // API request/response types
 export interface CreateOrderPayload {
   shippingAddress: string;
+  paymentMethod: string;
+  transactionId?: string;
   items: {
     medicineId: string;
     quantity: number;
-    price: number;
   }[];
 }
 

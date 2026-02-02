@@ -3,36 +3,15 @@ import {
   Order,
   CreateOrderPayload,
   GetOrdersParams,
-  PaginatedResponse,
   ApiResponse,
 } from "@/types";
 
 export async function getOrders(
   params?: GetOrdersParams,
-): Promise<PaginatedResponse<Order>> {
-  const response = await apiClient.get<PaginatedResponse<Order>>(
-    "/api/orders",
-    {
-      params,
-    },
-  );
-  return response.data;
-}
-
-export async function getSellerOrders(): Promise<ApiResponse<Order[]>> {
-  const response =
-    await apiClient.get<ApiResponse<Order[]>>("/api/orders/seller");
-  return response.data;
-}
-
-export async function updateSellerOrderStatus(
-  id: string,
-  status: string,
-): Promise<ApiResponse<Order>> {
-  const response = await apiClient.patch<ApiResponse<Order>>(
-    `/api/orders/seller/${id}`,
-    { status },
-  );
+): Promise<ApiResponse<Order[]>> {
+  const response = await apiClient.get<ApiResponse<Order[]>>("/api/orders", {
+    params,
+  });
   return response.data;
 }
 
@@ -56,7 +35,7 @@ export async function updateOrderStatus(
   status: string,
 ): Promise<ApiResponse<Order>> {
   const response = await apiClient.patch<ApiResponse<Order>>(
-    `/api/orders/${id}/status`,
+    `/api/orders/${id}`,
     {
       status,
     },
@@ -64,9 +43,19 @@ export async function updateOrderStatus(
   return response.data;
 }
 
+export async function deleteOrder(id: string): Promise<ApiResponse<null>> {
+  const response = await apiClient.delete<ApiResponse<null>>(
+    `/api/orders/${id}`,
+  );
+  return response.data;
+}
+
 export async function cancelOrder(id: string): Promise<ApiResponse<Order>> {
+  // Utilizing the update endpoint with CANCELLED status
+  // Note: Backend might need permission adjustment for Customers if this is for them
   const response = await apiClient.patch<ApiResponse<Order>>(
-    `/api/orders/${id}/cancel`,
+    `/api/orders/${id}`,
+    { status: "CANCELLED" },
   );
   return response.data;
 }

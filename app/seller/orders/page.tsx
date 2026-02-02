@@ -3,19 +3,38 @@
 import {
   useSellerOrders,
   useUpdateSellerOrderStatus,
+  useSellerDeleteOrder,
 } from "@/hooks/useSellerOrders";
-import { CheckCircle, Clock, Truck } from "lucide-react";
+import { CheckCircle, Clock, Truck, Trash2 } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/utils/cn";
 import { Skeleton } from "@/components/ui/Skeleton";
+import { useState } from "react";
+import { ConfirmationDialog } from "@/components/ui/ConfirmationDialog";
 
 export default function SellerOrdersPage() {
   const { data: ordersRes, isLoading } = useSellerOrders();
   const orders = ordersRes?.data || [];
   const { mutate: updateOrderStatus } = useUpdateSellerOrderStatus();
+  const { mutate: deleteOrder } = useSellerDeleteOrder();
+
+  const [deleteConfirmation, setDeleteConfirmation] = useState<string | null>(
+    null,
+  );
 
   const handleStatusUpdate = (orderId: string, status: string) => {
     updateOrderStatus({ id: orderId, status });
+  };
+
+  const handleDelete = (orderId: string) => {
+    setDeleteConfirmation(orderId);
+  };
+
+  const confirmDelete = () => {
+    if (deleteConfirmation) {
+      deleteOrder(deleteConfirmation);
+      setDeleteConfirmation(null);
+    }
   };
 
   const getStatusIcon = (status: string) => {
@@ -26,6 +45,8 @@ export default function SellerOrdersPage() {
         return <Truck className="h-4 w-4" />;
       case "DELIVERED":
         return <CheckCircle className="h-4 w-4" />;
+      case "CANCELLED":
+        return <CheckCircle className="h-4 w-4 text-red-500" />; // Or specific icon
       default:
         return null;
     }
@@ -143,6 +164,13 @@ export default function SellerOrdersPage() {
                           <option value="DELIVERED">Delivered</option>
                           <option value="CANCELLED">Cancelled</option>
                         </select>
+                        <button
+                          onClick={() => handleDelete(order.id)}
+                          className="rounded-lg p-2 text-red-600 hover:bg-red-50 hover:text-red-700 dark:text-red-400 dark:hover:bg-red-900/20 dark:hover:text-red-300"
+                          title="Delete Order"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
                       </div>
                     </td>
                   </tr>
@@ -155,6 +183,13 @@ export default function SellerOrdersPage() {
           </div>
         )}
       </div>
+      <ConfirmationDialog
+        isOpen={!!deleteConfirmation}
+        onClose={() => setDeleteConfirmation(null)}
+        onConfirm={confirmDelete}
+        title="Delete Order"
+        description="Are you sure you want to delete this order? This action cannot be undone."
+      />
     </div>
   );
 }

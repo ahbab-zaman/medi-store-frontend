@@ -12,7 +12,8 @@ function isProtectedPath(pathname: string) {
   return (
     pathname.startsWith("/admin") ||
     pathname.startsWith("/seller") ||
-    pathname.startsWith("/customer")
+    pathname.startsWith("/customer") ||
+    pathname.startsWith("/account")
   );
 }
 
@@ -53,5 +54,10 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/seller/:path*", "/customer/:path*"],
+  matcher: [
+    "/admin/:path*",
+    "/seller/:path*",
+    "/customer/:path*",
+    "/account/:path*",
+  ],
 };

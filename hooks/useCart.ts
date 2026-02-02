@@ -23,7 +23,7 @@ export function useCart() {
   } = useCartStore();
 
   // Fetch cart from backend if user is logged in
-  const { data: backendCart } = useQuery({
+  const { data: backendCart, isLoading } = useQuery({
     queryKey: ["cart"],
     queryFn: cartService.getCart,
     enabled: !!user,
@@ -287,6 +287,7 @@ export function useCart() {
 
     // Loading states - mostly for specific feedback if needed,
     // but optimistic updates make UI feel instant.
+    isLoading,
     isAdding: addMutation.isPending,
     isUpdating: updateMutation.isPending,
     isRemoving: removeMutation.isPending,

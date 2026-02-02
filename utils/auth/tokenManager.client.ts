@@ -32,7 +32,7 @@ export function isTokenExpiringSoon(
  */
 export async function refreshAccessToken(): Promise<string | null> {
   try {
-    const response = await fetch("/api/auth/refresh-token", {
+    const response = await fetch("/api/auth/refresh", {
       method: "POST",
       credentials: "include", // Important: send cookies
     });
