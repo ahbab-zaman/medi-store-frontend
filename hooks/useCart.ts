@@ -89,16 +89,17 @@ export function useCart() {
       // Return a context object with the snapshotted value
       return { previousCart };
     },
+    onSuccess: () => {
+      // Always refetch after error or success
+      queryClient.invalidateQueries({ queryKey: ["cart"] });
+      toast.success("Added to cart");
+    },
     onError: (err, newTodo, context) => {
       // If the mutation fails, use the context returned from onMutate to roll back
       if (context?.previousCart) {
         queryClient.setQueryData(["cart"], context.previousCart);
       }
       toast.error("Failed to add to cart");
-    },
-    onSettled: () => {
-      // Always refetch after error or success
-      queryClient.invalidateQueries({ queryKey: ["cart"] });
     },
   });
 
@@ -139,14 +140,15 @@ export function useCart() {
 
       return { previousCart };
     },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["cart"] });
+      toast.success("Cart updated");
+    },
     onError: (err, variables, context) => {
       if (context?.previousCart) {
         queryClient.setQueryData(["cart"], context.previousCart);
       }
       toast.error("Failed to update cart");
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["cart"] });
     },
   });
 
@@ -181,14 +183,15 @@ export function useCart() {
 
       return { previousCart };
     },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["cart"] });
+      toast.success("Item removed from cart");
+    },
     onError: (err, variables, context) => {
       if (context?.previousCart) {
         queryClient.setQueryData(["cart"], context.previousCart);
       }
       toast.error("Failed to remove from cart");
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["cart"] });
     },
   });
 
@@ -211,14 +214,15 @@ export function useCart() {
 
       return { previousCart };
     },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["cart"] });
+      toast.success("Cart cleared");
+    },
     onError: (err, variables, context) => {
       if (context?.previousCart) {
         queryClient.setQueryData(["cart"], context.previousCart);
       }
       toast.error("Failed to clear cart");
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["cart"] });
     },
   });
 

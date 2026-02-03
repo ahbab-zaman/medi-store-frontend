@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useUIStore } from "@/store";
 import * as orderService from "@/services/order.service";
+import { toast } from "sonner";
 
 export function useSellerOrders() {
   return useQuery({
@@ -11,7 +11,6 @@ export function useSellerOrders() {
 
 export function useUpdateSellerOrderStatus() {
   const queryClient = useQueryClient();
-  const { addNotification } = useUIStore();
 
   return useMutation({
     mutationFn: ({ id, status }: { id: string; status: string }) =>
@@ -19,38 +18,25 @@ export function useUpdateSellerOrderStatus() {
     onSuccess: () => {
       // Invalidate both general and specific queries
       queryClient.invalidateQueries({ queryKey: ["orders"] });
-      addNotification({
-        type: "success",
-        message: "Order status updated successfully!",
-      });
+      toast.success("Order status updated successfully!");
     },
     onError: (error: any) => {
-      addNotification({
-        type: "error",
-        message: error.message || "Failed to update order status",
-      });
+      toast.error(error.message || "Failed to update order status");
     },
   });
 }
 
 export function useSellerDeleteOrder() {
   const queryClient = useQueryClient();
-  const { addNotification } = useUIStore();
 
   return useMutation({
     mutationFn: (id: string) => orderService.deleteOrder(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["orders"] });
-      addNotification({
-        type: "success",
-        message: "Order deleted successfully!",
-      });
+      toast.success("Order deleted successfully!");
     },
     onError: (error: any) => {
-      addNotification({
-        type: "error",
-        message: error.message || "Failed to delete order",
-      });
+      toast.error(error.message || "Failed to delete order");
     },
   });
 }

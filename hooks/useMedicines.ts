@@ -1,5 +1,4 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useUIStore } from "@/store";
 import * as medicineService from "@/services/medicine.service";
 import {
   GetMedicinesParams,
@@ -8,6 +7,7 @@ import {
   Medicine,
   ApiResponse,
 } from "@/types";
+import { toast } from "sonner";
 
 // Fetch all medicines with filters
 export function useMedicines(params?: GetMedicinesParams) {
@@ -40,7 +40,6 @@ export function useSearchMedicines(query: string) {
 // Create medicine mutation
 export function useCreateMedicine() {
   const queryClient = useQueryClient();
-  const { addNotification } = useUIStore();
 
   return useMutation<
     ApiResponse<Medicine>,
@@ -50,16 +49,10 @@ export function useCreateMedicine() {
     mutationFn: medicineService.createMedicine,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["medicines"] });
-      addNotification({
-        type: "success",
-        message: "Medicine created successfully!",
-      });
+      toast.success("Medicine created successfully!");
     },
     onError: (error: any) => {
-      addNotification({
-        type: "error",
-        message: error.message || "Failed to create medicine",
-      });
+      toast.error(error.message || "Failed to create medicine");
     },
   });
 }
@@ -67,7 +60,6 @@ export function useCreateMedicine() {
 // Update medicine mutation
 export function useUpdateMedicine() {
   const queryClient = useQueryClient();
-  const { addNotification } = useUIStore();
 
   return useMutation<
     ApiResponse<Medicine>,
@@ -109,10 +101,7 @@ export function useUpdateMedicine() {
       queryClient.invalidateQueries({ queryKey: ["medicines"] });
       queryClient.invalidateQueries({ queryKey: ["medicines", variables.id] });
 
-      addNotification({
-        type: "success",
-        message: "Medicine updated successfully!",
-      });
+      toast.success("Medicine updated successfully!");
     },
     onError: (error: any, variables, context) => {
       if (context?.previousMedicines) {
@@ -127,10 +116,7 @@ export function useUpdateMedicine() {
         );
       }
 
-      addNotification({
-        type: "error",
-        message: error.message || "Failed to update medicine",
-      });
+      toast.error(error.message || "Failed to update medicine");
     },
   });
 }
@@ -138,7 +124,6 @@ export function useUpdateMedicine() {
 // Delete medicine mutation
 export function useDeleteMedicine() {
   const queryClient = useQueryClient();
-  const { addNotification } = useUIStore();
 
   return useMutation<any, Error, string, { previousMedicines?: any }>({
     mutationFn: medicineService.deleteMedicine,
@@ -161,10 +146,7 @@ export function useDeleteMedicine() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["medicines"] });
-      addNotification({
-        type: "success",
-        message: "Medicine deleted successfully!",
-      });
+      toast.success("Medicine deleted successfully!");
     },
     onError: (error: any, variables, context) => {
       if (context?.previousMedicines) {
@@ -172,10 +154,7 @@ export function useDeleteMedicine() {
           queryClient.setQueryData(queryKey, data);
         });
       }
-      addNotification({
-        type: "error",
-        message: error.message || "Failed to delete medicine",
-      });
+      toast.error(error.message || "Failed to delete medicine");
     },
   });
 }

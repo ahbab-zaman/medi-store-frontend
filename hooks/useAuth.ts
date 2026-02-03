@@ -1,15 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuthStore } from "@/store";
-import { useUIStore } from "@/store";
 import * as authService from "@/services/auth.service";
-import { LoginPayload, RegisterPayload } from "@/types";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export function useAuth() {
   const router = useRouter();
   const queryClient = useQueryClient();
   const { user, accessToken, setUser, logout: logoutStore } = useAuthStore();
-  const { addNotification } = useUIStore();
 
   // Fetch current user
   const { data: meData, isLoading: isLoadingMe } = useQuery({
@@ -33,10 +31,7 @@ export function useAuth() {
       // instead of fetching 'me' separately.
       if (data.success && data.data?.user) {
         setUser(data.data.user, data.data.accessToken);
-        addNotification({
-          type: "success",
-          message: "Login successful!",
-        });
+        toast.success("Login successful!");
         // Immediate redirect
         router.push("/");
       } else {
@@ -51,27 +46,19 @@ export function useAuth() {
           .then((meData) => {
             if (meData?.data) {
               setUser(meData.data, data.data?.accessToken);
-              addNotification({
-                type: "success",
-                message: "Login successful!",
-              });
+              toast.success("Login successful!");
               router.push("/");
             }
           })
           .catch(() => {
-            addNotification({
-              type: "warning",
-              message:
-                "Login successful, but profile loading failed. Please refresh.",
-            });
+            toast.warning(
+              "Login successful, but profile loading failed. Please refresh.",
+            );
           });
       }
     },
     onError: (error: any) => {
-      addNotification({
-        type: "error",
-        message: error.message || "Login failed",
-      });
+      toast.error(error.message || "Login failed");
     },
   });
 
@@ -82,24 +69,15 @@ export function useAuth() {
       // Optimization: Auto-login if registration returns token/user
       if (data.success && data.data?.user && data.data?.accessToken) {
         setUser(data.data.user, data.data.accessToken);
-        addNotification({
-          type: "success",
-          message: "Registration successful! Welcome.",
-        });
+        toast.success("Registration successful! Welcome.");
         router.push("/");
       } else {
-        addNotification({
-          type: "success",
-          message: "Registration successful! Please login.",
-        });
+        toast.success("Registration successful! Please login.");
         router.push("/login");
       }
     },
     onError: (error: any) => {
-      addNotification({
-        type: "error",
-        message: error.message || "Registration failed",
-      });
+      toast.error(error.message || "Registration failed");
     },
   });
 
@@ -109,10 +87,7 @@ export function useAuth() {
     onSuccess: () => {
       logoutStore();
       queryClient.clear();
-      addNotification({
-        type: "success",
-        message: "Logged out successfully",
-      });
+      toast.success("Logged out successfully");
       router.push("/login");
     },
     onError: (error: any) => {
@@ -128,18 +103,12 @@ export function useAuth() {
     onSuccess: (data) => {
       if (data.success && data.data) {
         setUser(data.data, accessToken);
-        addNotification({
-          type: "success",
-          message: "Profile updated successfully!",
-        });
+        toast.success("Profile updated successfully!");
         queryClient.invalidateQueries({ queryKey: ["auth", "me"] });
       }
     },
     onError: (error: any) => {
-      addNotification({
-        type: "error",
-        message: error.message || "Failed to update profile",
-      });
+      toast.error(error.message || "Failed to update profile");
     },
   });
 

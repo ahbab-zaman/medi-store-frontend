@@ -5,7 +5,7 @@ import {
   useAdminUpdateOrderStatus,
   useAdminDeleteOrder,
 } from "@/hooks";
-import { Trash2, CheckCircle, Clock, Truck } from "lucide-react";
+import { Trash2, CheckCircle, Clock, Truck, Loader2 } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/utils/cn";
 import { Skeleton } from "@/components/ui/Skeleton";
@@ -14,11 +14,19 @@ import { ConfirmationDialog } from "@/components/ui/ConfirmationDialog";
 
 export default function AdminOrdersPage() {
   const { data: orders, isLoading } = useAdminOrders();
-  const { mutate: updateOrderStatus } = useAdminUpdateOrderStatus();
+  const { mutate: updateOrderStatus, isPending: isUpdatingStatus } =
+    useAdminUpdateOrderStatus();
   const { mutate: deleteOrder } = useAdminDeleteOrder();
+  const [updatingId, setUpdatingId] = useState<string | null>(null);
 
   const handleStatusUpdate = (orderId: string, status: string) => {
-    updateOrderStatus({ id: orderId, status });
+    setUpdatingId(orderId);
+    updateOrderStatus(
+      { id: orderId, status },
+      {
+        onSettled: () => setUpdatingId(null),
+      },
+    );
   };
 
   const [deleteConfirmation, setDeleteConfirmation] = useState<string | null>(
@@ -140,18 +148,26 @@ export default function AdminOrdersPage() {
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
-                        <select
-                          value={order.status}
-                          onChange={(e) =>
-                            handleStatusUpdate(order.id, e.target.value)
-                          }
-                          className="rounded-lg border border-black/10 bg-transparent px-2 py-1 text-xs outline-none focus:border-black/30 dark:border-white/10 dark:focus:border-white/30"
-                        >
-                          <option value="PENDING">Pending</option>
-                          <option value="SHIPPED">Shipped</option>
-                          <option value="DELIVERED">Delivered</option>
-                          <option value="CANCELLED">Cancelled</option>
-                        </select>
+                        <div className="relative flex items-center gap-2">
+                          <select
+                            value={order.status}
+                            onChange={(e) =>
+                              handleStatusUpdate(order.id, e.target.value)
+                            }
+                            disabled={
+                              isUpdatingStatus && updatingId === order.id
+                            }
+                            className="rounded-lg border border-black/10 bg-transparent px-2 py-1 text-xs outline-none focus:border-black/30 dark:border-white/10 dark:focus:border-white/30 disabled:opacity-50"
+                          >
+                            <option value="PENDING">Pending</option>
+                            <option value="SHIPPED">Shipped</option>
+                            <option value="DELIVERED">Delivered</option>
+                            <option value="CANCELLED">Cancelled</option>
+                          </select>
+                          {isUpdatingStatus && updatingId === order.id && (
+                            <Loader2 className="h-4 w-4 animate-spin text-black/40 dark:text-white/40" />
+                          )}
+                        </div>
                         <button
                           onClick={() => handleDelete(order.id)}
                           className="rounded-lg p-2 text-red-600 hover:bg-red-50 hover:text-red-700 dark:text-red-400 dark:hover:bg-red-900/20 dark:hover:text-red-300"

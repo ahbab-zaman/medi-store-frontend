@@ -1,7 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useUIStore } from "@/store";
 import * as reviewService from "@/services/review.service";
-import { CreateReviewPayload } from "@/types";
+import { toast } from "sonner";
 
 // Fetch reviews for a specific medicine
 export function useReviews(medicineId: string) {
@@ -16,7 +15,6 @@ export function useReviews(medicineId: string) {
 // Create review mutation
 export function useCreateReview() {
   const queryClient = useQueryClient();
-  const { addNotification } = useUIStore();
 
   return useMutation({
     mutationFn: reviewService.createReview,
@@ -27,16 +25,10 @@ export function useCreateReview() {
       queryClient.invalidateQueries({
         queryKey: ["medicines", variables.medicineId],
       });
-      addNotification({
-        type: "success",
-        message: "Review submitted successfully!",
-      });
+      toast.success("Review submitted successfully!");
     },
     onError: (error: any) => {
-      addNotification({
-        type: "error",
-        message: error.message || "Failed to submit review",
-      });
+      toast.error(error.message || "Failed to submit review");
     },
   });
 }
@@ -44,7 +36,6 @@ export function useCreateReview() {
 // Update review mutation
 export function useUpdateReview() {
   const queryClient = useQueryClient();
-  const { addNotification } = useUIStore();
 
   return useMutation({
     mutationFn: ({
@@ -57,16 +48,10 @@ export function useUpdateReview() {
     }) => reviewService.updateReview(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["reviews"] });
-      addNotification({
-        type: "success",
-        message: "Review updated successfully!",
-      });
+      toast.success("Review updated successfully!");
     },
     onError: (error: any) => {
-      addNotification({
-        type: "error",
-        message: error.message || "Failed to update review",
-      });
+      toast.error(error.message || "Failed to update review");
     },
   });
 }
@@ -74,22 +59,15 @@ export function useUpdateReview() {
 // Delete review mutation
 export function useDeleteReview() {
   const queryClient = useQueryClient();
-  const { addNotification } = useUIStore();
 
   return useMutation({
     mutationFn: reviewService.deleteReview,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["reviews"] });
-      addNotification({
-        type: "success",
-        message: "Review deleted successfully!",
-      });
+      toast.success("Review deleted successfully!");
     },
     onError: (error: any) => {
-      addNotification({
-        type: "error",
-        message: error.message || "Failed to delete review",
-      });
+      toast.error(error.message || "Failed to delete review");
     },
   });
 }

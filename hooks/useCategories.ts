@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useUIStore } from "@/store";
 import * as categoryService from "@/services/category.service";
 import { Category } from "@/types";
+import { toast } from "sonner";
 
 // Fetch all categories
 export function useCategories() {
@@ -24,22 +24,15 @@ export function useCategory(id: string) {
 // Create category mutation
 export function useCreateCategory() {
   const queryClient = useQueryClient();
-  const { addNotification } = useUIStore();
 
   return useMutation({
     mutationFn: categoryService.createCategory,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["categories"] });
-      addNotification({
-        type: "success",
-        message: "Category created successfully!",
-      });
+      toast.success("Category created successfully!");
     },
     onError: (error: any) => {
-      addNotification({
-        type: "error",
-        message: error.message || "Failed to create category",
-      });
+      toast.error(error.message || "Failed to create category");
     },
   });
 }
@@ -47,7 +40,6 @@ export function useCreateCategory() {
 // Update category mutation
 export function useUpdateCategory() {
   const queryClient = useQueryClient();
-  const { addNotification } = useUIStore();
 
   return useMutation({
     mutationFn: ({
@@ -92,10 +84,7 @@ export function useUpdateCategory() {
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ["categories"] });
       queryClient.invalidateQueries({ queryKey: ["categories", variables.id] });
-      addNotification({
-        type: "success",
-        message: "Category updated successfully!",
-      });
+      toast.success("Category updated successfully!");
     },
     onError: (error: any, variables, context) => {
       if (context?.previousCategories) {
@@ -107,10 +96,7 @@ export function useUpdateCategory() {
           context.previousCategory,
         );
       }
-      addNotification({
-        type: "error",
-        message: error.message || "Failed to update category",
-      });
+      toast.error(error.message || "Failed to update category");
     },
   });
 }
@@ -118,7 +104,6 @@ export function useUpdateCategory() {
 // Delete category mutation
 export function useDeleteCategory() {
   const queryClient = useQueryClient();
-  const { addNotification } = useUIStore();
 
   return useMutation({
     mutationFn: categoryService.deleteCategory,
@@ -139,19 +124,13 @@ export function useDeleteCategory() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["categories"] });
-      addNotification({
-        type: "success",
-        message: "Category deleted successfully!",
-      });
+      toast.success("Category deleted successfully!");
     },
     onError: (error: any, variables, context) => {
       if (context?.previousCategories) {
         queryClient.setQueryData(["categories"], context.previousCategories);
       }
-      addNotification({
-        type: "error",
-        message: error.message || "Failed to delete category",
-      });
+      toast.error(error.message || "Failed to delete category");
     },
   });
 }
