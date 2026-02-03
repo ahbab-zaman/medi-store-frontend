@@ -1,6 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { AdminAppService } from "@/services/admin.service";
-import { useAuthStore } from "@/store";
 import { toast } from "sonner";
 
 export function useAdminCategories() {
@@ -13,11 +12,10 @@ export function useAdminCategories() {
 
 export function useCreateCategory() {
   const queryClient = useQueryClient();
-  const { accessToken } = useAuthStore();
 
   return useMutation({
     mutationFn: (payload: { name: string; description?: string }) =>
-      AdminAppService.createCategory(accessToken!, payload),
+      AdminAppService.createCategory(payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "categories"] });
       queryClient.invalidateQueries({ queryKey: ["categories"] });
@@ -27,7 +25,8 @@ export function useCreateCategory() {
     },
     onError: (error: any) => {
       toast.error("Failed to create category", {
-        description: error.message || "Please try again later",
+        description:
+          error.data?.message || error.message || "Please try again later",
       });
     },
   });
@@ -35,7 +34,6 @@ export function useCreateCategory() {
 
 export function useUpdateCategory() {
   const queryClient = useQueryClient();
-  const { accessToken } = useAuthStore();
 
   return useMutation({
     mutationFn: ({
@@ -44,7 +42,7 @@ export function useUpdateCategory() {
     }: {
       id: string;
       payload: { name?: string; description?: string };
-    }) => AdminAppService.updateCategory(accessToken!, id, payload),
+    }) => AdminAppService.updateCategory(id, payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "categories"] });
       queryClient.invalidateQueries({ queryKey: ["categories"] });
@@ -54,7 +52,8 @@ export function useUpdateCategory() {
     },
     onError: (error: any) => {
       toast.error("Failed to update category", {
-        description: error.message || "Please try again later",
+        description:
+          error.data?.message || error.message || "Please try again later",
       });
     },
   });
@@ -62,11 +61,9 @@ export function useUpdateCategory() {
 
 export function useDeleteCategory() {
   const queryClient = useQueryClient();
-  const { accessToken } = useAuthStore();
 
   return useMutation({
-    mutationFn: (id: string) =>
-      AdminAppService.deleteCategory(accessToken!, id),
+    mutationFn: (id: string) => AdminAppService.deleteCategory(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "categories"] });
       queryClient.invalidateQueries({ queryKey: ["categories"] });
@@ -76,7 +73,8 @@ export function useDeleteCategory() {
     },
     onError: (error: any) => {
       toast.error("Failed to delete category", {
-        description: error.message || "Please try again later",
+        description:
+          error.data?.message || error.message || "Please try again later",
       });
     },
   });

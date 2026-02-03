@@ -32,7 +32,7 @@ export function useCart() {
 
   // Use backend cart if available, otherwise use local cart
   const items = backendCart?.items || localItems;
-  const totalItems = backendCart?.totalItems || localTotalItems;
+  const totalItems = backendCart?.totalItems || 0;
   const totalAmount = backendCart?.totalAmount || localTotalAmount;
 
   // Add to cart mutation with Optimistic Update

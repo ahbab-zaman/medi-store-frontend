@@ -13,7 +13,12 @@ function isProtectedPath(pathname: string) {
     pathname.startsWith("/admin") ||
     pathname.startsWith("/seller") ||
     pathname.startsWith("/customer") ||
-    pathname.startsWith("/account")
+    pathname.startsWith("/account") ||
+    pathname.startsWith("/cart") ||
+    pathname.startsWith("/checkout") ||
+    pathname.startsWith("/my-account") ||
+    pathname.startsWith("/my-orders") ||
+    pathname.startsWith("/profile") // Adding profile just in case, though it likely maps to my-account
   );
 }
 
@@ -59,5 +64,10 @@ export const config = {
     "/seller/:path*",
     "/customer/:path*",
     "/account/:path*",
+    "/cart/:path*",
+    "/checkout/:path*",
+    "/my-account/:path*",
+    "/my-orders/:path*",
+    "/profile/:path*",
   ],
 };

@@ -1,6 +1,5 @@
-import { env } from "@/utils/env";
-
-const ADMIN_API_URL = `${env.backendApiBaseUrl}/admin`;
+import apiClient from "@/lib/axios";
+import { ApiResponse } from "@/types";
 
 export type User = {
   id: string;
@@ -12,171 +11,88 @@ export type User = {
 };
 
 export const AdminAppService = {
-  async getAllUsers(token: string) {
-    const res = await fetch(`${ADMIN_API_URL}/users`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    if (!res.ok) throw new Error("Failed to fetch users");
-    const data = await res.json();
-    return data.data as User[];
+  async getAllUsers() {
+    const res = await apiClient.get<ApiResponse<User[]>>("/api/admin/users");
+    return res.data.data;
   },
 
-  async updateUserBanStatus(token: string, userId: string, isBanned: boolean) {
-    const res = await fetch(`${ADMIN_API_URL}/users/${userId}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ isBanned }),
-    });
-    if (!res.ok) throw new Error("Failed to update user status");
-    const data = await res.json();
-    return data.data;
+  async updateUserBanStatus(userId: string, isBanned: boolean) {
+    const res = await apiClient.patch<ApiResponse<any>>(
+      `/api/admin/users/${userId}/ban`,
+      { isBanned },
+    );
+    return res.data.data;
   },
 
-  async updateUserRole(
-    token: string,
-    userId: string,
-    role: "ADMIN" | "SELLER" | "CUSTOMER",
-  ) {
-    const res = await fetch(`${ADMIN_API_URL}/users/${userId}/role`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ role }),
-    });
-    if (!res.ok) throw new Error("Failed to update user role");
-    const data = await res.json();
-    return data.data;
+  async updateUserRole(userId: string, role: "ADMIN" | "SELLER" | "CUSTOMER") {
+    const res = await apiClient.patch<ApiResponse<any>>(
+      `/api/admin/users/${userId}/role`,
+      { role },
+    );
+    return res.data.data;
   },
 
-  async deleteUser(token: string, userId: string) {
-    const res = await fetch(`${ADMIN_API_URL}/users/${userId}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    if (!res.ok) throw new Error("Failed to delete user");
+  async deleteUser(userId: string) {
+    await apiClient.delete(`/api/admin/users/${userId}`);
     return true;
   },
 
   async getAllCategories() {
-    const res = await fetch(`${env.backendApiBaseUrl}/categories`);
-    if (!res.ok) throw new Error("Failed to fetch categories");
-    const data = await res.json();
-    return data.data;
+    const res = await apiClient.get<ApiResponse<any[]>>("/api/categories");
+    return res.data.data;
   },
 
-  async createCategory(
-    token: string,
-    payload: { name: string; description?: string },
-  ) {
-    const res = await fetch(`${env.backendApiBaseUrl}/categories`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(payload),
-    });
-    if (!res.ok) throw new Error("Failed to create category");
-    const data = await res.json();
-    return data.data;
+  async createCategory(payload: { name: string; description?: string }) {
+    const res = await apiClient.post<ApiResponse<any>>(
+      "/api/categories",
+      payload,
+    );
+    return res.data.data;
   },
 
   async updateCategory(
-    token: string,
     id: string,
     payload: { name?: string; description?: string },
   ) {
-    const res = await fetch(`${env.backendApiBaseUrl}/categories/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(payload),
-    });
-    if (!res.ok) throw new Error("Failed to update category");
-    const data = await res.json();
-    return data.data;
-  },
-
-  async deleteCategory(token: string, id: string) {
-    const res = await fetch(`${env.backendApiBaseUrl}/categories/${id}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    if (!res.ok) throw new Error("Failed to delete category");
-    return true;
-  },
-
-  async getAllOrders(token: string) {
-    const res = await fetch(`${ADMIN_API_URL}/orders`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    if (!res.ok) throw new Error("Failed to fetch orders");
-    const data = await res.json();
-    return data.data;
-  },
-
-  async updateOrderStatus(token: string, orderId: string, status: string) {
-    const res = await fetch(`${ADMIN_API_URL}/orders/${orderId}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ status }),
-    });
-    if (!res.ok) throw new Error("Failed to update order status");
-    const data = await res.json();
-    return data.data;
-  },
-
-  async deleteOrder(token: string, orderId: string) {
-    const res = await fetch(`${ADMIN_API_URL}/orders/${orderId}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    if (!res.ok) throw new Error("Failed to delete order");
-    return true;
-  },
-
-  async getAllMedicines(token: string) {
-    const res = await fetch(`${env.backendApiBaseUrl}/medicines/admin/all`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    if (!res.ok) throw new Error("Failed to fetch medicines");
-    const data = await res.json();
-    return data;
-  },
-
-  async deleteMedicine(token: string, medicineId: string) {
-    const res = await fetch(
-      `${env.backendApiBaseUrl}/medicines/seller/${medicineId}`,
-      {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
+    const res = await apiClient.put<ApiResponse<any>>(
+      `/api/categories/${id}`,
+      payload,
     );
-    if (!res.ok) throw new Error("Failed to delete medicine");
+    return res.data.data;
+  },
+
+  async deleteCategory(id: string) {
+    await apiClient.delete(`/api/categories/${id}`);
+    return true;
+  },
+
+  async getAllOrders() {
+    const res = await apiClient.get<ApiResponse<any[]>>("/api/admin/orders");
+    return res.data.data;
+  },
+
+  async updateOrderStatus(orderId: string, status: string) {
+    const res = await apiClient.patch<ApiResponse<any>>(
+      `/api/admin/orders/${orderId}`,
+      { status },
+    );
+    return res.data.data;
+  },
+
+  async deleteOrder(orderId: string) {
+    await apiClient.delete(`/api/admin/orders/${orderId}`);
+    return true;
+  },
+
+  async getAllMedicines() {
+    const res = await apiClient.get<ApiResponse<any>>(
+      "/api/medicines/admin/all",
+    );
+    return res.data.data;
+  },
+
+  async deleteMedicine(medicineId: string) {
+    await apiClient.delete(`/api/medicines/seller/${medicineId}`);
     return true;
   },
 };
