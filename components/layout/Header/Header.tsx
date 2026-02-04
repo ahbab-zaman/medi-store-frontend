@@ -1,17 +1,19 @@
 "use client";
 
 import Link from "next/link";
-import { Search, ShoppingBag, Menu, X } from "lucide-react";
+import { ShoppingBag, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import UserDropdown from "./UserDropdown";
 import { useCart } from "@/hooks";
 import { CartSidebar } from "@/components/ui/CartSidebar";
+import { CategoryDropdown } from "@/app/Components/Dropdown/CategoryDropdown";
+import { SearchDropdown } from "@/app/Components/Dropdown/SearchDropdown";
 import logo from "@/app/favicon.ico";
 import Image from "next/image";
+
 const NAV_LINKS = [
   { name: "All Products", href: "/medicine" },
-  { name: "Categories", href: "/categories" },
   { name: "About", href: "/about" },
   { name: "Contact", href: "/contact" },
 ];
@@ -45,7 +47,7 @@ export default function Header() {
             href="/"
             className="text-xl font-bold tracking-tight text-black dark:text-white"
           >
-            <Image src={logo} alt="Logo" width={50} height={50} />
+            <Image src={logo} alt="Logo" width={50} height={50} priority />
           </Link>
         </div>
 
@@ -58,18 +60,21 @@ export default function Header() {
               className="group relative text-sm font-medium text-black/70 transition-colors hover:text-black dark:text-white/70 dark:hover:text-white"
             >
               {link.name}
-              <span className="absolute -bottom-1 left-0 h-0.5 w-full origin-left scale-x-0 bg-blue-600 transition-transform duration-300 group-hover:scale-x-100" />
+              <span className="absolute -bottom-1 left-0 h-0.5 w-full origin-left scale-x-0 bg-[#C48C64] transition-transform duration-300 group-hover:scale-x-100" />
             </Link>
           ))}
+
+          {/* Category Dropdown */}
+          <CategoryDropdown />
         </nav>
 
         {/* Actions */}
         <div className="flex flex-1 items-center justify-end gap-x-4">
-          <button className="hidden sm:block text-black/70 hover:text-black dark:text-white/70 dark:hover:text-white">
-            <Search size={20} />
-          </button>
+          {/* Search Dropdown - Hidden on small screens, visible on sm and up */}
+          <div className="hidden sm:block">
+            <SearchDropdown />
+          </div>
 
-          {/* DO NOT TOUCH AUTH LOGIC */}
           <UserDropdown />
 
           <button
@@ -78,7 +83,7 @@ export default function Header() {
           >
             <ShoppingBag size={20} />
             {totalItems > 0 && (
-              <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-blue-600 text-[10px] font-bold text-white">
+              <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#C48C64] text-[10px] font-bold text-white">
                 {totalItems}
               </span>
             )}
@@ -97,6 +102,11 @@ export default function Header() {
             className="lg:hidden overflow-hidden border-t border-black/5 bg-white dark:border-white/5 dark:bg-black"
           >
             <div className="space-y-1 px-4 py-4">
+              {/* Mobile Search - Show on mobile only */}
+              <div className="mb-4 sm:hidden">
+                <SearchDropdown />
+              </div>
+
               {NAV_LINKS.map((link, i) => (
                 <motion.div
                   key={link.name}

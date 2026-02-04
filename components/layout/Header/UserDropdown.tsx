@@ -64,9 +64,6 @@ export default function UserDropdown() {
         <div className="flex h-6 w-6 items-center justify-center rounded-full bg-black/10 dark:bg-white/10">
           <UserIcon size={14} className="text-black dark:text-white" />
         </div>
-        <span className="text-sm font-medium text-black dark:text-white hidden sm:block">
-          {user.name}
-        </span>
         <ChevronDown
           size={14}
           className={`text-black/50 dark:text-white/50 transition-transform ${isOpen ? "rotate-180" : ""}`}

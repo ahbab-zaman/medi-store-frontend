@@ -105,7 +105,7 @@ export function MedicineCard({ medicine }: MedicineCardProps) {
               <button
                 title="Add to Cart"
                 disabled={medicine.stock <= 0 || isAdding}
-                className="flex h-9.5 w-9.5 items-center justify-center rounded-full bg-[#AA383A] text-white hover:bg-[#8a2c2e] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="flex h-9.5 w-9.5 shadow-xl items-center justify-center rounded-full bg-gray-100 text-black hover:bg-[#C48C64] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 onClick={(e) => {
                   e.preventDefault();
                   if (medicine.stock > 0 && !isAdding) {

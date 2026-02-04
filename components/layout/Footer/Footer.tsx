@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Facebook, Twitter, Instagram, Mail } from "lucide-react";
-
+import logo from "@/public/medicine-symbol (1).png";
+import Image from "next/image";
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
@@ -13,7 +14,7 @@ export default function Footer() {
               href="/"
               className="text-xl font-bold tracking-tight dark:text-white"
             >
-              MEDI-STORE<span className="text-blue-600">.</span>
+              <Image src={logo} alt="Logo" width={50} height={50} />
             </Link>
             <p className="mt-4 max-w-xs text-sm dark:text-white/60">
               Your trusted partner for health and wellness. High-quality
