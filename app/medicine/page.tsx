@@ -46,7 +46,7 @@ export default function MedicinePage() {
   };
 
   return (
-    <div className="min-h-screen bg-white pb-20 pt-8">
+    <div className="min-h-screen bg-[#FAF8F5] pb-20 pt-8">
       <div className="container mx-auto px-4 lg:px-8">
         {/* Page Header */}
         <div className="mb-10 text-center">

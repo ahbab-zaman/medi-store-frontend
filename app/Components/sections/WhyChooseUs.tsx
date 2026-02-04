@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import {
   Shield,
   UserCheck,
@@ -50,7 +50,7 @@ const trustFeatures = [
 
 export default function WhyChooseUs() {
   return (
-    <section className="py-20 lg:py-28">
+    <section className="py-20 lg:py-28 bg-[#FAF8F5]">
       <div className="container mx-auto px-4">
         {/* Header */}
         <motion.div
@@ -58,7 +58,7 @@ export default function WhyChooseUs() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.5 }}
-          className="text-center max-w-2xl mx-auto mb-14"
+          className="text-start mb-14"
         >
           <p className="text-sm text-accent font-medium uppercase tracking-wider mb-2">
             Why MediCare
@@ -82,13 +82,13 @@ export default function WhyChooseUs() {
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
               whileHover={{ y: -4 }}
-              className="group p-6 lg:p-8 rounded-2xl border border-border hover:border-secondary hover:bg-card hover:shadow-elegant transition-all duration-300"
+              className="group p-6 lg:p-8 rounded-2xl border border-gray-200 bg-accent/5 shadow-sm hover:shadow-lg hover:border-gray-100 hover:bg-white transition-all duration-300 cursor-pointer"
             >
-              <div className="w-12 h-12 rounded-xl bg-muted group-hover:bg-accent/10 flex items-center justify-center mb-5 transition-colors duration-300">
-                <feature.icon className="w-6 h-6 text-muted-foreground group-hover:text-accent transition-colors duration-300" />
+              <div className="w-12 h-12 rounded-xl bg-gray-100 group-hover:bg-accent/10 flex items-center justify-center mb-5 transition-colors duration-300">
+                <feature.icon className="w-6 h-6 text-gray-500 group-hover:text-accent transition-colors duration-300" />
               </div>
               <h3 className="text-lg font-medium mb-2">{feature.title}</h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">
+              <p className="text-gray-600 text-sm leading-relaxed">
                 {feature.description}
               </p>
             </motion.div>

@@ -7,7 +7,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import UserDropdown from "./UserDropdown";
 import { useCart } from "@/hooks";
 import { CartSidebar } from "@/components/ui/CartSidebar";
-
+import logo from "@/app/favicon.ico";
+import Image from "next/image";
 const NAV_LINKS = [
   { name: "All Products", href: "/medicine" },
   { name: "Categories", href: "/categories" },
@@ -44,7 +45,7 @@ export default function Header() {
             href="/"
             className="text-xl font-bold tracking-tight text-black dark:text-white"
           >
-            MEDI-STORE<span className="text-blue-600">.</span>
+            <Image src={logo} alt="Logo" width={50} height={50} />
           </Link>
         </div>
 

@@ -47,7 +47,7 @@ export default function SellerMedicinesPage() {
   console.log("All my medicines ", myMedicines);
 
   return (
-    <div className="p-6">
+    <div className="p-6 bg-[#FAF8F5]">
       <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">My Medicines</h1>
