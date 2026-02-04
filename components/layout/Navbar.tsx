@@ -3,7 +3,7 @@ import Link from "next/link";
 export default function Navbar() {
   return (
     <header className="border-b border-black/10 bg-white/80 backdrop-blur dark:border-white/10 dark:bg-black/40">
-      <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-4">
+      <div className="mx-auto flex w-full items-center justify-between px-4 py-4">
         <Link href="/" className="text-lg font-semibold tracking-tight">
           Medi-Store
         </Link>

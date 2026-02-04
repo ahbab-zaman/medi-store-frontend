@@ -15,7 +15,7 @@ export default function AdminMedicinesPage() {
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
   const filteredMedicines =
-    medicines?.data?.filter(
+    medicines?.filter(
       (m: any) =>
         m.name.toLowerCase().includes(search.toLowerCase()) ||
         m.seller?.name?.toLowerCase().includes(search.toLowerCase()),
