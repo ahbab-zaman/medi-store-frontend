@@ -13,7 +13,8 @@ import { useState } from "react";
 import { ConfirmationDialog } from "@/components/ui/ConfirmationDialog";
 
 export default function AdminUsersPage() {
-  const { data: users, isLoading } = useAdminUsers();
+  const { data: usersRes, isLoading } = useAdminUsers();
+  const users = (usersRes as any)?.data || [];
   const { mutate: updateBanStatus } = useAdminUpdateUserBanStatus();
   const { mutate: updateRole } = useAdminUpdateUserRole();
   const { mutate: deleteUser } = useAdminDeleteUser();
@@ -47,7 +48,7 @@ export default function AdminUsersPage() {
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">Manage Users</h1>
-      <div className="overflow-hidden rounded-xl border border-black/10 bg-white dark:border-white/10 dark:bg-white/[.04]">
+      <div className="overflow-hidden rounded-xl border border-black/10 bg-white dark:border-white/10 dark:bg-white/[.04] w-full">
         <table className="w-full text-left text-sm">
           <thead className="border-b border-black/10 bg-black/5 dark:border-white/10 dark:bg-white/5">
             <tr>
@@ -79,7 +80,7 @@ export default function AdminUsersPage() {
                     </td>
                   </tr>
                 ))
-              : users?.map((user) => (
+              : users?.map((user: any) => (
                   <tr
                     key={user.id}
                     className="hover:bg-black/5 dark:hover:bg-white/5"

@@ -24,8 +24,7 @@ async function getMedicine(id: string): Promise<Medicine | null> {
 // Generate static params for all existing medicines
 export async function generateStaticParams() {
   try {
-    // Fetch first page of medicines to generate some static paths
-    // Ideally we'd fetch all IDs, but let's start with default pagination
+
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_API_BASE_URL}/medicines?limit=100`,
       { next: { revalidate: 3600 } },

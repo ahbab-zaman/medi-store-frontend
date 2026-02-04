@@ -4,8 +4,10 @@ import { Shield, Truck, Clock } from "lucide-react";
 import { motion } from "framer-motion";
 import heroImage from "@/public/hero-healthcare.jpg";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function HeroSection() {
+  const router = useRouter();
   return (
     <section className="relative overflow-hidden bg-[#F6F4F0]">
       <div className="container mx-auto px-4 py-20 lg:py-32">
@@ -49,7 +51,11 @@ export default function HeroSection() {
               transition={{ duration: 0.5, delay: 0.3 }}
               className="flex flex-col sm:flex-row gap-4 mb-12"
             >
-              <Button variant="hero" size="xl">
+              <Button
+                variant="hero"
+                size="xl"
+                onClick={() => router.push("/medicine")}
+              >
                 Browse Medicines
               </Button>
               <Button variant="hero-outline" size="xl">

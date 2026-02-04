@@ -106,7 +106,7 @@ export default function DoctorsPick() {
         </motion.div>
 
         {/* Medicine Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-6">
+        <div className="grid grid-cols-1 grid-cols-2 lg:grid-cols-6 gap-6">
           {randomMedicines.map((medicine: any) => (
             <MedicineCard key={medicine.id} medicine={medicine} />
           ))}

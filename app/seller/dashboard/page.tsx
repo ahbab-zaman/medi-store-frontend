@@ -6,6 +6,8 @@ import { useAuth } from "@/hooks/useAuth";
 import { ShoppingBag, Pill, DollarSign } from "lucide-react";
 import { Skeleton } from "@/components/ui/Skeleton";
 import Link from "next/link";
+import { SalesChart } from "@/components/dashboard/SalesChart";
+import { format, subDays } from "date-fns";
 
 export default function SellerDashboardPage() {
   const { user } = useAuth();
@@ -28,6 +30,28 @@ export default function SellerDashboardPage() {
         0,
       ) || 0,
   };
+
+  // Process data for the last 7 days chart
+  const last7Days = Array.from({ length: 7 }, (_, i) => {
+    const d = subDays(new Date(), i);
+    return format(d, "MMM dd");
+  }).reverse();
+
+  const chartData = last7Days.map((day) => {
+    const dayOrders = orders.filter(
+      (order: any) =>
+        format(new Date(order.createdAt), "MMM dd") === day &&
+        order.status === "DELIVERED",
+    );
+    const dailyRevenue = dayOrders.reduce(
+      (acc: number, order: any) => acc + order.totalAmount,
+      0,
+    );
+    return {
+      name: day,
+      daily: dailyRevenue,
+    };
+  });
 
   const statCards = [
     {
@@ -90,22 +114,39 @@ export default function SellerDashboardPage() {
         ))}
       </div>
 
-      <div className="grid gap-8 lg:grid-cols-2">
+      <div className="grid gap-8 lg:grid-cols-3">
+        {/* Chart Section - Takes up 2 columns */}
+        <div className="lg:col-span-2 rounded-3xl border border-black/10 bg-white p-8 dark:border-white/10 dark:bg-white/[.04]">
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-xl font-bold">Revenue Overview</h2>
+            <div className="flex items-center gap-2">
+              <div className="h-3 w-3 rounded-full bg-blue-600"></div>
+              <span className="text-sm text-gray-500">Last 7 Days</span>
+            </div>
+          </div>
+          <SalesChart data={chartData} />
+        </div>
+
+        {/* Quick Actions - Takes up 1 column */}
         <div className="rounded-3xl border border-black/10 bg-white p-8 dark:border-white/10 dark:bg-white/[.04]">
           <h2 className="mb-6 text-xl font-bold">Quick Actions</h2>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4">
             <Link
               href="/seller/medicines/add"
-              className="flex flex-col items-center gap-2 rounded-2xl border border-black/10 p-6 hover:bg-black/5 dark:border-white/10 dark:hover:bg-white/5"
+              className="flex items-center gap-3 rounded-2xl border border-black/10 p-4 transition-colors hover:bg-black/5 dark:border-white/10 dark:hover:bg-white/5"
             >
-              <Pill className="h-6 w-6" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-300">
+                <Pill className="h-5 w-5" />
+              </div>
               <span className="text-sm font-medium">Add Medicine</span>
             </Link>
             <Link
               href="/seller/orders"
-              className="flex flex-col items-center gap-2 rounded-2xl border border-black/10 p-6 hover:bg-black/5 dark:border-white/10 dark:hover:bg-white/5"
+              className="flex items-center gap-3 rounded-2xl border border-black/10 p-4 transition-colors hover:bg-black/5 dark:border-white/10 dark:hover:bg-white/5"
             >
-              <ShoppingBag className="h-6 w-6" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-300">
+                <ShoppingBag className="h-5 w-5" />
+              </div>
               <span className="text-sm font-medium">View Orders</span>
             </Link>
           </div>

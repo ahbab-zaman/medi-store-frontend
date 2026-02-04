@@ -13,7 +13,8 @@ import { useState } from "react";
 import { ConfirmationDialog } from "@/components/ui/ConfirmationDialog";
 
 export default function AdminOrdersPage() {
-  const { data: orders, isLoading } = useAdminOrders();
+  const { data: ordersRes, isLoading } = useAdminOrders();
+  const orders = (ordersRes as any)?.data || [];
   const { mutate: updateOrderStatus, isPending: isUpdatingStatus } =
     useAdminUpdateOrderStatus();
   const { mutate: deleteOrder } = useAdminDeleteOrder();

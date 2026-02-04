@@ -14,7 +14,8 @@ import { toast } from "sonner";
 import { getImageUrl } from "@/utils/image-url";
 
 export default function AdminCategoriesPage() {
-  const { data: categories, isLoading } = useAdminCategories();
+  const { data: categoriesRes, isLoading } = useAdminCategories();
+  const categories = (categoriesRes as any)?.data || [];
   const { mutate: createCategory, isPending: isCreating } =
     useAdminCreateCategory();
   const { mutate: updateCategory, isPending: isUpdating } =

@@ -64,7 +64,7 @@ export function MedicineDetailsClient({
       : 0;
 
   return (
-    <div className="bg-white pb-20 pt-8">
+    <div className="bg-[#FAF8F5] pb-20 pt-8">
       <div className="container mx-auto px-4 lg:px-8">
         {/* Breadcrumb */}
         <nav className="mb-8 flex items-center gap-2 text-sm text-gray-500">
@@ -237,6 +237,53 @@ export function MedicineDetailsClient({
             </div>
           </div>
         </div>
+        {/* Reviews List Section */}
+        {reviews.length > 0 && (
+          <div className="mt-16 border-t border-gray-100 pt-12">
+            <h2 className="mb-8 text-2xl font-bold text-gray-900">
+              Customer Reviews
+            </h2>
+            <div className="grid gap-8 lg:grid-cols-2">
+              {reviews.map((review: any) => (
+                <div
+                  key={review.id}
+                  className="rounded-2xl bg-gray-50 p-6 transition-shadow hover:shadow-md"
+                >
+                  <div className="mb-4 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 font-bold text-blue-600">
+                        {review.user?.name?.charAt(0) || "U"}
+                      </div>
+                      <div>
+                        <div className="font-medium text-gray-900">
+                          {review.user?.name || "Anonymous"}
+                        </div>
+                        <div className="text-xs text-gray-500">
+                          {new Date(review.createdAt).toLocaleDateString()}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-0.5">
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <Star
+                          key={i}
+                          className={`h-4 w-4 ${
+                            i < review.rating
+                              ? "fill-yellow-400 text-yellow-400"
+                              : "text-gray-300"
+                          }`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  <p className="text-sm leading-relaxed text-gray-600">
+                    {review.comment}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       <CartModal

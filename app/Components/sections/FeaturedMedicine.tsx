@@ -48,7 +48,7 @@ export default function FeaturedMedicine() {
         </motion.div>
 
         {/* Grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-6 gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-6 gap-6">
           {isLoading
             ? Array.from({ length: 6 }).map((_, index) => (
                 <motion.div

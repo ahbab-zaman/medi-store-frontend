@@ -10,7 +10,8 @@ import { getImageUrl } from "@/utils/image-url";
 export default function AdminMedicinesPage() {
   const [search, setSearch] = useState("");
   // Assuming useAdminMedicines fetches all medicines with seller info
-  const { data: medicines, isLoading } = useAdminMedicines();
+  const { data: medicinesRes, isLoading } = useAdminMedicines();
+  const medicines = (medicinesRes as any)?.data || [];
   const { mutate: deleteMedicine } = useDeleteMedicine();
   const [deleteId, setDeleteId] = useState<string | null>(null);
 

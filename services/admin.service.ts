@@ -13,7 +13,7 @@ export type User = {
 export const AdminAppService = {
   async getAllUsers() {
     const res = await apiClient.get<ApiResponse<User[]>>("/api/admin/users");
-    return res.data.data;
+    return res.data;
   },
 
   async updateUserBanStatus(userId: string, isBanned: boolean) {
@@ -39,7 +39,7 @@ export const AdminAppService = {
 
   async getAllCategories() {
     const res = await apiClient.get<ApiResponse<any[]>>("/api/categories");
-    return res.data.data;
+    return res.data;
   },
 
   async createCategory(payload: FormData) {
@@ -74,8 +74,8 @@ export const AdminAppService = {
   },
 
   async getAllOrders() {
-    const res = await apiClient.get<ApiResponse<any[]>>("/api/admin/orders");
-    return res.data.data;
+    const res = await apiClient.get<ApiResponse<any[]>>("/api/orders");
+    return res.data;
   },
 
   async updateOrderStatus(orderId: string, status: string) {
@@ -95,7 +95,7 @@ export const AdminAppService = {
     const res = await apiClient.get<ApiResponse<any>>(
       "/api/medicines/admin/all",
     );
-    return res.data.data;
+    return res.data;
   },
 
   async deleteMedicine(medicineId: string) {

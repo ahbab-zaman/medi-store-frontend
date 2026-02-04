@@ -86,7 +86,7 @@ export default function AddMedicinePage() {
   };
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
+    <div className="p-6 max-w-4xl mx-auto bg-[#FAF8F5]">
       <div className="mb-6">
         <Link
           href="/seller/medicines"
@@ -249,7 +249,7 @@ export default function AddMedicinePage() {
                 </div>
               )}
 
-              <label className="flex h-32 w-32 cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100">
+              <label className="flex h-32 w-32 cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-gray-300 bg-[#FAF8F5] hover:bg-gray-100">
                 <Upload className="mb-2 h-6 w-6 text-gray-400" />
                 <span className="text-xs text-gray-500">Upload</span>
                 <input

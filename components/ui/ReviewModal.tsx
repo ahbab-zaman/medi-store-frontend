@@ -132,7 +132,7 @@ export function ReviewModal({ isOpen, onClose, medicineId }: ReviewModalProps) {
                     {isPending ? "Submitting..." : "Submit Review"}
                   </span>
                   {!isPending && (
-                    <div className="absolute inset-0 -z-0 translate-y-full bg-gradient-to-r from-blue-600 to-indigo-600 transition-transform duration-300 group-hover:translate-y-0" />
+                    <div className="absolute inset-0 -z-0 translate-y-full bg-gray-900 transition-transform duration-300 group-hover:translate-y-0" />
                   )}
                 </button>
               </form>

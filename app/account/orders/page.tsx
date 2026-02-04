@@ -45,7 +45,7 @@ export default function MyOrdersPage() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-10 min-h-screen">
+    <div className="mx-auto px-4 py-10 min-h-screen bg-[#FAF8F5]">
       <div className="flex items-center mb-8">
         <div className="p-3 bg-teal-50 rounded-lg mr-4">
           <ShoppingBag className="w-8 h-8 text-teal-600" />
