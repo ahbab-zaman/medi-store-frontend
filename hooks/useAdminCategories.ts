@@ -14,8 +14,7 @@ export function useCreateCategory() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (payload: { name: string; description?: string }) =>
-      AdminAppService.createCategory(payload),
+    mutationFn: (payload: FormData) => AdminAppService.createCategory(payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "categories"] });
       queryClient.invalidateQueries({ queryKey: ["categories"] });
@@ -36,13 +35,8 @@ export function useUpdateCategory() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({
-      id,
-      payload,
-    }: {
-      id: string;
-      payload: { name?: string; description?: string };
-    }) => AdminAppService.updateCategory(id, payload),
+    mutationFn: ({ id, payload }: { id: string; payload: FormData }) =>
+      AdminAppService.updateCategory(id, payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "categories"] });
       queryClient.invalidateQueries({ queryKey: ["categories"] });

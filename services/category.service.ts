@@ -18,7 +18,7 @@ export async function getCategoryById(
 
 export async function createCategory(payload: {
   name: string;
-  imageUrl?: string;
+  image?: string;
 }): Promise<ApiResponse<Category>> {
   const response = await apiClient.post<ApiResponse<Category>>(
     "/api/categories",
@@ -29,7 +29,7 @@ export async function createCategory(payload: {
 
 export async function updateCategory(
   id: string,
-  payload: { name?: string; imageUrl?: string },
+  payload: { name?: string; image?: string },
 ): Promise<ApiResponse<Category>> {
   const response = await apiClient.patch<ApiResponse<Category>>(
     `/api/categories/${id}`,

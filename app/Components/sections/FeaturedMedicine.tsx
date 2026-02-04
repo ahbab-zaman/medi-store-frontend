@@ -27,7 +27,7 @@ export default function FeaturedMedicine() {
           className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-12"
         >
           <div>
-            <p className="text-sm text-accent font-medium uppercase tracking-wider mb-2">
+            <p className="text-sm text-[#D2A88A] font-medium uppercase tracking-wider mb-2">
               Featured Medicines
             </p>
             <h2 className="text-3xl md:text-4xl font-semibold">

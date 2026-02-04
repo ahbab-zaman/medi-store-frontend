@@ -1,3 +1,4 @@
+import { BrowseByCategory } from "./Components/sections/BrowseByCategory";
 import DoctorsPick from "./Components/sections/DoctorsPick";
 import FeaturedMedicine from "./Components/sections/FeaturedMedicine";
 import HeroSection from "./Components/sections/HeroSection";
@@ -10,6 +11,7 @@ export default function HomePage() {
       <HeroSection />
       <FeaturedMedicine />
       <WhyChooseUs />
+      <BrowseByCategory />  
       <DoctorsPick />
       <Newsletter />
     </>

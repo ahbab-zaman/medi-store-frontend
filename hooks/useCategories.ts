@@ -48,7 +48,7 @@ export function useUpdateCategory() {
     }: {
       id: string;
       name?: string;
-      imageUrl?: string;
+      image?: string;
     }) => categoryService.updateCategory(id, data),
     onMutate: async ({ id, ...data }) => {
       await queryClient.cancelQueries({ queryKey: ["categories"] });

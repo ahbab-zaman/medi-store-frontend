@@ -54,22 +54,6 @@ export default function Footer() {
                   Medicines
                 </Link>
               </li>
-              <li>
-                <Link
-                  href="/products?category=wellness"
-                  className="text-sm dark:text-white/60 dark:hover:text-white"
-                >
-                  Wellness
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/products?category=skincare"
-                  className="text-sm dark:text-white/60 dark:hover:text-white"
-                >
-                  Skincare
-                </Link>
-              </li>
             </ul>
           </div>
           <div>

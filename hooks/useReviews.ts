@@ -1,73 +1,75 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import * as reviewService from "@/services/review.service";
+import {
+  ReviewAppService,
+  CreateReviewPayload,
+} from "@/services/review.service";
 import { toast } from "sonner";
 
-// Fetch reviews for a specific medicine
-export function useReviews(medicineId: string) {
+export function useMedicineReviews(medicineId: string) {
   return useQuery({
     queryKey: ["reviews", medicineId],
-    queryFn: () => reviewService.getReviewsByMedicineId(medicineId),
+    queryFn: () => ReviewAppService.getMedicineReviews(medicineId),
     enabled: !!medicineId,
-    staleTime: 2 * 60 * 1000, // 2 minutes
   });
 }
 
-// Create review mutation
 export function useCreateReview() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: reviewService.createReview,
-    onSuccess: (data, variables) => {
-      queryClient.invalidateQueries({
-        queryKey: ["reviews", variables.medicineId],
+    mutationFn: (payload: CreateReviewPayload) =>
+      ReviewAppService.createReview(payload),
+    onSuccess: (_, variables) => {
+      // We don't necessarily invalidate immediately because it needs approval,
+      // but showing a success message is key.
+      toast.success("Review submitted!", {
+        description: "Your review is pending approval from an admin.",
       });
-      queryClient.invalidateQueries({
-        queryKey: ["medicines", variables.medicineId],
-      });
-      toast.success("Review submitted successfully!");
+      // Optionally invalidate if we showed pending reviews (not required by spec but good practice)
+      // queryClient.invalidateQueries({ queryKey: ["reviews", variables.medicineId] });
     },
     onError: (error: any) => {
-      toast.error(error.message || "Failed to submit review");
+      toast.error("Failed to submit review", {
+        description: error.response?.data?.message || "Something went wrong.",
+      });
     },
   });
 }
 
-// Update review mutation
-export function useUpdateReview() {
+export function useAdminReviews() {
+  return useQuery({
+    queryKey: ["admin", "reviews"],
+    queryFn: () => ReviewAppService.getAllReviewsForAdmin(),
+  });
+}
+
+export function useUpdateReviewStatus() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({
-      id,
-      ...data
-    }: {
-      id: string;
-      rating?: number;
-      comment?: string;
-    }) => reviewService.updateReview(id, data),
+    mutationFn: ({ id, status }: { id: string; status: string }) =>
+      ReviewAppService.updateReviewStatus(id, status),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["reviews"] });
-      toast.success("Review updated successfully!");
+      queryClient.invalidateQueries({ queryKey: ["admin", "reviews"] });
+      toast.success("Review status updated");
     },
     onError: (error: any) => {
-      toast.error(error.message || "Failed to update review");
+      toast.error("Failed to update status");
     },
   });
 }
 
-// Delete review mutation
 export function useDeleteReview() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: reviewService.deleteReview,
+    mutationFn: (id: string) => ReviewAppService.deleteReview(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["reviews"] });
-      toast.success("Review deleted successfully!");
+      queryClient.invalidateQueries({ queryKey: ["admin", "reviews"] });
+      toast.success("Review deleted");
     },
     onError: (error: any) => {
-      toast.error(error.message || "Failed to delete review");
+      toast.error("Failed to delete review");
     },
   });
 }

@@ -4,9 +4,12 @@ import { User } from "./user.types";
 export interface Category {
   id: string;
   name: string;
-  imageUrl?: string | null;
+  image?: string | null;
   createdAt: string;
   updatedAt: string;
+  _count?: {
+    medicines: number;
+  };
 }
 
 // Medicine types
@@ -37,6 +40,7 @@ export interface Review {
   user?: User;
   medicineId: string;
   medicine?: Medicine;
+  status: "PENDING" | "APPROVED" | "REJECTED";
   createdAt: string;
   updatedAt: string;
 }

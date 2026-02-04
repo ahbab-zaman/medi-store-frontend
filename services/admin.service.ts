@@ -42,21 +42,28 @@ export const AdminAppService = {
     return res.data.data;
   },
 
-  async createCategory(payload: { name: string; description?: string }) {
+  async createCategory(payload: FormData) {
     const res = await apiClient.post<ApiResponse<any>>(
       "/api/categories",
       payload,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      },
     );
     return res.data.data;
   },
 
-  async updateCategory(
-    id: string,
-    payload: { name?: string; description?: string },
-  ) {
+  async updateCategory(id: string, payload: FormData) {
     const res = await apiClient.put<ApiResponse<any>>(
       `/api/categories/${id}`,
       payload,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      },
     );
     return res.data.data;
   },

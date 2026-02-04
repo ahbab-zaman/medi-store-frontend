@@ -5,6 +5,7 @@ import {
   ShoppingCart,
   Pill,
   List,
+  MessageSquare,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -45,6 +46,11 @@ const items: SidebarItem[] = [
     icon: Pill,
     label: "Medicines",
     href: "/admin/medicines",
+  },
+  {
+    icon: MessageSquare,
+    label: "Reviews",
+    href: "/admin/reviews",
   },
 ];
 

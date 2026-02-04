@@ -6,11 +6,12 @@ import {
   useAdminUpdateCategory,
   useAdminDeleteCategory,
 } from "@/hooks";
-import { Trash2, Edit, Plus, X, Loader2 } from "lucide-react";
+import { Trash2, Edit, Plus, X, Loader2, ImagePlus } from "lucide-react";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { ConfirmationDialog } from "@/components/ui/ConfirmationDialog";
 import { useState } from "react";
 import { toast } from "sonner";
+import { getImageUrl } from "@/utils/image-url";
 
 export default function AdminCategoriesPage() {
   const { data: categories, isLoading } = useAdminCategories();
@@ -24,6 +25,7 @@ export default function AdminCategoriesPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState<any | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const handleDeleteClick = (id: string) => {
     setDeletingId(id);
@@ -40,6 +42,7 @@ export default function AdminCategoriesPage() {
   const closeModal = () => {
     setIsModalOpen(false);
     setEditingCategory(null);
+    setImagePreview(null);
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -48,7 +51,6 @@ export default function AdminCategoriesPage() {
 
     // Validate form
     const name = formData.get("name") as string;
-    const description = formData.get("description") as string;
 
     if (!name || name.trim().length < 2) {
       toast.error("Invalid category name", {
@@ -57,20 +59,15 @@ export default function AdminCategoriesPage() {
       return;
     }
 
-    const payload = {
-      name,
-      description: description || undefined,
-    };
-
     if (editingCategory) {
       updateCategory(
-        { id: editingCategory.id, payload },
+        { id: editingCategory.id, payload: formData },
         {
           onSuccess: () => closeModal(),
         },
       );
     } else {
-      createCategory(payload, {
+      createCategory(formData, {
         onSuccess: () => closeModal(),
       });
     }
@@ -78,7 +75,15 @@ export default function AdminCategoriesPage() {
 
   const openEditModal = (category: any) => {
     setEditingCategory(category);
+    setImagePreview(category.image ? getImageUrl(category.image) : null);
     setIsModalOpen(true);
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImagePreview(URL.createObjectURL(file));
+    }
   };
 
   const isSubmitting = isCreating || isUpdating;
@@ -100,6 +105,7 @@ export default function AdminCategoriesPage() {
         <table className="w-full text-left text-sm">
           <thead className="border-b border-black/10 bg-black/5 dark:border-white/10 dark:bg-white/5">
             <tr>
+              <th className="px-6 py-4 font-medium">Image</th>
               <th className="px-6 py-4 font-medium">Name</th>
               <th className="px-6 py-4 font-medium">Description</th>
               <th className="px-6 py-4 font-medium">Actions</th>
@@ -109,6 +115,9 @@ export default function AdminCategoriesPage() {
             {isLoading
               ? Array.from({ length: 5 }).map((_, i) => (
                   <tr key={i}>
+                    <td className="px-6 py-4">
+                      <Skeleton className="h-10 w-10 rounded-lg" />
+                    </td>
                     <td className="px-6 py-4">
                       <Skeleton className="h-4 w-32" />
                     </td>
@@ -125,6 +134,19 @@ export default function AdminCategoriesPage() {
                     key={category.id}
                     className="hover:bg-black/5 dark:hover:bg-white/5"
                   >
+                    <td className="px-6 py-4">
+                      {category.image ? (
+                        <img
+                          src={getImageUrl(category.image)}
+                          alt={category.name}
+                          className="h-10 w-10 rounded-lg object-cover bg-gray-100"
+                        />
+                      ) : (
+                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-black/5 text-black/40 dark:bg-white/5 dark:text-white/40">
+                          <ImagePlus className="h-5 w-5" />
+                        </div>
+                      )}
+                    </td>
                     <td className="px-6 py-4 font-medium text-black dark:text-white">
                       {category.name}
                     </td>
@@ -172,6 +194,33 @@ export default function AdminCategoriesPage() {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label className="mb-2 block text-sm font-medium">
+                  Category Image
+                </label>
+                <div className="group relative flex aspect-video w-full cursor-pointer flex-col items-center justify-center overflow-hidden rounded-xl border border-dashed border-black/20 bg-black/5 transition-colors hover:bg-black/10 dark:border-white/20 dark:bg-white/5 dark:hover:bg-white/10">
+                  {imagePreview ? (
+                    <img
+                      src={imagePreview}
+                      alt="Preview"
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <div className="flex flex-col items-center gap-2 text-black/50 dark:text-white/50">
+                      <ImagePlus className="h-8 w-8" />
+                      <span className="text-sm font-medium">Upload Image</span>
+                    </div>
+                  )}
+                  <input
+                    type="file"
+                    name="image"
+                    accept="image/*"
+                    className="absolute inset-0 cursor-pointer opacity-0"
+                    onChange={handleImageChange}
+                  />
+                </div>
+              </div>
+
               <div>
                 <label className="mb-2 block text-sm font-medium">
                   Category Name

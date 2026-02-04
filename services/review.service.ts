@@ -1,37 +1,44 @@
 import apiClient from "@/lib/axios";
-import { Review, CreateReviewPayload, ApiResponse } from "@/types";
+import { ApiResponse } from "@/types";
 
-export async function getReviewsByMedicineId(
-  medicineId: string,
-): Promise<ApiResponse<Review[]>> {
-  const response = await apiClient.get<ApiResponse<Review[]>>(
-    `/api/medicines/${medicineId}/reviews`,
-  );
-  return response.data;
+export interface CreateReviewPayload {
+  medicineId: string;
+  rating: number;
+  comment: string;
 }
 
-export async function createReview(
-  payload: CreateReviewPayload,
-): Promise<ApiResponse<Review>> {
-  const response = await apiClient.post<ApiResponse<Review>>(
-    "/api/reviews",
-    payload,
-  );
-  return response.data;
-}
+export const ReviewAppService = {
+  async createReview(payload: CreateReviewPayload) {
+    const res = await apiClient.post<ApiResponse<any>>("/api/reviews", payload);
+    return res.data;
+  },
 
-export async function updateReview(
-  id: string,
-  payload: { rating?: number; comment?: string },
-): Promise<ApiResponse<Review>> {
-  const response = await apiClient.patch<ApiResponse<Review>>(
-    `/api/reviews/${id}`,
-    payload,
-  );
-  return response.data;
-}
+  async getMedicineReviews(medicineId: string) {
+    const res = await apiClient.get<ApiResponse<any[]>>(
+      `/api/reviews/medicine/${medicineId}`,
+    );
+    return res.data;
+  },
 
-export async function deleteReview(id: string): Promise<ApiResponse> {
-  const response = await apiClient.delete<ApiResponse>(`/api/reviews/${id}`);
-  return response.data;
-}
+  async getAllReviewsForAdmin() {
+    const res = await apiClient.get<ApiResponse<any[]>>(
+      "/api/reviews/admin/all",
+    );
+    return res.data;
+  },
+
+  async updateReviewStatus(id: string, status: string) {
+    const res = await apiClient.patch<ApiResponse<any>>(
+      `/api/reviews/admin/${id}/status`,
+      { status },
+    );
+    return res.data;
+  },
+
+  async deleteReview(id: string) {
+    const res = await apiClient.delete<ApiResponse<any>>(
+      `/api/reviews/admin/${id}`,
+    );
+    return res.data;
+  },
+};

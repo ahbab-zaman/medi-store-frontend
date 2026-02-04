@@ -60,7 +60,7 @@ export default function WhyChooseUs() {
           transition={{ duration: 0.5 }}
           className="text-start mb-14"
         >
-          <p className="text-sm text-accent font-medium uppercase tracking-wider mb-2">
+          <p className="text-sm text-[#D2A88A] font-medium uppercase tracking-wider mb-2">
             Why MediCare
           </p>
           <h2 className="text-3xl md:text-4xl font-semibold mb-4">

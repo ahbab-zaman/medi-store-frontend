@@ -8,6 +8,8 @@ import {
   ShieldCheck,
   Clock,
   Loader2,
+  Star,
+  MessageSquarePlus,
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -18,6 +20,8 @@ import { useCart } from "@/hooks";
 import { CartModal } from "@/components/ui/CartModal";
 import { toast } from "sonner";
 import { Medicine } from "@/types";
+import { useMedicineReviews } from "@/hooks/useReviews";
+import { ReviewModal } from "@/components/ui/ReviewModal";
 
 interface MedicineDetailsClientProps {
   medicine: Medicine;
@@ -28,8 +32,11 @@ export function MedicineDetailsClient({
 }: MedicineDetailsClientProps) {
   const [quantity, setQuantity] = useState(1);
   const [showCartModal, setShowCartModal] = useState(false);
+  const [showReviewModal, setShowReviewModal] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   const { addToCart } = useCart();
+  const { data: reviewsData } = useMedicineReviews(medicine.id);
+  const reviews = reviewsData?.data || [];
 
   const handleIncrement = () =>
     setQuantity((p) => (p < medicine.stock ? p + 1 : p));
@@ -49,6 +56,12 @@ export function MedicineDetailsClient({
       setIsAdding(false);
     }
   };
+
+  const averageRating =
+    reviews.length > 0
+      ? reviews.reduce((acc: number, r: any) => acc + r.rating, 0) /
+        reviews.length
+      : 0;
 
   return (
     <div className="bg-white pb-20 pt-8">
@@ -90,11 +103,24 @@ export function MedicineDetailsClient({
               <h1 className="mt-4 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
                 {medicine.name}
               </h1>
-              <div className="mt-2 text-sm text-gray-500">
-                Manufacturer:{" "}
-                <span className="font-medium text-gray-900">
-                  {medicine.manufacturer}
-                </span>
+
+              <div className="mt-3 flex items-center gap-4">
+                <div className="flex items-center gap-1">
+                  <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                  <span className="font-medium text-gray-900">
+                    {averageRating.toFixed(1)}
+                  </span>
+                  <span className="text-sm text-gray-500">
+                    ({reviews.length} reviews)
+                  </span>
+                </div>
+                <span className="h-4 w-px bg-gray-300"></span>
+                <div className="text-sm text-gray-500">
+                  Manufacturer:{" "}
+                  <span className="font-medium text-gray-900">
+                    {medicine.manufacturer}
+                  </span>
+                </div>
               </div>
             </div>
 
@@ -163,6 +189,15 @@ export function MedicineDetailsClient({
                     </>
                   )}
                 </button>
+
+                {/* Add Review Button */}
+                <button
+                  onClick={() => setShowReviewModal(true)}
+                  className="h-12 w-12 flex items-center justify-center rounded-full border border-gray-200 text-gray-600 transition-colors hover:bg-black hover:text-white"
+                  title="Write a Review"
+                >
+                  <MessageSquarePlus className="h-5 w-5" />
+                </button>
               </div>
 
               {medicine.stock <= 5 && medicine.stock > 0 && (
@@ -207,6 +242,11 @@ export function MedicineDetailsClient({
       <CartModal
         isOpen={showCartModal}
         onClose={() => setShowCartModal(false)}
+      />
+      <ReviewModal
+        isOpen={showReviewModal}
+        onClose={() => setShowReviewModal(false)}
+        medicineId={medicine.id}
       />
     </div>
   );

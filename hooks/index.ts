@@ -24,9 +24,10 @@ export {
   useCancelOrder,
 } from "./useOrders";
 export {
-  useReviews,
+  useMedicineReviews,
   useCreateReview,
-  useUpdateReview,
+  useAdminReviews,
+  useUpdateReviewStatus,
   useDeleteReview,
 } from "./useReviews";
 export { useUsers, useUpdateUserBanStatus, useDeleteUser } from "./useUsers";

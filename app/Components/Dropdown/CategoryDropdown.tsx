@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCategories } from "@/hooks/useCategories";
+
+import { getImageUrl } from "@/utils/image-url";
 
 export function CategoryDropdown() {
   const [isOpen, setIsOpen] = useState(false);
@@ -85,17 +86,12 @@ export function CategoryDropdown() {
                     className="group flex items-center gap-3 px-4 py-2.5 text-sm text-black/70 transition-colors hover:bg-gray-50 hover:text-black dark:text-white/70 dark:hover:bg-gray-800 dark:hover:text-white"
                   >
                     {/* Category Image with optimized loading */}
-                    <div className="relative h-10 w-10 flex-shrink-0 overflow-hidden rounded-md bg-gray-100 dark:bg-gray-800">
-                      {category.imageUrl ? (
-                        <Image
-                          src={category.imageUrl}
+                    <div className="relative h-7 w-7 flex-shrink-0 overflow-hidden rounded-md bg-gray-100 dark:bg-gray-700">
+                      {category.image ? (
+                        <img
+                          src={getImageUrl(category.image)}
                           alt={category.name}
-                          fill
-                          sizes="40px"
-                          className="object-cover"
-                          loading="eager" // Load immediately for fast display
-                          priority={index < 6} // Prioritize first 6 images
-                          quality={75}
+                          className="h-full w-full object-cover"
                         />
                       ) : (
                         <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-gray-200 to-gray-300 text-xs font-semibold text-gray-600 dark:from-gray-700 dark:to-gray-800 dark:text-gray-400">
