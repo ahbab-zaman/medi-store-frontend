@@ -8,7 +8,7 @@ import { useAuth } from "@/hooks";
 function roleHome(role?: string) {
   if (role === "ADMIN") return "/admin/dashboard";
   if (role === "SELLER") return "/seller/dashboard";
-  return "/customer/dashboard";
+  return "/";
 }
 
 export default function LoginClient() {

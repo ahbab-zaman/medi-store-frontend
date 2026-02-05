@@ -92,7 +92,7 @@ export function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
                       <Loader2 className="h-6 w-6 animate-spin text-gray-600" />
                     </div>
                     {/* Image */}
-                    <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-lg bg-gray-50">
+                    <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-gray-50">
                       {item.medicine.imageUrl ? (
                         <img
                           src={getImageUrl(item.medicine.imageUrl)}
@@ -139,14 +139,6 @@ export function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
           {/* Footer */}
           {items.length > 0 && (
             <div className="border-t border-gray-200 p-6 bg-gray-50">
-              {/* Countdown */}
-              <div className="mb-4 text-center">
-                <p className="text-sm text-gray-600">
-                  Redirecting to cart in{" "}
-                  <span className="font-bold text-black">{countdown}s</span>
-                </p>
-              </div>
-
               {/* Total */}
               <div className="mb-4 flex items-center justify-between">
                 <span className="text-lg font-semibold text-gray-900">
