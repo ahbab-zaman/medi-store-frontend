@@ -129,7 +129,7 @@ export default function LoginClient() {
             {loginError && (
               <div className="flex items-start gap-3 p-4 rounded-xl bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20">
                 <svg
-                  className="w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5"
+                  className="w-5 h-5 text-red-600 dark:text-red-400 shrink-0 mt-0.5"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >

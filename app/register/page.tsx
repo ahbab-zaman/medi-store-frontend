@@ -36,7 +36,7 @@ export default function RegisterPage() {
       <div className="relative w-full max-w-md">
         {/* Logo/Brand area */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-white dark:to-slate-300 bg-clip-text text-transparent">
+          <h1 className="text-3xl font-bold bg-linear-to-r from-slate-900 to-slate-700 dark:from-white dark:to-slate-300 bg-clip-text text-transparent">
             Join Medi-Store
           </h1>
           <p className="mt-2 text-slate-600 dark:text-slate-400">
@@ -183,7 +183,7 @@ export default function RegisterPage() {
             {registerError && (
               <div className="flex items-start gap-3 p-4 rounded-xl bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20">
                 <svg
-                  className="w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5"
+                  className="w-5 h-5 text-red-600 dark:text-red-400 shrink-0 mt-0.5"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >

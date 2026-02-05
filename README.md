@@ -1,6 +1,6 @@
 # 💊 MediStore - Frontend
 
-![MediStore Banner](https://img.shields.io/badge/MediStore-Frontend-teal?style=for-the-badge&logo=medistory)
+![MediStore Banner](https://medi-store-frontend.vercel.app)
 [![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
 [![TanStack Query](https://img.shields.io/badge/TanStack_Query-FF4154?style=for-the-badge&logo=reactquery&logoColor=white)](https://tanstack.com/query)
@@ -57,7 +57,7 @@ We believe in **Rich Aesthetics**. The application utilizes:
    Configure `.env.local`:
 
    ```env
-   NEXT_PUBLIC_BACKEND_API_BASE_URL="http://localhost:5000/api"
+   NEXT_PUBLIC_BACKEND_API_BASE_URL="http://localhost:4000/api"
    ```
 
 3. **Development Mode**
