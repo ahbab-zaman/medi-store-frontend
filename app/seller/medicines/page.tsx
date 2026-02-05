@@ -23,7 +23,6 @@ export default function SellerMedicinesPage() {
   const { user } = useAuth();
   const { data: medicines, isLoading } = useMedicines({
     search,
-    sellerId: user?.id,
   });
   const { mutate: deleteMedicine } = useDeleteMedicine();
   const [deleteId, setDeleteId] = useState<string | null>(null);
@@ -50,7 +49,7 @@ export default function SellerMedicinesPage() {
     <div className="p-6 bg-[#FAF8F5]">
       <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">My Medicines</h1>
+          <h1 className="text-2xl font-bold text-gray-900">All Medicines</h1>
           <p className="text-sm text-gray-500">Manage your product inventory</p>
         </div>
         <button

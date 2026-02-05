@@ -5,7 +5,7 @@ import { toast } from "sonner";
 export function useSellerOrders() {
   return useQuery({
     queryKey: ["orders", "seller"],
-    queryFn: () => orderService.getOrders(),
+    queryFn: () => orderService.getOrders({ sellerView: "true" }),
   });
 }
 

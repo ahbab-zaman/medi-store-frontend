@@ -45,10 +45,8 @@ export function Sidebar({ className, isOpen = false, onClose }: SidebarProps) {
 
       <aside
         className={cn(
-          "fixed flex h-screen flex-col bg-white dark:bg-black/40 backdrop-blur-xl transition-all duration-300",
-          // Desktop
+          "fixed z-30 flex h-screen flex-col border-r border-black/10 dark:border-white/10 bg-white dark:bg-black/40 backdrop-blur-xl transition-all duration-300",
           "lg:relative lg:translate-x-0",
-          // Mobile animation
           isOpen ? "translate-x-0" : "-translate-x-full",
           className,
         )}

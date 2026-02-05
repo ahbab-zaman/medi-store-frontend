@@ -22,6 +22,10 @@ export interface Order {
   paymentMethod: string;
   transactionId?: string;
   orderItems: OrderItem[];
+  user?: {
+    name: string;
+    email: string;
+  };
   createdAt: string;
   updatedAt: string;
 }
@@ -41,4 +45,5 @@ export interface GetOrdersParams {
   page?: number;
   limit?: number;
   status?: OrderStatus;
+  sellerView?: string;
 }

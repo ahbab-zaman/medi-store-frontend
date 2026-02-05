@@ -6,9 +6,11 @@ import { Order } from "@/types";
 import { toast } from "sonner";
 import { ShoppingBag, Eye, Calendar, DollarSign } from "lucide-react";
 import { format } from "date-fns";
+import { useAuth } from "@/hooks/useAuth";
 import { OrderDetailModal } from "@/components/order/OrderDetailModal";
 
 export default function MyOrdersPage() {
+  const { user } = useAuth();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);

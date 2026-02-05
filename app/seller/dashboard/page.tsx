@@ -12,9 +12,9 @@ import { format, subDays } from "date-fns";
 export default function SellerDashboardPage() {
   const { user } = useAuth();
 
-  const { data: medicinesRes, isLoading: isLoadingMedicines } = useMedicines({
-    sellerId: user?.id,
-  });
+  const { data: medicinesRes, isLoading: isLoadingMedicines } = useMedicines(
+    {},
+  );
   const medicines = medicinesRes?.data || [];
 
   const { data: ordersRes, isLoading: isLoadingOrders } = useSellerOrders();
@@ -55,7 +55,7 @@ export default function SellerDashboardPage() {
 
   const statCards = [
     {
-      label: "My Medicines",
+      label: "Total Medicines",
       value: stats.medicines,
       icon: Pill,
       color:
