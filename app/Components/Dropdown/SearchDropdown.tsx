@@ -145,7 +145,7 @@ export function SearchDropdown() {
             transition={{ duration: 0.3, ease: "easeOut" }}
             className="absolute right-0 top-0 z-0 overflow-hidden"
           >
-            <div className="flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 shadow-lg dark:border-gray-700 dark:bg-gray-900">
+            <div className="flex items-center gap-2 rounded-full bg-white px-4 py-2 shadow-lg dark:bg-gray-900 focus-within:ring-0 focus-within:outline-none focus:outline-none focus:border-none">
               <Search size={18} className="text-gray-400" />
               <input
                 ref={inputRef}
@@ -153,7 +153,11 @@ export function SearchDropdown() {
                 placeholder="Search medicines..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-64 bg-transparent text-sm text-black outline-none placeholder:text-gray-400 dark:text-white sm:w-80"
+                className="w-64 bg-transparent text-sm text-black
+outline-none border-none ring-0
+focus:outline-none focus:border-none focus:ring-0
+focus-visible:outline-none focus-visible:ring-0
+placeholder:text-gray-400 dark:text-white sm:w-80"
               />
               {searchQuery && (
                 <button
@@ -174,9 +178,9 @@ export function SearchDropdown() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.95 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="absolute right-0 top-full mt-2 w-[400px] overflow-hidden rounded-xl border border-black/5 bg-white shadow-2xl dark:border-white/5 dark:bg-gray-900"
+            className="absolute right-0 top-full mt-2 w-100 overflow-hidden rounded-xl border border-black/5 bg-white shadow-2xl dark:border-white/5 dark:bg-gray-900"
           >
-            <div className="max-h-[500px] overflow-y-auto">
+            <div className="max-h-125 overflow-y-auto">
               {isLoading ? (
                 <div className="flex items-center justify-center py-12">
                   <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
@@ -203,7 +207,7 @@ export function SearchDropdown() {
                         className="flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-gray-50 dark:hover:bg-gray-800"
                       >
                         {/* Medicine Image */}
-                        <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800">
+                        <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800">
                           {medicine.imageUrl ? (
                             <img
                               src={getImageUrl(medicine.imageUrl)}
@@ -248,7 +252,7 @@ export function SearchDropdown() {
                           viewBox="0 0 24 24"
                           strokeWidth={2}
                           stroke="currentColor"
-                          className="h-5 w-5 flex-shrink-0 text-gray-400"
+                          className="h-5 w-5 shrink-0 text-gray-400"
                         >
                           <path
                             strokeLinecap="round"
