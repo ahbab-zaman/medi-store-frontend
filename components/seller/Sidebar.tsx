@@ -38,21 +38,21 @@ export function Sidebar({ className, isOpen = false, onClose }: SidebarProps) {
       <div
         onClick={onClose}
         className={cn(
-          "fixed inset-0 z-40 bg-black/40 backdrop-blur-sm transition-opacity duration-300 lg:hidden",
+          "fixed inset-0 z-30 bg-black/40 backdrop-blur-sm transition-opacity duration-300 lg:hidden",
           isOpen ? "opacity-100" : "pointer-events-none opacity-0",
         )}
       />
 
       <aside
         className={cn(
-          "fixed z-30 flex h-screen flex-col border-r border-black/10 dark:border-white/10 bg-white dark:bg-black/40 backdrop-blur-xl transition-all duration-300",
+          "fixed z-40 flex h-screen flex-col border-r border-black/10 dark:border-white/10 bg-white dark:bg-black/40 backdrop-blur-xl transition-all duration-300",
           "lg:relative lg:translate-x-0",
           isOpen ? "translate-x-0" : "-translate-x-full",
           className,
         )}
       >
         {/* Decorative gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-blue-500/[0.02] via-transparent to-purple-500/[0.02] pointer-events-none" />
+        <div className="absolute inset-0 bg-linear-to-b from-blue-500/2 via-transparent to-purple-500/2 pointer-events-none" />
 
         {/* Logo + Close button */}
         <div className="relative flex items-center justify-between p-4 sm:p-6 lg:p-8">
@@ -130,7 +130,7 @@ export function Sidebar({ className, isOpen = false, onClose }: SidebarProps) {
 
         {/* Bottom divider */}
         <div className="relative p-4 sm:p-6">
-          <div className="h-px bg-gradient-to-r from-transparent via-black/10 dark:via-white/10 to-transparent" />
+          <div className="h-px bg-linear-to-r from-transparent via-black/10 dark:via-white/10 to-transparent" />
         </div>
 
         <style jsx>{`
