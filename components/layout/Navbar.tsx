@@ -11,7 +11,7 @@ export default function Navbar() {
         <nav className="flex items-center gap-3">
           <Link
             href="/login"
-            className="rounded-full px-4 py-2 text-sm font-medium hover:bg-black/[.04] dark:hover:bg-white/[.08]"
+            className="rounded-full px-4 py-2 text-sm font-medium hover:bg-black/4 dark:hover:bg-white/8"
           >
             Login
           </Link>
