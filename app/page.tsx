@@ -4,6 +4,7 @@ import FeaturedMedicine from "./Components/sections/FeaturedMedicine";
 import HeroSection from "./Components/sections/HeroSection";
 import { Newsletter } from "./Components/sections/Newsletter";
 import WhyChooseUs from "./Components/sections/WhyChooseUs";
+import ChatWidget from "@/components/layout/ChatWidget";
 
 export default function HomePage() {
   return (
@@ -14,6 +15,7 @@ export default function HomePage() {
       <BrowseByCategory />  
       <DoctorsPick />
       <Newsletter />
+      <ChatWidget />
     </>
   );
 }
