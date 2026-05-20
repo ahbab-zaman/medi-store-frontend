@@ -99,7 +99,7 @@ export const AdminAppService = {
   },
 
   async deleteMedicine(medicineId: string) {
-    await apiClient.delete(`/api/medicines/seller/${medicineId}`);
+    await apiClient.delete(`/api/medicines/admin/${medicineId}`);
     return true;
   },
 };

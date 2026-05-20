@@ -24,6 +24,10 @@ const nextConfig: NextConfig = {
         hostname: "medi-store-backend-ytk1.onrender.com",
         pathname: "/uploads/**",
       },
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+      },
     ],
     // IMPORTANT: Set to false to enable Next.js image optimization for faster loading
     // Only use unoptimized: true if you're having issues with image optimization
