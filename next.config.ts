@@ -28,6 +28,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "res.cloudinary.com",
       },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      },
     ],
     // IMPORTANT: Set to false to enable Next.js image optimization for faster loading
     // Only use unoptimized: true if you're having issues with image optimization

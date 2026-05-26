@@ -17,7 +17,8 @@ const ChatWidget = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       role: "assistant",
-      content: "Hi, I can help with products, medicine info, and order questions.",
+      content:
+        "Hi, I can provide doctor-level medicine guidance, product details, and order support. Share age, symptoms, current medicines, and conditions for a more precise answer.",
     },
   ]);
 
@@ -42,9 +43,13 @@ const ChatWidget = () => {
     setIsStreaming(true);
 
     try {
+      const clientRequestId = crypto.randomUUID();
       const response = await fetch(apiUrl, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "x-client-request-id": clientRequestId,
+        },
         body: JSON.stringify({ message, sessionId }),
       });
 
@@ -78,6 +83,9 @@ const ChatWidget = () => {
 
             if (eventName === "meta" && parsed?.sessionId) {
               setSessionId(parsed.sessionId);
+            }
+            if (eventName === "warning") {
+              continue;
             }
 
             if (parsed?.token) {
@@ -140,7 +148,7 @@ const ChatWidget = () => {
             className="fixed bottom-24 right-6 z-50 flex h-[520px] w-[360px] max-w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-2xl border border-emerald-100 bg-white shadow-2xl"
           >
             <div className="bg-gradient-to-r from-emerald-600 to-teal-600 px-4 py-3 text-sm font-semibold text-white">
-              MediStore Assistant
+              MediStore Clinical Assistant
             </div>
 
             <div className="flex-1 space-y-3 overflow-y-auto bg-emerald-50/30 p-4">
@@ -167,7 +175,7 @@ const ChatWidget = () => {
                 <input
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
-                  placeholder="Ask about medicines, products, or orders"
+                  placeholder="Ask a medical, product, or order question"
                   className="h-10 flex-1 bg-transparent text-sm outline-none"
                 />
                 <button
