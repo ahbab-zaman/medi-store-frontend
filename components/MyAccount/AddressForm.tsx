@@ -5,12 +5,6 @@ import { MapPin, Navigation } from "lucide-react";
 
 /* ─── Types ──────────────────────────────────────────────────────────────── */
 
-interface Area {
-  id: string;
-  name: string;
-  status: string;
-}
-
 export interface AddressFormData {
   name: string;
   firstname: string;
@@ -48,10 +42,27 @@ function buildFormState(initial: Partial<AddressFormData>): AddressFormData {
     landmark: initial.landmark ?? "",
     latitude: initial.latitude ?? "",
     longitude: initial.longitude ?? "",
-    mobile_country_code: initial.mobile_country_code ?? "971",
+    mobile_country_code: initial.mobile_country_code ?? "880",
     mobile: (initial.mobile ?? "").replace(/\D/g, ""),
     default: initial.default ?? 0,
   };
+}
+
+/**
+ * Validates a Bangladesh mobile number.
+ * BD numbers: 01[3-9]XXXXXXXX — 11 digits total (local format).
+ * After stripping the leading 0, the stored value is 10 digits: 1[3-9]XXXXXXXX.
+ */
+function validateBDMobile(number: string): string | null {
+  const digits = number.replace(/\D/g, "");
+  // Accept both 10-digit (country-code stripped) and 11-digit (with leading 0) formats
+  const normalized =
+    digits.length === 11 && digits.startsWith("0") ? digits.slice(1) : digits;
+
+  if (normalized.length === 0) return "Mobile number is required.";
+  if (!/^1[3-9]\d{8}$/.test(normalized))
+    return "Enter a valid Bangladeshi mobile number (e.g. 01712345678).";
+  return null;
 }
 
 const inputCls =
@@ -72,8 +83,9 @@ function MapPicker({ lat, lng, onChange }: MapPickerProps) {
   const [mapReady, setMapReady] = useState(false);
   const [locating, setLocating] = useState(false);
 
-  const defaultLat = lat ? parseFloat(lat) : 25.2048;
-  const defaultLng = lng ? parseFloat(lng) : 55.2708;
+  // Default to Dhaka, Bangladesh
+  const defaultLat = lat ? parseFloat(lat) : 23.8103;
+  const defaultLng = lng ? parseFloat(lng) : 90.4125;
 
   useEffect(() => {
     if (mapInstanceRef.current || !mapRef.current) return;
@@ -197,7 +209,7 @@ function MapPicker({ lat, lng, onChange }: MapPickerProps) {
           <input
             value={lat}
             onChange={(e) => onChange(e.target.value, lng)}
-            placeholder="e.g. 25.2048"
+            placeholder="e.g. 23.8103"
             className={inputCls}
           />
         </div>
@@ -208,7 +220,7 @@ function MapPicker({ lat, lng, onChange }: MapPickerProps) {
           <input
             value={lng}
             onChange={(e) => onChange(lat, e.target.value)}
-            placeholder="e.g. 55.2708"
+            placeholder="e.g. 90.4125"
             className={inputCls}
           />
         </div>
@@ -217,38 +229,48 @@ function MapPicker({ lat, lng, onChange }: MapPickerProps) {
   );
 }
 
-/* ─── PhoneInput stub ────────────────────────────────────────────────────── */
-/* Replace with your actual PhoneInput when integrating */
+/* ─── Bangladesh PhoneInput ──────────────────────────────────────────────── */
 function PhoneInput({
   value,
   onChange,
   placeholder,
+  error,
 }: {
   value: string;
   onChange: (v: string) => void;
   placeholder?: string;
+  error?: string | null;
 }) {
   return (
-    <div className="flex h-11 overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50/80 dark:bg-gray-800/60 focus-within:border-indigo-400 dark:focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-indigo-400/20 transition-colors">
-      <div className="flex items-center gap-1.5 border-r border-gray-200 dark:border-gray-700 px-3 text-sm font-medium text-gray-700 dark:text-gray-300 select-none">
-        🇦🇪 <span>+971</span>
+    <div>
+      <div
+        className={`flex h-11 overflow-hidden rounded-xl border bg-gray-50/80 dark:bg-gray-800/60 transition-colors focus-within:ring-2 ${
+          error
+            ? "border-red-400 dark:border-red-500 focus-within:ring-red-400/20"
+            : "border-gray-200 dark:border-gray-700 focus-within:border-indigo-400 dark:focus-within:border-indigo-500 focus-within:ring-indigo-400/20"
+        }`}
+      >
+        {/* Bangladesh country prefix — fixed, non-editable */}
+        <div className="flex items-center gap-1.5 border-r border-gray-200 dark:border-gray-700 px-3 text-sm font-medium text-gray-700 dark:text-gray-300 select-none whitespace-nowrap">
+          🇧🇩 <span>+880</span>
+        </div>
+        <input
+          type="tel"
+          value={value}
+          onChange={(e) => {
+            // Only allow digits; strip any accidental country-code prefix
+            const raw = e.target.value.replace(/\D/g, "").replace(/^880/, "");
+            onChange(raw);
+          }}
+          placeholder={placeholder}
+          maxLength={11}
+          className="flex-1 bg-transparent px-3 text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 outline-none"
+        />
       </div>
-      <input
-        value={value.replace(/^\+971/, "")}
-        onChange={(e) => onChange(`+971${e.target.value}`)}
-        placeholder={placeholder}
-        className="flex-1 bg-transparent px-3 text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 outline-none"
-      />
+      {error && (
+        <p className="mt-1.5 text-xs text-red-500 dark:text-red-400">{error}</p>
+      )}
     </div>
-  );
-}
-
-/* ─── Skeleton stub ──────────────────────────────────────────────────────── */
-function Skeleton({ className }: { className?: string }) {
-  return (
-    <div
-      className={`animate-pulse rounded-xl bg-gray-100 dark:bg-gray-800 ${className ?? ""}`}
-    />
   );
 }
 
@@ -263,32 +285,20 @@ export function AddressForm({
   const [form, setForm] = useState<AddressFormData>(() =>
     buildFormState(initial),
   );
-  const [areas, setAreas] = useState<Area[]>([]);
-  const [areasLoading, setAreasLoading] = useState(false);
-
-  // TODO: replace with real API call
-  useEffect(() => {
-    setAreasLoading(false);
-    setAreas([
-      { id: "1", name: "Dubai Marina", status: "1" },
-      { id: "2", name: "Downtown Dubai", status: "1" },
-      { id: "3", name: "Jumeirah", status: "1" },
-      { id: "4", name: "Business Bay", status: "1" },
-      { id: "5", name: "Deira", status: "1" },
-    ]);
-  }, []);
+  const [phoneError, setPhoneError] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handlePhoneChange = (fullPhone: string) => {
-    const number = fullPhone.replace(/^\+971/, "").replace(/\D/g, "");
+  const handlePhoneChange = (raw: string) => {
     setForm((prev) => ({
       ...prev,
-      mobile_country_code: "971",
-      mobile: number,
+      mobile_country_code: "880",
+      mobile: raw,
     }));
+    // Clear error on change so the user gets live feedback
+    if (phoneError) setPhoneError(validateBDMobile(raw));
   };
 
   const handleMapChange = (lat: string, lng: string) => {
@@ -297,6 +307,15 @@ export function AddressForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validate phone before submission
+    const err = validateBDMobile(form.mobile);
+    if (err) {
+      setPhoneError(err);
+      return;
+    }
+    setPhoneError(null);
+
     await onSubmit(form);
   };
 
@@ -355,12 +374,13 @@ export function AddressForm({
         </div>
         <div className="mt-4">
           <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.14em] text-gray-500 dark:text-gray-400">
-            Mobile Number
+            Mobile Number <span className="text-red-500">*</span>
           </label>
           <PhoneInput
-            value={`+971${form.mobile}`}
+            value={form.mobile}
             onChange={handlePhoneChange}
-            placeholder="50 123 4567"
+            placeholder="01712345678"
+            error={phoneError}
           />
         </div>
       </section>
@@ -397,7 +417,7 @@ export function AddressForm({
               className={inputCls}
             />
           </div>
-          <div>
+          <div className="sm:col-span-2">
             <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.14em] text-gray-500 dark:text-gray-400">
               Road <span className="text-red-500">*</span>
             </label>
@@ -410,52 +430,13 @@ export function AddressForm({
               className={inputCls}
             />
           </div>
-          <div>
-            <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.14em] text-gray-500 dark:text-gray-400">
-              Area <span className="text-red-500">*</span>
-            </label>
-            <select
-              name="area"
-              value={form.area}
-              onChange={(e) =>
-                setForm((prev) => ({ ...prev, area: e.target.value }))
-              }
-              required
-              disabled={areasLoading}
-              className={`${inputCls} ${areasLoading ? "opacity-60" : ""}`}
-            >
-              <option value="">
-                {areasLoading ? "Loading areas..." : "Select area"}
-              </option>
-              {areas.map((a) => (
-                <option key={a.id} value={a.id}>
-                  {a.name}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="sm:col-span-2">
-            <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.14em] text-gray-500 dark:text-gray-400">
-              Landmark
-            </label>
-            <input
-              name="landmark"
-              value={form.landmark}
-              onChange={handleChange}
-              placeholder="Near a mosque, mall, etc."
-              className={inputCls}
-            />
-          </div>
         </div>
       </section>
 
-      {/* ── Map Picker ── */}
+      {/* ── Location (Map) ── */}
       <section className="rounded-2xl border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 p-5 shadow-sm sm:p-6">
-        <p className="mb-1 text-[11px] font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">
+        <p className="mb-4 text-[11px] font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">
           Pin Location
-        </p>
-        <p className="mb-4 text-xs text-gray-500 dark:text-gray-400">
-          Click on the map or drag the pin to set your exact delivery location.
         </p>
         <MapPicker
           lat={form.latitude}
@@ -483,7 +464,7 @@ export function AddressForm({
                 onClick={() => setForm((prev) => ({ ...prev, default: val }))}
                 className={`rounded-lg px-4 py-1.5 text-sm font-medium transition-all ${
                   form.default === val
-                    ? "bg-indigo-600 text-white shadow-sm"
+                    ? "bg-gray-600 text-white shadow-sm"
                     : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
                 }`}
               >
@@ -499,7 +480,7 @@ export function AddressForm({
         <button
           type="submit"
           disabled={loading}
-          className="min-w-[180px] rounded-xl bg-indigo-600 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-indigo-700 disabled:opacity-60 disabled:cursor-not-allowed"
+          className="min-w-[180px] rounded-xl bg-gray-600 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-indigo-700 disabled:opacity-60 disabled:cursor-not-allowed"
         >
           {loading ? "Saving..." : submitLabel}
         </button>

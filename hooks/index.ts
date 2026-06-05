@@ -16,6 +16,7 @@ export {
   useDeleteCategory,
 } from "./useCategories";
 export { useCart } from "./useCart";
+export { useWishlist } from "./useWishlist";
 export {
   useOrders,
   useOrder,

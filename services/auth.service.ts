@@ -7,6 +7,16 @@ import {
   UpdateProfilePayload,
 } from "@/types";
 
+export interface ChangePasswordPayload {
+  currentPassword: string;
+  newPassword: string;
+}
+
+export interface ChangePasswordResponse {
+  success: boolean;
+  message: string;
+}
+
 // Use standard axios for Next.js API routes (relative paths)
 const nextAuthClient = axios.create({
   headers: {
@@ -50,6 +60,16 @@ export async function updateProfile(
 ): Promise<MeResponse> {
   const response = await nextAuthClient.patch<MeResponse>(
     "/api/users/my-profile",
+    payload,
+  );
+  return response.data;
+}
+
+export async function changePassword(
+  payload: ChangePasswordPayload,
+): Promise<ChangePasswordResponse> {
+  const response = await nextAuthClient.patch<ChangePasswordResponse>(
+    "/api/users/change-password",
     payload,
   );
   return response.data;

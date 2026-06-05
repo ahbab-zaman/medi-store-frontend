@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { ShoppingBag, Menu, X } from "lucide-react";
+import WishlistDropdown from "./WishlistDropdown";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import UserDropdown from "./UserDropdown";
@@ -74,6 +75,9 @@ export default function Header() {
           <div className="hidden sm:block">
             <SearchDropdown />
           </div>
+
+          {/* Wishlist Dropdown */}
+          <WishlistDropdown />
 
           <UserDropdown />
 

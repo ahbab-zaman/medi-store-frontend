@@ -1,29 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { MapPin, Pencil, Plus, Trash2 } from "lucide-react";
+import { toast } from "react-hot-toast";
+import {
+  getAddresses,
+  deleteAddress,
+  AddressApiRecord,
+} from "@/services/address.service";
 
-/* ─── Types ──────────────────────────────────────────────────────────────── */
-
-interface Address {
-  address_id: string;
-  firstname: string;
-  lastname: string;
-  address_1: string;
-  address_2?: string;
-  flat?: string;
-  road?: string;
-  city: string;
-  postcode?: string;
-  zone?: string;
-  country: string;
-  mobile?: string;
-  mobile_country_code?: string;
-  default: number;
-}
-
-/* ─── Skeleton stub ──────────────────────────────────────────────────────── */
+/* ─── Skeleton ───────────────────────────────────────────────────────────── */
 function Skeleton({ className }: { className?: string }) {
   return (
     <div
@@ -32,7 +19,7 @@ function Skeleton({ className }: { className?: string }) {
   );
 }
 
-/* ─── ConfirmDialog inline stub (replace with the real component) ────────── */
+/* ─── ConfirmDialog ──────────────────────────────────────────────────────── */
 function ConfirmDialog({
   open,
   title,
@@ -93,69 +80,123 @@ function ConfirmDialog({
   );
 }
 
-/* ─── Mock data ──────────────────────────────────────────────────────────── */
-const MOCK_ADDRESSES: Address[] = [
-  {
-    address_id: "1",
-    firstname: "Sarah",
-    lastname: "Johnson",
-    address_1: "Marina Crown Tower",
-    address_2: "Apartment 2104",
-    flat: "2104",
-    city: "Dubai",
-    postcode: "00000",
-    zone: "Dubai Marina",
-    country: "United Arab Emirates",
-    mobile: "501234567",
-    mobile_country_code: "971",
-    default: 1,
-  },
-  {
-    address_id: "2",
-    firstname: "Sarah",
-    lastname: "Johnson",
-    address_1: "Business Central Tower A",
-    flat: "3402",
-    city: "Dubai",
-    zone: "Business Bay",
-    country: "United Arab Emirates",
-    mobile: "501234567",
-    mobile_country_code: "971",
-    default: 0,
-  },
-  {
-    address_id: "3",
-    firstname: "James",
-    lastname: "Johnson",
-    address_1: "Villa 12, Street 32",
-    city: "Dubai",
-    zone: "Jumeirah",
-    country: "United Arab Emirates",
-    default: 0,
-  },
-];
+/* ─── Address Card ───────────────────────────────────────────────────────── */
+function AddressCard({
+  addr,
+  isDefault,
+  onDelete,
+}: {
+  addr: AddressApiRecord;
+  isDefault: boolean;
+  onDelete: (id: string) => void;
+}) {
+  const containerCls = isDefault
+    ? "rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-5 shadow-sm"
+    : "rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-5 transition-colors hover:border-gray-300 dark:hover:border-gray-600";
+
+  const nameCls = isDefault
+    ? "text-base font-semibold text-gray-700 dark:text-gray-300"
+    : "text-base font-semibold text-gray-900 dark:text-gray-100";
+
+  const detailCls = isDefault
+    ? "mt-3 space-y-1 text-sm text-gray-700 dark:text-gray-300"
+    : "mt-3 space-y-1 text-sm text-gray-600 dark:text-gray-400";
+
+  return (
+    <div className={containerCls}>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-2">
+            <h3 className={nameCls}>
+              {addr.firstname} {addr.lastname}
+            </h3>
+            {addr.name && (
+              <span className="rounded-full border border-gray-200 dark:border-gray-700 px-2 py-0.5 text-xs text-gray-500 dark:text-gray-400">
+                {addr.name}
+              </span>
+            )}
+            {isDefault && (
+              <span className="rounded-full bg-gray-600 px-2.5 py-1 text-xs font-medium text-white">
+                Default
+              </span>
+            )}
+          </div>
+
+          <div className={detailCls}>
+            <p>
+              {addr.address_1}, {addr.address_2}
+            </p>
+            {addr.road && <p>Road: {addr.road}</p>}
+            {addr.area && <p>Area: {addr.area}</p>}
+            {addr.landmark && <p>Near: {addr.landmark}</p>}
+            <p>
+              +{addr.mobileCountryCode} {addr.mobile}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex gap-2 sm:items-end">
+          <Link
+            href={`/account/address/${addr.id}`}
+            className={`inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-sm transition-colors ${
+              isDefault
+                ? "border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100"
+                : "border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100"
+            }`}
+          >
+            <Pencil size={14} />
+          </Link>
+          <button
+            onClick={() => onDelete(addr.id)}
+            className="inline-flex items-center gap-2 rounded-lg border border-red-100 dark:border-red-900/30 px-3 py-2 text-sm text-red-600 dark:text-red-400 transition-colors hover:bg-red-50 dark:hover:bg-red-950/30"
+          >
+            <Trash2 size={14} />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 /* ─── Page ───────────────────────────────────────────────────────────────── */
-
 export default function AddressPage() {
-  const [addresses, setAddresses] = useState<Address[]>(MOCK_ADDRESSES);
-  const [loading] = useState(false);
+  const [addresses, setAddresses] = useState<AddressApiRecord[]>([]);
+  const [loading, setLoading] = useState(true);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
 
-  const defaultAddress = addresses.find((addr) => addr.default == 1) ?? null;
-  const otherAddresses = addresses.filter(
-    (addr) => addr.address_id !== defaultAddress?.address_id,
-  );
+  const fetchAddresses = async () => {
+    try {
+      setLoading(true);
+      const res = await getAddresses();
+      if (res.data) setAddresses(res.data);
+    } catch {
+      toast.error("Failed to load addresses");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchAddresses();
+  }, []);
+
+  const defaultAddress = addresses.find((a) => a.isDefault) ?? null;
+  const otherAddresses = addresses.filter((a) => a.id !== defaultAddress?.id);
 
   const handleDelete = async () => {
     if (!deleteId) return;
     setDeleteLoading(true);
-    // Simulate API call
-    await new Promise((r) => setTimeout(r, 800));
-    setAddresses((prev) => prev.filter((a) => a.address_id !== deleteId));
-    setDeleteId(null);
-    setDeleteLoading(false);
+    try {
+      await deleteAddress(deleteId);
+      setAddresses((prev) => prev.filter((a) => a.id !== deleteId));
+      toast.success("Address deleted");
+    } catch {
+      toast.error("Failed to delete address");
+    } finally {
+      setDeleteId(null);
+      setDeleteLoading(false);
+    }
   };
 
   return (
@@ -213,71 +254,18 @@ export default function AddressPage() {
             {defaultAddress && (
               <section className="space-y-3">
                 <div>
-                  <p className="text-[11px] font-semibold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
+                  <p className="text-[11px] font-semibold uppercase tracking-wider text-gray-600 dark:text-gray-400">
                     Default address
                   </p>
                   <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                     This address will be used first at checkout.
                   </p>
                 </div>
-
-                <div className="rounded-2xl border border-indigo-300/40 dark:border-indigo-700/40 bg-indigo-50/60 dark:bg-indigo-950/20 p-5 shadow-sm">
-                  <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                    <div className="min-w-0">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <h3 className="text-base font-semibold text-indigo-700 dark:text-indigo-300">
-                          {defaultAddress.firstname} {defaultAddress.lastname}
-                        </h3>
-                        <span className="rounded-full bg-indigo-600 px-2.5 py-1 text-xs font-medium text-white">
-                          Default
-                        </span>
-                      </div>
-
-                      <div className="mt-3 space-y-1 text-sm text-gray-700 dark:text-gray-300">
-                        <p>
-                          {defaultAddress.address_1}
-                          {defaultAddress.flat
-                            ? `, Flat ${defaultAddress.flat}`
-                            : ""}
-                        </p>
-                        {defaultAddress.address_2 && (
-                          <p>{defaultAddress.address_2}</p>
-                        )}
-                        <p>
-                          {defaultAddress.city}
-                          {defaultAddress.postcode
-                            ? ` ${defaultAddress.postcode}`
-                            : ""}
-                          {defaultAddress.zone
-                            ? `, ${defaultAddress.zone}`
-                            : ""}
-                        </p>
-                        <p>{defaultAddress.country}</p>
-                        {defaultAddress.mobile && (
-                          <p>
-                            +{defaultAddress.mobile_country_code}{" "}
-                            {defaultAddress.mobile}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-
-                    <div className="flex gap-2 sm:items-end">
-                      <Link
-                        href={`/account/address/${defaultAddress.address_id}`}
-                        className="inline-flex items-center gap-2 rounded-lg border border-indigo-200 dark:border-indigo-800/40 bg-white dark:bg-gray-900 px-3 py-2 text-sm text-indigo-600 dark:text-indigo-400 transition-colors hover:bg-indigo-50 dark:hover:bg-indigo-950/30"
-                      >
-                        <Pencil size={14} />
-                      </Link>
-                      <button
-                        onClick={() => setDeleteId(defaultAddress.address_id)}
-                        className="inline-flex items-center gap-2 rounded-lg border border-red-100 dark:border-red-900/30 px-3 py-2 text-sm text-red-600 dark:text-red-400 transition-colors hover:bg-red-50 dark:hover:bg-red-950/30"
-                      >
-                        <Trash2 size={14} />
-                      </button>
-                    </div>
-                  </div>
-                </div>
+                <AddressCard
+                  addr={defaultAddress}
+                  isDefault={true}
+                  onDelete={setDeleteId}
+                />
               </section>
             )}
 
@@ -294,57 +282,14 @@ export default function AddressPage() {
                     </p>
                   </div>
                 )}
-
                 <div className="space-y-4">
                   {otherAddresses.map((addr) => (
-                    <div
-                      key={addr.address_id}
-                      className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-5 transition-colors hover:border-gray-300 dark:hover:border-gray-600"
-                    >
-                      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                        <div className="min-w-0">
-                          <div className="flex flex-wrap items-center gap-2">
-                            <h3 className="text-base font-semibold text-gray-900 dark:text-gray-100">
-                              {addr.firstname} {addr.lastname}
-                            </h3>
-                          </div>
-
-                          <div className="mt-3 space-y-1 text-sm text-gray-600 dark:text-gray-400">
-                            <p>
-                              {addr.address_1}
-                              {addr.flat ? `, Flat ${addr.flat}` : ""}
-                            </p>
-                            {addr.address_2 && <p>{addr.address_2}</p>}
-                            <p>
-                              {addr.city}
-                              {addr.postcode ? ` ${addr.postcode}` : ""}
-                              {addr.zone ? `, ${addr.zone}` : ""}
-                            </p>
-                            <p>{addr.country}</p>
-                            {addr.mobile && (
-                              <p>
-                                +{addr.mobile_country_code} {addr.mobile}
-                              </p>
-                            )}
-                          </div>
-                        </div>
-
-                        <div className="flex gap-2 sm:items-end">
-                          <Link
-                            href={`/account/address/${addr.address_id}`}
-                            className="inline-flex items-center gap-2 rounded-lg border border-gray-200 dark:border-gray-700 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 transition-colors hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100"
-                          >
-                            <Pencil size={14} />
-                          </Link>
-                          <button
-                            onClick={() => setDeleteId(addr.address_id)}
-                            className="inline-flex items-center gap-2 rounded-lg border border-red-100 dark:border-red-900/30 px-3 py-2 text-sm text-red-600 dark:text-red-400 transition-colors hover:bg-red-50 dark:hover:bg-red-950/30"
-                          >
-                            <Trash2 size={14} />
-                          </button>
-                        </div>
-                      </div>
-                    </div>
+                    <AddressCard
+                      key={addr.id}
+                      addr={addr}
+                      isDefault={false}
+                      onDelete={setDeleteId}
+                    />
                   ))}
                 </div>
               </section>

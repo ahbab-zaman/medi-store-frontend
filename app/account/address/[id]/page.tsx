@@ -1,9 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { use, useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ChevronLeft, MapPin } from "lucide-react";
+import { toast } from "react-hot-toast";
 import { AddressForm, AddressFormData } from "@/components/MyAccount/AddressForm";
+import { getAddressById, updateAddress, AddressApiRecord } from "@/services/address.service";
 
 /* ─── Skeleton stub ──────────────────────────────────────────────────────── */
 function Skeleton({ className }: { className?: string }) {
@@ -14,38 +17,84 @@ function Skeleton({ className }: { className?: string }) {
   );
 }
 
-/* ─── Page ───────────────────────────────────────────────────────────────── */
+/* ─── Helpers ─────────────────────────────────────────────────────────────── */
+function toFormData(addr: AddressApiRecord): Partial<AddressFormData> {
+  return {
+    name: addr.name,
+    firstname: addr.firstname,
+    lastname: addr.lastname,
+    address_1: addr.address_1,
+    address_2: addr.address_2,
+    road: addr.road,
+    area: addr.area,
+    landmark: addr.landmark ?? "",
+    latitude: addr.latitude ?? "",
+    longitude: addr.longitude ?? "",
+    mobile_country_code: addr.mobileCountryCode,
+    mobile: addr.mobile,
+    default: addr.isDefault ? 1 : 0,
+  };
+}
 
+/* ─── Page ───────────────────────────────────────────────────────────────── */
 export default function EditAddressPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }> | { id: string };
 }) {
-  const [loading, setLoading] = useState(false);
-  const [fetchLoading] = useState(false); // set to true to preview skeleton state
+  // Support both Next.js 15 async params and older sync params
+  const resolvedParams = params instanceof Promise ? use(params) : params;
+  const { id } = resolvedParams;
 
-  // Pre-fill with mock data for UI preview — replace with real API fetch
-  const [initial] = useState<Partial<AddressFormData>>({
-    name: "Home",
-    firstname: "Sarah",
-    lastname: "Johnson",
-    address_1: "Marina Crown Tower",
-    address_2: "Apartment 2104",
-    road: "Marina Walk",
-    area: "1",
-    landmark: "Next to Dubai Marina Mall",
-    latitude: "25.0812",
-    longitude: "55.1428",
-    mobile_country_code: "971",
-    mobile: "501234567",
-    default: 1,
-  });
+  const router = useRouter();
+  const [fetchLoading, setFetchLoading] = useState(true);
+  const [submitLoading, setSubmitLoading] = useState(false);
+  const [initial, setInitial] = useState<Partial<AddressFormData>>({});
+  const [notFound, setNotFound] = useState(false);
 
-  const handleSubmit = async (_data: AddressFormData) => {
-    setLoading(true);
-    // TODO: wire up API call
-    await new Promise((r) => setTimeout(r, 1000));
-    setLoading(false);
+  useEffect(() => {
+    if (!id) return;
+    setFetchLoading(true);
+    getAddressById(id)
+      .then((res) => {
+        if (res.data) {
+          setInitial(toFormData(res.data));
+        } else {
+          setNotFound(true);
+        }
+      })
+      .catch(() => {
+        setNotFound(true);
+        toast.error("Address not found");
+      })
+      .finally(() => setFetchLoading(false));
+  }, [id]);
+
+  const handleSubmit = async (data: AddressFormData) => {
+    setSubmitLoading(true);
+    try {
+      await updateAddress(id, {
+        name: data.name,
+        firstname: data.firstname,
+        lastname: data.lastname,
+        address_1: data.address_1,
+        address_2: data.address_2,
+        road: data.road,
+        area: data.area,
+        landmark: data.landmark || undefined,
+        latitude: data.latitude || undefined,
+        longitude: data.longitude || undefined,
+        mobile_country_code: data.mobile_country_code,
+        mobile: data.mobile,
+        default: data.default,
+      });
+      toast.success("Address updated successfully!");
+      router.push("/account/address");
+    } catch (err: any) {
+      toast.error(err?.message || "Failed to update address. Please try again.");
+    } finally {
+      setSubmitLoading(false);
+    }
   };
 
   return (
@@ -75,7 +124,25 @@ export default function EditAddressPage({
 
       {/* Body */}
       <div className="p-6 sm:p-8">
-        {fetchLoading ? (
+        {notFound ? (
+          <div className="rounded-2xl border border-dashed border-gray-200 dark:border-gray-700 px-6 py-14 text-center">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800">
+              <MapPin size={24} className="text-gray-400 dark:text-gray-500" />
+            </div>
+            <h3 className="mt-4 text-lg font-semibold text-gray-900 dark:text-gray-100">
+              Address not found
+            </h3>
+            <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+              This address may have been deleted or doesn&apos;t exist.
+            </p>
+            <Link
+              href="/account/address"
+              className="mt-5 inline-flex items-center gap-2 rounded-xl bg-gray-900 dark:bg-gray-700 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-gray-800 dark:hover:bg-gray-600"
+            >
+              Back to Address Book
+            </Link>
+          </div>
+        ) : fetchLoading ? (
           <div className="space-y-4">
             {Array.from({ length: 6 }).map((_, i) => (
               <Skeleton key={i} className="h-14 w-full rounded-2xl" />
@@ -85,7 +152,7 @@ export default function EditAddressPage({
           <AddressForm
             initial={initial}
             onSubmit={handleSubmit}
-            loading={loading}
+            loading={submitLoading}
             submitLabel="Update Address"
           />
         )}

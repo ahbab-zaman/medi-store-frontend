@@ -4,3 +4,5 @@ export * from "./medicine.types";
 export * from "./order.types";
 export * from "./api.types";
 export * from "./cart.types";
+export * from "./address.types";
+export * from "./wishlist.types";

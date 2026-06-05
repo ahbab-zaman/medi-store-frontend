@@ -2,17 +2,41 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
+import { toast } from "react-hot-toast";
 import { AddressForm, AddressFormData } from "@/components/MyAccount/AddressForm";
+import { createAddress } from "@/services/address.service";
 
 export default function AddAddressPage() {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (_data: AddressFormData) => {
+  const handleSubmit = async (data: AddressFormData) => {
     setLoading(true);
-    // TODO: wire up API call
-    await new Promise((r) => setTimeout(r, 1000));
-    setLoading(false);
+    try {
+      await createAddress({
+        name: data.name,
+        firstname: data.firstname,
+        lastname: data.lastname,
+        address_1: data.address_1,
+        address_2: data.address_2,
+        road: data.road,
+        area: data.area,
+        landmark: data.landmark || undefined,
+        latitude: data.latitude || undefined,
+        longitude: data.longitude || undefined,
+        mobile_country_code: data.mobile_country_code,
+        mobile: data.mobile,
+        default: data.default,
+      });
+      toast.success("Address added successfully!");
+      router.push("/account/address");
+    } catch (err: any) {
+      toast.error(err?.message || "Failed to add address. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

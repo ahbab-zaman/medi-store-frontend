@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ShoppingBag, Loader2 } from "lucide-react";
+import { ShoppingBag, Loader2, Heart } from "lucide-react";
 import { Medicine } from "@/types/medicine.types";
 import { getImageUrl } from "@/utils/image-url";
 import bdtImage from "@/public/BDT.png";
@@ -9,7 +9,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { QuantitySelector } from "./QuantitySelector";
 import { CartModal } from "./CartModal";
-import { useCart } from "@/hooks";
+import { useCart, useWishlist } from "@/hooks";
 import { toast } from "sonner";
 
 interface MedicineCardProps {
@@ -21,6 +21,8 @@ export function MedicineCard({ medicine }: MedicineCardProps) {
   const [showCartModal, setShowCartModal] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   const { addToCart } = useCart();
+  const { toggleWishlist, isInWishlist } = useWishlist();
+  const isWishlisted = isInWishlist(medicine.id);
 
   const handleAddToCart = async (quantity: number) => {
     try {
@@ -67,6 +69,25 @@ export function MedicineCard({ medicine }: MedicineCardProps) {
             </div>
           )}
         </Link>
+
+        {/* Heart/Wishlist Button */}
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleWishlist(medicine);
+          }}
+          className="absolute top-3 right-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 hover:bg-white text-gray-600 hover:text-red-500 shadow-md backdrop-blur-sm transition-all duration-300 transform hover:scale-110 active:scale-95"
+          title={isWishlisted ? "Remove from Wishlist" : "Add to Wishlist"}
+        >
+          <Heart
+            className={`h-4.5 w-4.5 transition-colors duration-300 ${
+              isWishlisted
+                ? "fill-red-500 text-red-500"
+                : "text-gray-600"
+            }`}
+          />
+        </button>
 
         {/* Content */}
         <div className="p-4">
