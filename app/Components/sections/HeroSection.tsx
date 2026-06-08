@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 export default function HeroSection() {
   const router = useRouter();
   return (
-    <section className="relative overflow-hidden bg-[#F6F4F0]">
+    <section className="relative overflow-hidden bg-background">
       <div className="container mx-auto px-4 py-20 lg:py-32">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           {/* Content */}
@@ -84,7 +84,7 @@ export default function HeroSection() {
                 },
               ].map((item) => (
                 <div key={item.title} className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-[#DED6CD] flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center">
                     <item.icon className="w-5 h-5 text-foreground" />
                   </div>
                   <div>

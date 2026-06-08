@@ -45,7 +45,7 @@ export function QuantitySelector({
   return (
     <div
       ref={dropdownRef}
-      className={`absolute right-0 bottom-0 left-0 z-50 overflow-hidden rounded-t-md bg-[#AA383A] transition-all duration-300 ease-in-out ${
+      className={`absolute right-0 bottom-0 left-0 z-50 overflow-hidden rounded-t-md bg-destructive transition-all duration-300 ease-in-out ${
         isOpen ? "max-h-50" : "h-0"
       }`}
     >
@@ -54,7 +54,7 @@ export function QuantitySelector({
           <button
             key={qty}
             onClick={() => handleSelect(qty)}
-            className="w-full py-2 text-center text-[15px] font-semibold text-white transition hover:bg-[#C95467]"
+            className="w-full py-2 text-center text-[15px] font-semibold text-white transition hover:bg-destructive/80"
           >
             {qty}
           </button>

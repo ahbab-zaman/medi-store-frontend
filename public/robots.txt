@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /seller/
+Disallow: /customer/
+Disallow: /account/
+Disallow: /my-account/
+Disallow: /my-orders/
+Disallow: /checkout/
+Disallow: /cart/
+Disallow: /profile/
+Disallow: /api/
+
+Sitemap: https://medistore.com/sitemap.xml

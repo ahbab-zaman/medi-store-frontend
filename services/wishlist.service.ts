@@ -18,9 +18,8 @@ export const addToWishlist = async (medicineId: string): Promise<WishlistItem> =
   return response.data.data;
 };
 
-export const removeFromWishlist = async (medicineId: string): Promise<any> => {
-  const response = await wishlistClient.delete(`/api/wishlist/remove/${medicineId}`);
-  return response.data.data;
+export const removeFromWishlist = async (medicineId: string): Promise<void> => {
+  await wishlistClient.delete(`/api/wishlist/remove/${medicineId}`);
 };
 
 export const wishlistService = {

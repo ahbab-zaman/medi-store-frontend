@@ -65,10 +65,12 @@ export const useUIStore = create<UIState>((set, get) => ({
   },
 
   closeModal: (id) => {
+    const existingModal = get().modals[id];
+    if (!existingModal) return;
     set({
       modals: {
         ...get().modals,
-        [id]: { ...get().modals[id], isOpen: false },
+        [id]: { ...existingModal, isOpen: false },
       },
     });
   },

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { decodeJwtPayload } from "@/utils/auth/jwt";
+import { verifyJwtPayload } from "@/utils/auth/jwt";
 import { ACCESS_TOKEN_COOKIE } from "@/utils/auth/cookies";
 
 const roleHome: Record<string, string> = {
@@ -22,7 +22,7 @@ function isProtectedPath(pathname: string) {
   );
 }
 
-export function middleware(req: NextRequest) {
+export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   if (!isProtectedPath(pathname)) return NextResponse.next();
 
@@ -34,10 +34,12 @@ export function middleware(req: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  const payload = decodeJwtPayload(token);
+  // Cryptographically verify the JWT signature — prevents forged tokens
+  const secret = process.env.NEXT_PUBLIC_JWT_SECRET ?? process.env.JWT_SECRET ?? "";
+  const payload = await verifyJwtPayload(token, secret);
   const role = payload?.role;
 
-  // If token is malformed, treat as logged out.
+  // If token is invalid/expired/forged, treat as logged out.
   if (!role) {
     const url = req.nextUrl.clone();
     url.pathname = "/login";

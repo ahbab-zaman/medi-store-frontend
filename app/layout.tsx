@@ -18,8 +18,27 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Medi-Store",
-  description: "Medi-Store e-commerce",
+  title: {
+    template: "%s | Medi-Store",
+    default: "Medi-Store – Your Trusted Online Pharmacy",
+  },
+  description:
+    "Medi-Store is a trusted online pharmacy offering a wide range of medicines, healthcare products, and medical supplies delivered to your door.",
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_BASE_URL ?? "https://medistore.com",
+  ),
+  openGraph: {
+    siteName: "Medi-Store",
+    type: "website",
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({

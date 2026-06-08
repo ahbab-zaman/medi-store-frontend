@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient, QueryKey } from "@tanstack/react-query";
 import * as medicineService from "@/services/medicine.service";
 import {
   GetMedicinesParams,
@@ -8,6 +8,10 @@ import {
   ApiResponse,
 } from "@/types";
 import { toast } from "sonner";
+
+type MedicineListCache = ApiResponse<Medicine[]> | undefined;
+type MedicineSingleCache = ApiResponse<Medicine> | undefined;
+type QueryEntry = [QueryKey, unknown];
 
 // Fetch all medicines with filters
 export function useMedicines(params?: GetMedicinesParams) {
@@ -51,7 +55,7 @@ export function useCreateMedicine() {
       queryClient.invalidateQueries({ queryKey: ["medicines"] });
       toast.success("Medicine created successfully!");
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       toast.error(error.message || "Failed to create medicine");
     },
   });
@@ -65,21 +69,21 @@ export function useUpdateMedicine() {
     ApiResponse<Medicine>,
     Error,
     { id: string; data: FormData | UpdateMedicinePayload },
-    { previousMedicines?: any; previousMedicine?: any }
+    { previousMedicines?: QueryEntry[]; previousMedicine?: MedicineSingleCache }
   >({
     mutationFn: medicineService.updateMedicine,
     onMutate: async ({ id, data }) => {
       await queryClient.cancelQueries({ queryKey: ["medicines"] });
 
       // Snapshot previous data
-      const previousMedicines = queryClient.getQueriesData({
+      const previousMedicines = queryClient.getQueriesData<ApiResponse<Medicine[]>>({
         queryKey: ["medicines"],
       });
-      const previousMedicine = queryClient.getQueryData(["medicines", id]);
+      const previousMedicine = queryClient.getQueryData<ApiResponse<Medicine>>(["medicines", id]);
 
       // Optimistically update lists
       if (!(data instanceof FormData)) {
-        queryClient.setQueriesData({ queryKey: ["medicines"] }, (old: any) => {
+        queryClient.setQueriesData({ queryKey: ["medicines"] }, (old: MedicineListCache) => {
           if (!old?.data) return old;
           return {
             ...old,
@@ -89,7 +93,7 @@ export function useUpdateMedicine() {
           };
         });
 
-        queryClient.setQueryData(["medicines", id], (old: any) => {
+        queryClient.setQueryData(["medicines", id], (old: MedicineSingleCache) => {
           if (!old?.data) return old;
           return { ...old, data: { ...old.data, ...data } };
         });
@@ -103,9 +107,9 @@ export function useUpdateMedicine() {
 
       toast.success("Medicine updated successfully!");
     },
-    onError: (error: any, variables, context) => {
+    onError: (error: Error, variables, context) => {
       if (context?.previousMedicines) {
-        context.previousMedicines.forEach(([queryKey, data]: [any, any]) => {
+        context.previousMedicines.forEach(([queryKey, data]: QueryEntry) => {
           queryClient.setQueryData(queryKey, data);
         });
       }
@@ -125,16 +129,16 @@ export function useUpdateMedicine() {
 export function useDeleteMedicine() {
   const queryClient = useQueryClient();
 
-  return useMutation<any, Error, string, { previousMedicines?: any }>({
+  return useMutation<ApiResponse<null>, Error, string, { previousMedicines?: QueryEntry[] }>({ 
     mutationFn: medicineService.deleteMedicine,
     onMutate: async (id) => {
       await queryClient.cancelQueries({ queryKey: ["medicines"] });
-      const previousMedicines = queryClient.getQueriesData({
+      const previousMedicines = queryClient.getQueriesData<ApiResponse<Medicine[]>>({
         queryKey: ["medicines"],
       });
 
       // Optimistically remove from lists
-      queryClient.setQueriesData({ queryKey: ["medicines"] }, (old: any) => {
+      queryClient.setQueriesData({ queryKey: ["medicines"] }, (old: MedicineListCache) => {
         if (!old?.data) return old;
         return {
           ...old,
@@ -148,9 +152,9 @@ export function useDeleteMedicine() {
       queryClient.invalidateQueries({ queryKey: ["medicines"] });
       toast.success("Medicine deleted successfully!");
     },
-    onError: (error: any, variables, context) => {
+    onError: (error: Error, _variables, context) => {
       if (context?.previousMedicines) {
-        context.previousMedicines.forEach(([queryKey, data]: [any, any]) => {
+        context.previousMedicines.forEach(([queryKey, data]: QueryEntry) => {
           queryClient.setQueryData(queryKey, data);
         });
       }

@@ -64,10 +64,12 @@ export function useCart() {
         if (existingItemIndex > -1) {
           // Update existing item
           const existingItem = newItems[existingItemIndex];
-          newItems[existingItemIndex] = {
-            ...existingItem,
-            quantity: existingItem.quantity + quantity,
-          };
+          if (existingItem) {
+            newItems[existingItemIndex] = {
+              ...existingItem,
+              quantity: existingItem.quantity + quantity,
+            };
+          }
         } else {
           // Add new item
           const newItem: CartItem = {
@@ -121,6 +123,7 @@ export function useCart() {
         if (existingItemIndex === -1) return old;
 
         const existingItem = old.items[existingItemIndex];
+        if (!existingItem) return old;
         const quantityDiff = quantity - existingItem.quantity;
         const price = existingItem.medicine.price || 0;
 
