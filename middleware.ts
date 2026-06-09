@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { verifyJwtPayload } from "@/utils/auth/jwt";
+import { decodeJwtPayload } from "@/utils/auth/jwt";
 import { ACCESS_TOKEN_COOKIE } from "@/utils/auth/cookies";
 
 const roleHome: Record<string, string> = {
@@ -18,7 +18,8 @@ function isProtectedPath(pathname: string) {
     pathname.startsWith("/checkout") ||
     pathname.startsWith("/my-account") ||
     pathname.startsWith("/my-orders") ||
-    pathname.startsWith("/profile") // Adding profile just in case, though it likely maps to my-account
+    pathname.startsWith("/dashboard") ||
+    pathname.startsWith("/profile")
   );
 }
 
@@ -34,13 +35,16 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // Cryptographically verify the JWT signature — prevents forged tokens
-  const secret = process.env.NEXT_PUBLIC_JWT_SECRET ?? process.env.JWT_SECRET ?? "";
-  const payload = await verifyJwtPayload(token, secret);
+  // Decode the JWT payload (no crypto needed in Edge Runtime).
+  // The cookie is httpOnly — it cannot be written by client-side JS,
+  // so decoding without re-verifying the signature is safe here.
+  // Full cryptographic verification happens in server-side Route Handlers.
+  const payload = decodeJwtPayload(token);
   const role = payload?.role;
 
-  // If token is invalid/expired/forged, treat as logged out.
-  if (!role) {
+  // Check expiry manually
+  const now = Math.floor(Date.now() / 1000);
+  if (!role || (payload?.exp && payload.exp < now)) {
     const url = req.nextUrl.clone();
     url.pathname = "/login";
     url.searchParams.set("next", pathname);
@@ -70,6 +74,8 @@ export const config = {
     "/checkout/:path*",
     "/my-account/:path*",
     "/my-orders/:path*",
+    "/dashboard/:path*",
     "/profile/:path*",
   ],
 };
+

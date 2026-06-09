@@ -8,10 +8,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import UserDropdown from "./UserDropdown";
 import { useCart } from "@/hooks";
 import { CartSidebar } from "@/components/ui/CartSidebar";
-import { CategoryDropdown } from "@/app/Components/Dropdown/CategoryDropdown";
-import { SearchDropdown } from "@/app/Components/Dropdown/SearchDropdown";
+
 import logo from "@/app/favicon.ico";
 import Image from "next/image";
+import { SearchBar } from "@/app/Components/Dropdown/SearchBar";
+import { CategoryNavStrip } from "@/app/Components/Dropdown/CategoryNavStrip";
 
 const NAV_LINKS = [
   { name: "All Products", href: "/medicine" },
@@ -25,13 +26,15 @@ export default function Header() {
   const { totalItems } = useCart();
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-black/5 bg-[#FAF9F5] backdrop-blur-md dark:border-white/5 dark:bg-black/70">
-      <div className="mx-auto container flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
-        {/* Mobile Menu Button */}
-        <div className="flex lg:hidden">
+    <header className="sticky top-0 z-90 w-full border-b border-black/5 bg-[#FAF9F5] backdrop-blur-md dark:border-white/5 dark:bg-black/70">
+      {/* ── TOP BAR ── */}
+      <div className="mx-auto container flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8 gap-4">
+        {/* LEFT – Mobile menu toggle + Logo */}
+        <div className="flex items-center gap-2 flex-shrink-0">
+          {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="rounded-lg p-2 hover:bg-black/5 dark:hover:bg-white/5"
+            className="lg:hidden rounded-lg p-2 hover:bg-black/5 dark:hover:bg-white/5"
           >
             <motion.div
               animate={{ rotate: isMenuOpen ? 90 : 0 }}
@@ -40,10 +43,8 @@ export default function Header() {
               {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </motion.div>
           </button>
-        </div>
 
-        {/* Logo */}
-        <div className="flex lg:flex-1">
+          {/* Logo */}
           <Link
             href="/"
             className="text-xl font-bold tracking-tight text-black dark:text-white"
@@ -52,35 +53,15 @@ export default function Header() {
           </Link>
         </div>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden lg:flex items-center gap-x-10">
-          {NAV_LINKS.map((link) => (
-            <Link
-              key={link.name}
-              href={link.href}
-              className="group relative text-sm font-medium text-black/70 transition-colors hover:text-black dark:text-white/70 dark:hover:text-white"
-            >
-              {link.name}
-              <span className="absolute -bottom-1 left-0 h-0.5 w-full origin-left scale-x-0 bg-[#C48C64] transition-transform duration-300 group-hover:scale-x-100" />
-            </Link>
-          ))}
+        {/* CENTER – Search Bar (desktop) */}
+        <div className="hidden sm:flex flex-1 max-w-xl mx-4 lg:mx-8">
+          <SearchBar />
+        </div>
 
-          {/* Category Dropdown */}
-          <CategoryDropdown />
-        </nav>
-
-        {/* Actions */}
-        <div className="flex flex-1 items-center justify-end gap-x-4">
-          {/* Search Dropdown - Hidden on small screens, visible on sm and up */}
-          <div className="hidden sm:block">
-            <SearchDropdown />
-          </div>
-
-          {/* Wishlist Dropdown */}
+        {/* RIGHT – Actions */}
+        <div className="flex items-center gap-x-1 flex-shrink-0">
           <WishlistDropdown />
-
           <UserDropdown />
-
           <button
             onClick={() => setShowCartSidebar(true)}
             className="relative rounded-lg p-2 hover:bg-black/5 dark:hover:bg-white/5"
@@ -95,7 +76,10 @@ export default function Header() {
         </div>
       </div>
 
-      {/* Mobile Navigation */}
+      {/* ── CATEGORY STRIP (bottom nav) ── */}
+      <CategoryNavStrip />
+
+      {/* ── MOBILE NAV DRAWER ── */}
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div
@@ -106,9 +90,9 @@ export default function Header() {
             className="lg:hidden overflow-hidden border-t border-black/5 bg-white dark:border-white/5 dark:bg-black"
           >
             <div className="space-y-1 px-4 py-4">
-              {/* Mobile Search - Show on mobile only */}
+              {/* Mobile Search */}
               <div className="mb-4 sm:hidden">
-                <SearchDropdown />
+                <SearchBar />
               </div>
 
               {NAV_LINKS.map((link, i) => (

@@ -125,7 +125,7 @@ export default function AdminDashboardPage() {
     },
     {
       label: "Total Revenue",
-      value: `$${stats.revenue.toFixed(2)}`,
+      value: `৳ ${stats.revenue.toFixed(2)}`,
       icon: DollarSign,
       color:
         "text-emerald-600 bg-emerald-50 dark:bg-emerald-950/50 dark:text-emerald-400",

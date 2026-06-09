@@ -42,11 +42,11 @@ export function MedicineCard({ medicine }: MedicineCardProps) {
 
   return (
     <>
-      <div className="group relative block overflow-hidden rounded-lg bg-white transition-all duration-300 hover:shadow-lg border border-gray-100">
+      <div className="group relative block rounded-lg bg-white transition-all duration-300 hover:shadow-lg border border-gray-100">
         {/* Image Container */}
         <Link
           href={`/medicine/${medicine.id}`}
-          className="block relative aspect-square overflow-hidden bg-gray-50"
+          className="block relative aspect-square overflow-hidden rounded-t-lg bg-gray-50"
         >
           {medicine.imageUrl ? (
             <img

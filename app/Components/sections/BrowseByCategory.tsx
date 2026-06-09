@@ -1,15 +1,42 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useCategories } from "@/hooks/useCategories";
 import { getImageUrl } from "@/utils/image-url";
 import Link from "next/link";
-import { Loader2, Package } from "lucide-react";
+import { Package, ChevronLeft, ChevronRight } from "lucide-react";
 import { Skeleton } from "@/components/ui/Skeleton";
+import { useState } from "react";
+
+const VISIBLE_COUNT = 7; // how many circles visible at once (desktop)
 
 export function BrowseByCategory() {
   const { data: categoriesData, isLoading } = useCategories();
-  const categories = categoriesData?.data?.slice(0, 4) || [];
+  const categories = categoriesData?.data || [];
+
+  const [startIndex, setStartIndex] = useState(0);
+  const [direction, setDirection] = useState<1 | -1>(1);
+
+  const visibleCount = VISIBLE_COUNT;
+  const canGoPrev = startIndex > 0;
+  const canGoNext = startIndex + visibleCount < categories.length;
+
+  const handlePrev = () => {
+    if (!canGoPrev) return;
+    setDirection(-1);
+    setStartIndex((i) => Math.max(0, i - 1));
+  };
+
+  const handleNext = () => {
+    if (!canGoNext) return;
+    setDirection(1);
+    setStartIndex((i) => Math.min(categories.length - visibleCount, i + 1));
+  };
+
+  const visibleCategories = categories.slice(
+    startIndex,
+    startIndex + visibleCount
+  );
 
   return (
     <section className="py-20 lg:py-28 bg-[#F6F4F0]">
@@ -33,54 +60,144 @@ export function BrowseByCategory() {
           </p>
         </motion.div>
 
-        {/* Categories Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6">
-          {isLoading
-            ? Array.from({ length: 4 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="bg-white rounded-2xl p-6 lg:p-8 shadow-card"
-                >
-                  <Skeleton className="w-14 h-14 rounded-xl mb-4" />
-                  <Skeleton className="h-6 w-3/4 mb-2" />
-                  <Skeleton className="h-4 w-1/2" />
-                </div>
-              ))
-            : categories.map((category, index) => (
-                <Link
-                  key={category.id}
-                  href={`/medicine?category=${category.id}`}
-                >
-                  <motion.div
-                    initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                    whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                    viewport={{ once: true, margin: "-50px" }}
-                    transition={{ duration: 0.4, delay: index * 0.05 }}
-                    whileHover={{ y: -6, scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="group h-full bg-white rounded-2xl p-6 lg:p-8 shadow-card hover:shadow-elegant transition-shadow duration-300 text-left block cursor-pointer"
+        {/* Carousel */}
+        <div className="relative flex items-center gap-3">
+          {/* Left Arrow — hidden on mobile */}
+          <button
+            onClick={handlePrev}
+            disabled={!canGoPrev}
+            aria-label="Previous categories"
+            className={`hidden md:flex flex-shrink-0 w-10 h-10 rounded-full border items-center justify-center transition-all duration-200 shadow-sm
+              ${
+                canGoPrev
+                  ? "bg-white border-[#D2A88A] text-[#D2A88A] hover:bg-[#D2A88A] hover:text-white cursor-pointer"
+                  : "bg-white border-gray-200 text-gray-300 cursor-not-allowed"
+              }`}
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+
+          {/* Circles Track */}
+          <div className="flex-1 overflow-hidden">
+            {isLoading ? (
+              <div className="flex gap-4 justify-between">
+                {Array.from({ length: visibleCount }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="flex flex-col items-center gap-2 flex-shrink-0"
                   >
-                    <div className="w-14 h-14 rounded-xl bg-muted group-hover:bg-accent/10 flex items-center justify-center mb-4 transition-colors duration-300 overflow-hidden relative">
-                      {category.image ? (
-                        <img
-                          src={getImageUrl(category.image)}
-                          alt={category.name}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <Package className="w-7 h-7 text-muted-foreground group-hover:text-accent transition-colors duration-300" />
-                      )}
-                    </div>
-                    <h3 className="font-medium mb-1 group-hover:text-accent transition-colors">
-                      {category.name}
-                    </h3>
-                    <p className="text-sm text-muted-foreground">
-                      {category._count?.medicines || 0} products
-                    </p>
+                    <Skeleton className="w-16 h-16 md:w-20 md:h-20 rounded-full" />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <>
+                {/* Mobile: horizontal scroll */}
+                <div className="flex md:hidden gap-4 overflow-x-auto scrollbar-hide pb-2">
+                  {categories.map((category) => (
+                    <Link
+                      key={category.id}
+                      href={`/medicine?category=${category.id}`}
+                      className="flex flex-col items-center gap-2 flex-shrink-0 group"
+                    >
+                      <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-transparent group-hover:border-[#D2A88A] transition-all duration-300 shadow-md bg-white flex items-center justify-center p-2">
+                        {category.image ? (
+                          <img
+                            src={getImageUrl(category.image)}
+                            alt={category.name}
+                            className="w-[85%] h-[85%] object-contain"
+                          />
+                        ) : (
+                          <Package className="w-7 h-7 text-muted-foreground text-muted group-hover:text-[#D2A88A] transition-colors duration-300" />
+                        )}
+                      </div>
+                      <span className="text-xs text-center text-muted-foreground group-hover:text-[#D2A88A] transition-colors duration-200 max-w-[72px] truncate">
+                        {category.name}
+                      </span>
+                    </Link>
+                  ))}
+                </div>
+
+                {/* Desktop: animated carousel */}
+                <AnimatePresence mode="popLayout" initial={false}>
+                  <motion.div
+                    key={startIndex}
+                    className="hidden md:flex gap-4 md:gap-6 justify-between"
+                    initial={{ opacity: 0, x: direction * 40 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: direction * -40 }}
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                  >
+                    {visibleCategories.map((category) => (
+                      <Link
+                        key={category.id}
+                        href={`/medicine?category=${category.id}`}
+                        className="flex flex-col items-center gap-2 flex-shrink-0 group"
+                      >
+                        <motion.div
+                          whileHover={{ scale: 1.08 }}
+                          whileTap={{ scale: 0.95 }}
+                          className="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden border-2 border-transparent group-hover:border-[#D2A88A] transition-all duration-300 shadow-md bg-white flex items-center justify-center p-2"
+                        >
+                          {category.image ? (
+                            <img
+                              src={getImageUrl(category.image)}
+                              alt={category.name}
+                              className="w-[85%] h-[85%] object-contain"
+                            />
+                          ) : (
+                            <Package className="w-7 h-7 text-muted-foreground text-muted group-hover:text-[#D2A88A] transition-colors duration-300" />
+                          )}
+                        </motion.div>
+                        <span className="text-xs text-center text-muted-foreground group-hover:text-[#D2A88A] transition-colors duration-200 max-w-[72px] truncate">
+                          {category.name}
+                        </span>
+                      </Link>
+                    ))}
                   </motion.div>
-                </Link>
-              ))}
+                </AnimatePresence>
+              </>
+            )}
+          </div>
+
+          {/* Right Arrow — hidden on mobile */}
+          <button
+            onClick={handleNext}
+            disabled={!canGoNext}
+            aria-label="Next categories"
+            className={`hidden md:flex flex-shrink-0 w-10 h-10 rounded-full border items-center justify-center transition-all duration-200 shadow-sm
+              ${
+                canGoNext
+                  ? "bg-white border-[#D2A88A] text-[#D2A88A] hover:bg-[#D2A88A] hover:text-white cursor-pointer"
+                  : "bg-white border-gray-200 text-gray-300 cursor-not-allowed"
+              }`}
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
         </div>
+
+        {/* Dots indicator */}
+        {!isLoading && categories.length > visibleCount && (
+          <div className="flex justify-center gap-1.5 mt-6">
+            {Array.from({
+              length: categories.length - visibleCount + 1,
+            }).map((_, i) => (
+              <button
+                key={i}
+                onClick={() => {
+                  setDirection(i > startIndex ? 1 : -1);
+                  setStartIndex(i);
+                }}
+                className={`h-1.5 rounded-full transition-all duration-300 ${
+                  i === startIndex
+                    ? "w-5 bg-[#D2A88A]"
+                    : "w-1.5 bg-gray-300 hover:bg-[#D2A88A]/50"
+                }`}
+                aria-label={`Go to position ${i + 1}`}
+              />
+            ))}
+          </div>
+        )}
 
         {!isLoading && categories.length === 0 && (
           <div className="text-center text-muted-foreground py-10">

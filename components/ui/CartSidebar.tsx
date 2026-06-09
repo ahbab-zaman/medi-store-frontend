@@ -18,6 +18,18 @@ export function CartSidebar({ isOpen, onClose }: CartSidebarProps) {
   const router = useRouter();
   const [countdown, setCountdown] = useState(3);
 
+  // Prevent body scroll (including x-axis scrollbar) when sidebar is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
+
   useEffect(() => {
     if (isOpen && items.length > 0) {
       setCountdown(3);

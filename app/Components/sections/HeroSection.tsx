@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 export default function HeroSection() {
   const router = useRouter();
   return (
-    <section className="relative overflow-hidden bg-background">
+    <section className="relative overflow-hidden bg-[#F6F4F0]">
       <div className="container mx-auto px-4 py-20 lg:py-32">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           {/* Content */}

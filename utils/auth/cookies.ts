@@ -9,7 +9,7 @@ export async function setAccessTokenCookie(accessToken: string) {
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
     path: "/",
-    maxAge: 60 * 15, // 15 minutes
+    maxAge: 60 * 60 * 24 * 15, // 15 days — matches JWT_EXPIRES_IN on the backend
   });
 }
 

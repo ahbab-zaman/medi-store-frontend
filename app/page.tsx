@@ -10,9 +10,9 @@ export default function HomePage() {
   return (
     <>
       <HeroSection />
+      <BrowseByCategory />  
       <FeaturedMedicine />
       <WhyChooseUs />
-      <BrowseByCategory />  
       <DoctorsPick />
       <Newsletter />
       <ChatWidget />

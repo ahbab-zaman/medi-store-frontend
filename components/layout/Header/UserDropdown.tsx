@@ -72,7 +72,7 @@ export default function UserDropdown() {
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-56 origin-top-right rounded-2xl border border-black/5 bg-white p-2 shadow-xl shadow-black/5 ring-1 ring-black/5 focus:outline-none dark:border-white/5 dark:bg-gray-900">
+        <div className="absolute right-0 mt-2 w-56 origin-top-right rounded-2xl border border-black/5 bg-white p-2 shadow-xl shadow-black/5 ring-1 ring-black/5 focus:outline-none dark:border-white/5 dark:bg-gray-900 z-50">
           <div className="px-3 py-2 border-b border-black/5 dark:border-white/5 mb-1">
             <p className="truncate text-sm font-medium text-black dark:text-white">
               {user.name}
