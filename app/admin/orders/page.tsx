@@ -76,8 +76,8 @@ export default function AdminOrdersPage() {
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">Manage Orders</h1>
-      <div className="overflow-hidden rounded-xl border border-black/10 bg-white dark:border-white/10 dark:bg-white/[.04]">
-        <table className="w-full text-left text-sm">
+      <div className="rounded-xl border border-black/10 bg-white dark:border-white/10 dark:bg-white/[.04] admin-table-scroll">
+        <table className="min-w-full w-full text-left text-sm">
           <thead className="border-b border-black/10 bg-black/5 dark:border-white/10 dark:bg-white/5">
             <tr>
               <th className="px-6 py-4 font-medium">Order ID</th>

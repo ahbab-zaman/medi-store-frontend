@@ -19,7 +19,7 @@ export default function DoctorsPick() {
 
   if (isLoading) {
     return (
-      <section className="py-16 bg-[#F6F4F0]">
+      <section className="py-16 bg-[#F6F4F0] dark:bg-zinc-950/45">
         <div className="container mx-auto px-4">
           {/* Shimmer Header */}
           <div className="text-start mb-14 flex items-center gap-4">
@@ -38,7 +38,7 @@ export default function DoctorsPick() {
             {[...Array(6)].map((_, index) => (
               <div
                 key={index}
-                className="relative overflow-hidden rounded-lg bg-white border border-gray-100"
+                className="relative overflow-hidden rounded-lg bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800"
               >
                 {/* Shimmer Effect */}
                 <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/60 to-transparent" />
@@ -74,7 +74,7 @@ export default function DoctorsPick() {
   if (!randomMedicines.length) return null;
 
   return (
-    <section className="py-16 bg-[#F6F4F0]">
+    <section className="py-16 bg-[#F6F4F0] dark:bg-zinc-950/45">
       <div className="container mx-auto px-4">
         {/* Section Header */}
         <motion.div
@@ -87,7 +87,7 @@ export default function DoctorsPick() {
           <div className="flex items-start gap-4">
             <motion.div
               whileHover={{ rotate: 5, scale: 1.05 }}
-              className="w-14 h-14 rounded-2xl bg-[#F1E9E2] flex items-center justify-center flex-shrink-0"
+              className="w-14 h-14 rounded-2xl bg-[#F1E9E2] dark:bg-zinc-900 flex items-center justify-center flex-shrink-0"
             >
               <Stethoscope className="w-7 h-7 text-[#D2A88A]" />
             </motion.div>
@@ -98,7 +98,7 @@ export default function DoctorsPick() {
               <h2 className="text-3xl md:text-4xl font-semibold">
                 Doctor's Pick
               </h2>
-              <p className="text-[#666666] mt-2">
+              <p className="text-[#666666] dark:text-zinc-400 mt-2">
                 Hand-selected by healthcare professionals for your wellbeing
               </p>
             </div>

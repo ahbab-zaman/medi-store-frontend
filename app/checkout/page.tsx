@@ -260,14 +260,14 @@ function CheckoutContent() {
   };
 
   return (
-    <div className="bg-[#FAF8F5] min-h-screen py-10">
+    <div className="bg-[#FAF8F5] dark:bg-[#0a0a0a] min-h-screen py-10">
       <div className="container mx-auto px-4 max-w-6xl">
         {/* Step Progress Bar */}
-        <div className="flex items-center justify-between bg-white rounded-2xl p-4 shadow-sm border border-gray-100 mb-8 overflow-x-auto scrollbar-none">
+        <div className="flex items-center justify-between bg-white dark:bg-white/5 rounded-2xl p-4 shadow-sm border border-gray-100 mb-8 overflow-x-auto scrollbar-none ">
           {/* Left: Back Link */}
           <button
             onClick={handlePrevStep}
-            className="flex items-center text-gray-500 hover:text-teal-600 transition-colors text-sm font-semibold mr-4 shrink-0 cursor-pointer"
+            className="flex items-center text-gray-500 dark:text-white/60 hover:text-teal-600 transition-colors text-sm font-semibold mr-4 shrink-0 cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4 mr-1.5" />
             {activeStep > 1 ? "Previous" : "Cart"}
@@ -352,20 +352,20 @@ function CheckoutContent() {
           )}
         </div>
 
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">Checkout</h1>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">Checkout</h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Column: Details */}
           <div className="lg:col-span-2 space-y-6">
             {/* Step 1: Shipping Address */}
             {activeStep === 1 && (
-              <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 animate-fade-in">
+              <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 animate-fade-in dark:bg-white/5 dark:border-white/10">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center">
-                    <div className="p-2 bg-blue-50 rounded-lg mr-3">
+                    <div className="p-2 bg-blue-50 rounded-lg mr-3 dark:bg-blue-50/5">
                       <MapPin className="w-5 h-5 text-blue-600" />
                     </div>
-                    <h2 className="text-xl font-semibold text-gray-900">
+                    <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
                       Shipping Address
                     </h2>
                   </div>
@@ -502,15 +502,15 @@ function CheckoutContent() {
                     )}
 
                     {!isCustomAddress && shippingAddress && (
-                      <div className="mt-4 p-3 bg-gray-50 rounded-xl border border-gray-100 flex items-start gap-2.5">
+                      <div className="mt-4 p-3 bg-gray-50 dark:bg-white/5 dark:border-white/10 rounded-xl border border-gray-100 flex items-start gap-2.5">
                         <div className="mt-0.5">
                           <Check className="w-4 h-4 text-teal-600" />
                         </div>
                         <div>
-                          <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider block mb-0.5">
+                          <span className="text-xs dark:text-white font-semibold text-gray-500 dark:text-white uppercase tracking-wider block mb-0.5">
                             Selected Shipping Destination
                           </span>
-                          <p className="text-xs text-gray-700 leading-relaxed">
+                          <p className="text-xs text-gray-700 dark:text-white/60 leading-relaxed">
                             {shippingAddress}
                           </p>
                         </div>
@@ -526,7 +526,7 @@ function CheckoutContent() {
                       className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition-all"
                       rows={3}
                     />
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-gray-500 dark:text-white/60" >
                       You can save your addresses in the{" "}
                       <Link
                         href="/account/address"
@@ -555,9 +555,9 @@ function CheckoutContent() {
 
             {/* Step 2: Delivery Date */}
             {activeStep === 2 && (
-              <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 animate-fade-in">
+              <div className="bg-white dark:bg-white/5 dark:border-white/10 rounded-2xl p-6 shadow-sm border border-gray-100 animate-fade-in">
                 <div className="flex items-center mb-4">
-                  <div className="p-2 bg-indigo-50 rounded-lg mr-3">
+                  <div className="p-2 bg-indigo-50 rounded-lg mr-3 dark:bg-indigo-50/5">
                     <CalendarIcon className="w-5 h-5 text-indigo-600" />
                   </div>
                   <h2 className="text-xl font-semibold text-gray-900">
@@ -583,7 +583,7 @@ function CheckoutContent() {
                   </button>
                   <button
                     onClick={handleNextStep}
-                    className="px-6 py-3 bg-teal-600 text-white font-semibold rounded-xl hover:bg-teal-700 transition-all hover:scale-[1.02] active:scale-[0.98] shadow-sm cursor-pointer text-sm"
+                    className="px-6 py-3 bg-teal-600 text-white dark:text-white font-semibold rounded-xl hover:bg-teal-700 transition-all hover:scale-[1.02] active:scale-[0.98] shadow-sm cursor-pointer text-sm"
                   >
                     Continue to Payment
                   </button>
@@ -593,12 +593,12 @@ function CheckoutContent() {
 
             {/* Step 3: Payment Method */}
             {activeStep === 3 && (
-              <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 animate-fade-in">
+              <div className="bg-white dark:bg-white/5 dark:border-white/10 rounded-2xl p-6 shadow-sm border border-gray-100 animate-fade-in">
                 <div className="flex items-center mb-4">
-                  <div className="p-2 bg-green-50 rounded-lg mr-3">
+                  <div className="p-2 bg-green-50 rounded-lg mr-3 dark:bg-green-50/5">
                     <CreditCard className="w-5 h-5 text-green-600" />
                   </div>
-                  <h2 className="text-xl font-semibold text-gray-900">
+                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
                     Payment Method
                   </h2>
                 </div>
@@ -623,7 +623,7 @@ function CheckoutContent() {
                       )}
                     </div>
                     <Banknote className="w-6 h-6 text-gray-650 mr-3" />
-                    <span className="font-semibold text-gray-800 text-sm">
+                    <span className="font-semibold text-gray-800 dark:text-white/60 text-sm">
                       Cash On Delivery
                     </span>
                   </div>
@@ -647,8 +647,8 @@ function CheckoutContent() {
                         <div className="w-2.5 h-2.5 rounded-full bg-teal-600" />
                       )}
                     </div>
-                    <CreditCard className="w-6 h-6 text-gray-650 mr-3" />
-                    <span className="font-semibold text-gray-800 text-sm">
+                    <CreditCard className="w-6 h-6 text-gray-650 dark:text-white/60 mr-3" />
+                    <span className="font-semibold text-gray-800 dark:text-white/60 text-sm">
                       Credit / Debit Card
                     </span>
                   </div>
@@ -680,7 +680,7 @@ function CheckoutContent() {
 
           {/* Right Column: Order Summary */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 sticky top-8">
+            <div className="bg-white dark:bg-white/5 dark:border-white/10 rounded-2xl p-6 shadow-sm border border-gray-100 sticky top-8">
               <h2 className="text-xl font-semibold mb-6">Order Summary</h2>
               <div className="space-y-4 max-h-96 overflow-y-auto pr-2 custom-scrollbar">
                 {items.map((item) => (
@@ -706,15 +706,15 @@ function CheckoutContent() {
               <hr className="my-6 border-gray-100" />
 
               <div className="space-y-2">
-                <div className="flex justify-between text-gray-650 text-sm">
+                <div className="flex justify-between text-gray-650 dark:text-white/60 text-sm">
                   <span>Subtotal</span>
                   <span>${totalAmount.toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between text-gray-650 text-sm">
+                <div className="flex justify-between text-gray-650 dark:text-white/60 text-sm">
                   <span>Shipping</span>
                   <span>$0.00</span>
                 </div>
-                <div className="flex justify-between text-lg font-bold text-gray-900 mt-4 pt-4 border-t border-gray-100">
+                <div className="flex justify-between text-lg font-bold text-gray-900 dark:text-white mt-4 pt-4 border-t border-gray-100">
                   <span>Total</span>
                   <span>${totalAmount.toFixed(2)}</span>
                 </div>
@@ -724,9 +724,9 @@ function CheckoutContent() {
               {(shippingAddress || deliveryDate) && (
                 <div className="mt-6 pt-6 border-t border-gray-100 space-y-3">
                   {shippingAddress && (
-                    <div className="p-3 bg-gray-50 rounded-xl border border-gray-150 relative">
+                    <div className="p-3 bg-gray-50 dark:bg-white/5 dark:border-white/10 rounded-xl border border-gray-150 relative">
                       <div className="flex justify-between items-center mb-1">
-                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+                        <span className="text-[10px] font-bold text-gray-400 dark:text-white/60 uppercase tracking-wider">
                           Address
                         </span>
                         <button
@@ -743,9 +743,9 @@ function CheckoutContent() {
                   )}
 
                   {deliveryDate && (
-                    <div className="p-3 bg-gray-50 rounded-xl border border-gray-150 relative">
+                    <div className="p-3 bg-gray-50 dark:bg-white/5 dark:border-white/10 rounded-xl border border-gray-150 relative">
                       <div className="flex justify-between items-center mb-1">
-                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+                        <span className="text-[10px] font-bold text-gray-400 dark:text-white/60 uppercase tracking-wider">
                           Delivery Date
                         </span>
                         <button
@@ -880,7 +880,7 @@ function StripePaymentModal({
               leaveFrom="opacity-100 scale-100 translate-y-0"
               leaveTo="opacity-0 scale-95 translate-y-4"
             >
-              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-[20px] bg-white shadow-2xl transition-all border border-gray-100">
+              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-[20px] bg-white dark:bg-white/5 dark:border-white/10 shadow-2xl transition-all border border-gray-100">
                 {/* Top accent bar */}
                 <div className="h-1 w-full bg-gradient-to-r from-teal-700 via-teal-500 to-teal-300" />
 
@@ -935,7 +935,7 @@ function StripePaymentModal({
                           VISA
                         </span>
                       </div>
-                      <div className="w-8 h-5 bg-white border border-gray-200 rounded-[3px] flex items-center justify-center">
+                      <div className="w-8 h-5 bg-white dark:bg-white/5 dark:border-white/10 border border-gray-200 rounded-[3px] flex items-center justify-center">
                         <div className="flex">
                           <div className="w-3 h-3 rounded-full bg-red-500 opacity-90" />
                           <div className="w-3 h-3 rounded-full bg-amber-400 opacity-90 -ml-1.5" />
@@ -959,7 +959,7 @@ function StripePaymentModal({
                     <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-2.5">
                       Card details
                     </p>
-                    <div className="border border-gray-200 rounded-xl overflow-hidden bg-white px-4 py-3.5">
+                    <div className="border border-gray-200 rounded-xl overflow-hidden bg-white  px-4 py-3.5">
                       <CardElement
                         options={{
                           style: {

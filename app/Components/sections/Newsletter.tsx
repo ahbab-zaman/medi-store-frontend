@@ -19,14 +19,14 @@ export function Newsletter() {
   };
 
   return (
-    <section className="py-20 lg:py-28 bg-[#FAF8F5]">
+    <section className="py-20 lg:py-28 bg-[#FAF8F5] dark:bg-zinc-950/20">
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 40, scale: 0.98 }}
           whileInView={{ opacity: 1, y: 0, scale: 1 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="max-w-4xl mx-auto bg-white rounded-3xl shadow-lg p-8 md:p-12 lg:p-16"
+          className="max-w-4xl mx-auto bg-white dark:bg-zinc-900 rounded-3xl shadow-lg p-8 md:p-12 lg:p-16"
         >
           <div className="text-center max-w-xl mx-auto">
             <motion.div
@@ -59,7 +59,7 @@ export function Newsletter() {
                   placeholder="Enter your email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="h-12 pl-4 pr-4 rounded-xl bg-[#EEEBE8] border-0 focus-visible:ring-[#CEA07E]"
+                  className="h-12 pl-4 pr-4 rounded-xl bg-[#EEEBE8] dark:bg-zinc-800 dark:text-white dark:placeholder:text-zinc-500 border-0 focus-visible:ring-[#CEA07E]"
                 />
               </div>
               <Button

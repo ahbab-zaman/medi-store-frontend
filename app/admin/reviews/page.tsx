@@ -33,123 +33,156 @@ export default function AdminReviewsPage() {
   };
 
   return (
-    <div className="p-6">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Review Management</h1>
-        <p className="text-sm text-gray-500">
-          Approve, reject, or delete user reviews.
-        </p>
-      </div>
+    <div className="w-full p-4 sm:p-6 lg:p-8">
+      <div className="space-y-6">
+        <div className="mb-8">
+          <h1 className="text-2xl font-bold text-black dark:text-white">
+            Review Management
+          </h1>
+          <p className="text-sm text-black/50 dark:text-white/50">
+            Approve, reject, or delete user reviews.
+          </p>
+        </div>
 
-      <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
-        <table className="w-full border-collapse text-left text-sm text-gray-600">
-          <thead className="bg-gray-50 text-xs font-semibold uppercase text-gray-500">
-            <tr>
-              <th className="px-6 py-4">User</th>
-              <th className="px-6 py-4">Medicine</th>
-              <th className="px-6 py-4">Rating</th>
-              <th className="px-6 py-4 w-1/3">Comment</th>
-              <th className="px-6 py-4">Date</th>
-              <th className="px-6 py-4">Status</th>
-              <th className="px-6 py-4 text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-100">
-            {isLoading ? (
+        <div className="rounded-xl border border-black/10 bg-white dark:border-white/10 dark:bg-white/[.04] admin-table-scroll">
+          <table className="min-w-full w-full border-collapse text-left text-sm">
+            <thead className="border-b border-black/10 bg-black/5 dark:border-white/10 dark:bg-white/5">
               <tr>
-                <td colSpan={7} className="px-6 py-8 text-center text-gray-500">
-                  <div className="flex items-center justify-center gap-2">
-                    <Loader2 className="h-4 w-4 animate-spin" /> Loading...
-                  </div>
-                </td>
+                <th className="px-6 py-4 text-xs font-semibold uppercase text-black/50 dark:text-white/50">
+                  User
+                </th>
+                <th className="px-6 py-4 text-xs font-semibold uppercase text-black/50 dark:text-white/50">
+                  Medicine
+                </th>
+                <th className="px-6 py-4 text-xs font-semibold uppercase text-black/50 dark:text-white/50">
+                  Rating
+                </th>
+                <th className="px-6 py-4 w-1/3 text-xs font-semibold uppercase text-black/50 dark:text-white/50">
+                  Comment
+                </th>
+                <th className="px-6 py-4 text-xs font-semibold uppercase text-black/50 dark:text-white/50">
+                  Date
+                </th>
+                <th className="px-6 py-4 text-xs font-semibold uppercase text-black/50 dark:text-white/50">
+                  Status
+                </th>
+                <th className="px-6 py-4 text-xs font-semibold uppercase text-black/50 dark:text-white/50 text-right">
+                  Actions
+                </th>
               </tr>
-            ) : reviews.length > 0 ? (
-              reviews.map((review: any) => (
-                <tr key={review.id} className="hover:bg-gray-50/50">
-                  <td className="px-6 py-4 font-medium text-gray-900">
-                    {review.user?.name}
-                    <div className="text-xs text-gray-400 font-normal">
-                      {review.user?.email}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-gray-700 font-medium">
-                    {review.medicine?.name}
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-1">
-                      <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                      <span className="font-semibold">{review.rating}</span>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <p className="line-clamp-2 text-gray-600">
-                      {review.comment}
-                    </p>
-                  </td>
-                  <td className="px-6 py-4 text-gray-500">
-                    {format(new Date(review.createdAt), "MMM d, yyyy")}
-                  </td>
-                  <td className="px-6 py-4">
-                    <span
-                      className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                        review.status === "APPROVED"
-                          ? "bg-green-100 text-green-700"
-                          : review.status === "REJECTED"
-                            ? "bg-red-100 text-red-700"
-                            : "bg-yellow-100 text-yellow-700"
-                      }`}
-                    >
-                      {review.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <div className="flex items-center justify-end gap-2">
-                      {review.status !== "APPROVED" && (
-                        <button
-                          onClick={() =>
-                            updateStatus({ id: review.id, status: "APPROVED" })
-                          }
-                          className="p-1 text-green-600 hover:bg-green-50 rounded"
-                          title="Approve"
-                        >
-                          <CheckCircle className="h-4 w-4" />
-                        </button>
-                      )}
-                      {review.status !== "REJECTED" && (
-                        <button
-                          onClick={() =>
-                            updateStatus({ id: review.id, status: "REJECTED" })
-                          }
-                          className="p-1 text-orange-600 hover:bg-orange-50 rounded"
-                          title="Reject"
-                        >
-                          <XCircle className="h-4 w-4" />
-                        </button>
-                      )}
-
-                      <button
-                        onClick={() => setDeleteId(review.id)}
-                        className="p-1 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
-                        title="Delete"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </button>
+            </thead>
+            <tbody className="divide-y divide-black/10 dark:divide-white/10">
+              {isLoading ? (
+                <tr>
+                  <td
+                    colSpan={7}
+                    className="px-6 py-8 text-center text-black/50 dark:text-white/50"
+                  >
+                    <div className="flex items-center justify-center gap-2">
+                      <Loader2 className="h-4 w-4 animate-spin" /> Loading...
                     </div>
                   </td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={7} className="px-6 py-12 text-center">
-                  <div className="flex flex-col items-center justify-center gap-2">
-                    <AlertCircle className="h-8 w-8 text-gray-300" />
-                    <p className="text-gray-500">No reviews found.</p>
-                  </div>
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+              ) : reviews.length > 0 ? (
+                reviews.map((review: any) => (
+                  <tr
+                    key={review.id}
+                    className="hover:bg-black/5 dark:hover:bg-white/5"
+                  >
+                    <td className="px-6 py-4 font-medium text-black dark:text-white">
+                      {review.user?.name}
+                      <div className="text-xs text-black/40 dark:text-white/40 font-normal">
+                        {review.user?.email}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 font-medium text-black/70 dark:text-white/70">
+                      {review.medicine?.name}
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-1">
+                        <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                        <span className="font-semibold text-black dark:text-white">
+                          {review.rating}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <p className="line-clamp-2 text-black/70 dark:text-white/70">
+                        {review.comment}
+                      </p>
+                    </td>
+                    <td className="px-6 py-4 text-black/50 dark:text-white/50">
+                      {format(new Date(review.createdAt), "MMM d, yyyy")}
+                    </td>
+                    <td className="px-6 py-4">
+                      <span
+                        className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                          review.status === "APPROVED"
+                            ? "bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-400"
+                            : review.status === "REJECTED"
+                              ? "bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-400"
+                              : "bg-yellow-50 text-yellow-700 dark:bg-yellow-900/20 dark:text-yellow-400"
+                        }`}
+                      >
+                        {review.status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <div className="flex items-center justify-end gap-2">
+                        {review.status !== "APPROVED" && (
+                          <button
+                            onClick={() =>
+                              updateStatus({
+                                id: review.id,
+                                status: "APPROVED",
+                              })
+                            }
+                            className="rounded-lg p-2 text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20 dark:text-green-400"
+                            title="Approve"
+                          >
+                            <CheckCircle className="h-4 w-4" />
+                          </button>
+                        )}
+                        {review.status !== "REJECTED" && (
+                          <button
+                            onClick={() =>
+                              updateStatus({
+                                id: review.id,
+                                status: "REJECTED",
+                              })
+                            }
+                            className="rounded-lg p-2 text-orange-600 hover:bg-orange-50 dark:hover:bg-orange-900/20 dark:text-orange-400"
+                            title="Reject"
+                          >
+                            <XCircle className="h-4 w-4" />
+                          </button>
+                        )}
+                        <button
+                          onClick={() => setDeleteId(review.id)}
+                          className="rounded-lg p-2 text-black/40 hover:bg-red-50 hover:text-red-600 dark:text-white/40 dark:hover:bg-red-900/20 dark:hover:text-red-400 transition-colors"
+                          title="Delete"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={7} className="px-6 py-12 text-center">
+                    <div className="flex flex-col items-center justify-center gap-2">
+                      <AlertCircle className="h-8 w-8 text-black/20 dark:text-white/20" />
+                      <p className="text-black/50 dark:text-white/50">
+                        No reviews found.
+                      </p>
+                    </div>
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <ConfirmationDialog

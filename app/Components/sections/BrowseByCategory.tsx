@@ -39,7 +39,7 @@ export function BrowseByCategory() {
   );
 
   return (
-    <section className="py-20 lg:py-28 bg-[#F6F4F0]">
+    <section className="py-20 lg:py-28 bg-[#F6F4F0] dark:bg-zinc-950/45">
       <div className="container mx-auto px-4">
         {/* Header */}
         <motion.div
@@ -70,8 +70,8 @@ export function BrowseByCategory() {
             className={`hidden md:flex flex-shrink-0 w-10 h-10 rounded-full border items-center justify-center transition-all duration-200 shadow-sm
               ${
                 canGoPrev
-                  ? "bg-white border-[#D2A88A] text-[#D2A88A] hover:bg-[#D2A88A] hover:text-white cursor-pointer"
-                  : "bg-white border-gray-200 text-gray-300 cursor-not-allowed"
+                  ? "bg-white dark:bg-zinc-900 border-[#D2A88A] text-[#D2A88A] hover:bg-[#D2A88A] hover:text-white cursor-pointer"
+                  : "bg-white dark:bg-zinc-900 border-gray-200 dark:border-zinc-800 text-gray-300 dark:text-zinc-700 cursor-not-allowed"
               }`}
           >
             <ChevronLeft className="w-5 h-5" />
@@ -100,7 +100,7 @@ export function BrowseByCategory() {
                       href={`/medicine?category=${category.id}`}
                       className="flex flex-col items-center gap-2 flex-shrink-0 group"
                     >
-                      <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-transparent group-hover:border-[#D2A88A] transition-all duration-300 shadow-md bg-white flex items-center justify-center p-2">
+                      <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-transparent group-hover:border-[#D2A88A] transition-all duration-300 shadow-md bg-white dark:bg-zinc-900 flex items-center justify-center p-2">
                         {category.image ? (
                           <img
                             src={getImageUrl(category.image)}
@@ -137,7 +137,7 @@ export function BrowseByCategory() {
                         <motion.div
                           whileHover={{ scale: 1.08 }}
                           whileTap={{ scale: 0.95 }}
-                          className="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden border-2 border-transparent group-hover:border-[#D2A88A] transition-all duration-300 shadow-md bg-white flex items-center justify-center p-2"
+                          className="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden border-2 border-transparent group-hover:border-[#D2A88A] transition-all duration-300 shadow-md bg-white dark:bg-zinc-900 flex items-center justify-center p-2"
                         >
                           {category.image ? (
                             <img
@@ -168,8 +168,8 @@ export function BrowseByCategory() {
             className={`hidden md:flex flex-shrink-0 w-10 h-10 rounded-full border items-center justify-center transition-all duration-200 shadow-sm
               ${
                 canGoNext
-                  ? "bg-white border-[#D2A88A] text-[#D2A88A] hover:bg-[#D2A88A] hover:text-white cursor-pointer"
-                  : "bg-white border-gray-200 text-gray-300 cursor-not-allowed"
+                  ? "bg-white dark:bg-zinc-900 border-[#D2A88A] text-[#D2A88A] hover:bg-[#D2A88A] hover:text-white cursor-pointer"
+                  : "bg-white dark:bg-zinc-900 border-gray-200 dark:border-zinc-800 text-gray-300 dark:text-zinc-700 cursor-not-allowed"
               }`}
           >
             <ChevronRight className="w-5 h-5" />

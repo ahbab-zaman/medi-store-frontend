@@ -82,11 +82,11 @@ export default function AdminMedicinesPage() {
   }, [currentPage, totalPages]);
 
   return (
-    <div className="p-6 bg-[#FAF8F5]">
+    <div className="p-6 bg-transparent">
       <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">All Medicines</h1>
-          <p className="text-sm text-gray-500">
+          <h1 className="text-2xl font-bold text-black dark:text-white">All Medicines</h1>
+          <p className="text-sm text-black/50 dark:text-white/50">
             Manage global inventory and oversight.
           </p>
         </div>
@@ -99,7 +99,7 @@ export default function AdminMedicinesPage() {
         </button>
       </div>
 
-      <div className="mb-2 text-xs text-gray-500">
+      <div className="mb-2 text-xs text-black/50 dark:text-white/50">
         Showing {paginatedMedicines.length} of {filteredMedicines.length} results
       </div>
       <div className="mb-6">
@@ -107,7 +107,7 @@ export default function AdminMedicinesPage() {
           <input
             type="text"
             placeholder="Search medicines or sellers..."
-            className="w-full rounded-lg border border-gray-200 bg-white py-2 pl-10 pr-4 text-sm focus:border-black focus:outline-none focus:ring-0"
+            className="w-full rounded-lg border border-black/10 dark:border-white/10 bg-white dark:bg-white/[.04] py-2 pl-10 pr-4 text-sm focus:border-black/30 dark:focus:border-white/30 focus:outline-none focus:ring-0"
             value={search}
             onChange={(e) => handleSearch(e.target.value)}
           />
@@ -115,9 +115,9 @@ export default function AdminMedicinesPage() {
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
-        <table className="w-full border-collapse text-left text-sm text-gray-600">
-          <thead className="bg-gray-50 text-xs font-semibold uppercase text-gray-500">
+      <div className="rounded-xl border border-black/10 dark:border-white/10 bg-white dark:bg-white/[.04] admin-table-scroll">
+        <table className="min-w-full w-full border-collapse text-left text-sm text-gray-600">
+          <thead className="bg-black/5 dark:bg-white/5 text-xs font-semibold uppercase text-black/50 dark:text-white/50">
             <tr>
               <th className="px-6 py-4">Product</th>
               <th className="px-6 py-4">Seller</th>
@@ -128,10 +128,10 @@ export default function AdminMedicinesPage() {
               <th className="px-6 py-4 text-right">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100">
+          <tbody className="divide-y divide-black/10 dark:divide-white/10">
             {isLoading ? (
               <tr>
-                <td colSpan={7} className="px-6 py-8 text-center text-gray-500">
+                <td colSpan={7} className="px-6 py-8 text-center text-black/50 dark:text-white/50">
                   <div className="flex items-center justify-center gap-2">
                     <Loader2 className="h-4 w-4 animate-spin" /> Loading...
                   </div>
@@ -139,10 +139,10 @@ export default function AdminMedicinesPage() {
               </tr>
             ) : paginatedMedicines.length > 0 ? (
               paginatedMedicines.map((medicine) => (
-                <tr key={medicine.id} className="hover:bg-gray-50/50">
+                <tr key={medicine.id} className="hover:bg-black/5 dark:bg-white/5/50">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-lg bg-gray-100/50">
+                      <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-lg bg-black/5 dark:bg-white/5/50">
                         {medicine.imageUrl ? (
                           <img
                             src={getImageUrl(medicine.imageUrl)}
@@ -156,10 +156,10 @@ export default function AdminMedicinesPage() {
                         )}
                       </div>
                       <div>
-                        <div className="font-medium text-gray-900">
+                        <div className="font-medium text-black dark:text-white">
                           {medicine.name}
                         </div>
-                        <div className="text-xs text-gray-500">
+                        <div className="text-xs text-black/50 dark:text-white/50">
                           {medicine.manufacturer}
                         </div>
                       </div>
@@ -168,13 +168,13 @@ export default function AdminMedicinesPage() {
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-2">
                       <Store className="h-3 w-3 text-gray-400" />
-                      <span className="font-medium text-gray-700">
+                      <span className="font-medium text-black/70 dark:text-white/70">
                         {medicine.seller?.name || "Unknown"}
                       </span>
                     </div>
                   </td>
                   <td className="px-6 py-4">{medicine.category?.name}</td>
-                  <td className="px-6 py-4 font-medium text-gray-900">
+                  <td className="px-6 py-4 font-medium text-black dark:text-white">
                     <span className="flex items-center gap-1">
                       <Image
                         src={bdtImage}
@@ -201,14 +201,14 @@ export default function AdminMedicinesPage() {
                     <div className="flex justify-end gap-2">
                       <button
                         onClick={() => setEditingMedicine(medicine)}
-                        className="rounded p-1 text-gray-500 hover:bg-gray-100 hover:text-black"
+                        className="rounded p-1 text-black/50 dark:text-white/50 hover:bg-black/5 dark:bg-white/5 hover:text-black"
                         title="Edit"
                       >
                         <Edit className="h-4 w-4" />
                       </button>
                       <button
                         onClick={() => setDeleteId(medicine.id)}
-                        className="rounded p-1 text-gray-500 hover:bg-red-50 hover:text-red-600 transition-colors"
+                        className="rounded p-1 text-black/50 dark:text-white/50 hover:bg-red-50 hover:text-red-600 transition-colors"
                         title="Delete"
                       >
                         <Trash2 className="h-4 w-4" />
@@ -222,7 +222,7 @@ export default function AdminMedicinesPage() {
                 <td colSpan={7} className="px-6 py-12 text-center">
                   <div className="flex flex-col items-center justify-center gap-2">
                     <AlertCircle className="h-8 w-8 text-gray-300" />
-                    <p className="text-gray-500">No medicines found.</p>
+                    <p className="text-black/50 dark:text-white/50">No medicines found.</p>
                     <button
                       onClick={() => setIsAddModalOpen(true)}
                       className="text-sm font-medium text-blue-600 hover:underline"
@@ -238,21 +238,21 @@ export default function AdminMedicinesPage() {
       </div>
 
       <div className="mt-4 flex items-center justify-between">
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-black/50 dark:text-white/50">
           Page {currentPage} of {totalPages}
         </p>
         <div className="flex gap-2">
           <button
             onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
             disabled={currentPage === 1}
-            className="rounded-md border border-gray-200 bg-white px-3 py-1.5 text-sm text-gray-700 disabled:cursor-not-allowed disabled:opacity-50"
+            className="rounded-md border border-black/10 dark:border-white/10 bg-white dark:bg-white/[.04] px-3 py-1.5 text-sm text-black/70 dark:text-white/70 disabled:cursor-not-allowed disabled:opacity-50"
           >
             Previous
           </button>
           <button
             onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
             disabled={currentPage === totalPages}
-            className="rounded-md border border-gray-200 bg-white px-3 py-1.5 text-sm text-gray-700 disabled:cursor-not-allowed disabled:opacity-50"
+            className="rounded-md border border-black/10 dark:border-white/10 bg-white dark:bg-white/[.04] px-3 py-1.5 text-sm text-black/70 dark:text-white/70 disabled:cursor-not-allowed disabled:opacity-50"
           >
             Next
           </button>

@@ -26,7 +26,7 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-12 bg-[#FAF9F5] dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
+    <div className="min-h-screen flex items-center justify-center px-4 py-12 bg-[#FAF9F5] dark:bg-slate-950 transition-colors duration-300">
       {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-400/20 rounded-full blur-3xl dark:bg-blue-500/10"></div>
@@ -58,7 +58,7 @@ export default function RegisterPage() {
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full px-4 py-3.5 rounded-xl  border border-slate-200 text-slate-900  placeholder:text-slate-400 transition-all duration-200"
+                  className="w-full px-4 py-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 transition-all duration-200 outline-none focus:ring-2 focus:ring-[#81604a]/40"
                   placeholder="John Doe"
                 />
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
@@ -90,7 +90,7 @@ export default function RegisterPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-3.5 rounded-xl  border border-slate-200 text-slate-900  placeholder:text-slate-400 transition-all duration-200"
+                  className="w-full px-4 py-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 transition-all duration-200 outline-none focus:ring-2 focus:ring-[#81604a]/40"
                   placeholder="you@example.com"
                 />
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
@@ -122,7 +122,7 @@ export default function RegisterPage() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3.5 rounded-xl  border border-slate-200 text-slate-900  placeholder:text-slate-400 transition-all duration-200"
+                  className="w-full px-4 py-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 transition-all duration-200 outline-none focus:ring-2 focus:ring-[#81604a]/40"
                   placeholder="••••••••"
                 />
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
@@ -152,12 +152,12 @@ export default function RegisterPage() {
                 <select
                   value={role}
                   onChange={(e) => setRole(e.target.value as Role)}
-                  className="w-full px-4 py-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 text-slate-900 transition-all duration-200 appearance-none cursor-pointer"
+                  className="w-full px-4 py-3.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 transition-all duration-200 appearance-none cursor-pointer outline-none focus:ring-2 focus:ring-[#81604a]/40"
                 >
-                  <option value={Role.CUSTOMER}>
+                  <option value={Role.CUSTOMER} className="dark:bg-slate-900 dark:text-slate-100">
                     Customer - Browse and purchase
                   </option>
-                  <option value={Role.SELLER}>
+                  <option value={Role.SELLER} className="dark:bg-slate-900 dark:text-slate-100">
                     Seller - List and sell products
                   </option>
                 </select>
@@ -204,7 +204,7 @@ export default function RegisterPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3.5 px-4 rounded-xl font-semibold text-white bg-[#81604a]  disabled:opacity-60 disabled:cursor-not-allowed shadow-lg shadow-blue-500/30 hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98]"
+              className="w-full py-3.5 px-4 rounded-xl font-semibold text-white bg-[#81604a] hover:bg-[#6f503c] dark:bg-[#96735c] dark:hover:bg-[#81604a] disabled:opacity-60 disabled:cursor-not-allowed shadow-lg shadow-blue-500/10 hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
             >
               {isLoading ? (
                 <span className="flex items-center justify-center gap-2">
@@ -234,8 +234,8 @@ export default function RegisterPage() {
             {/* Terms */}
             <p className="text-xs text-center text-slate-500 dark:text-slate-400">
               By creating an account, you agree to our{" "}
-              <a href="#">Terms of Service</a> and{" "}
-              <a href="#" className="">
+              <a href="#" className="underline hover:text-slate-800 dark:hover:text-slate-200">Terms of Service</a> and{" "}
+              <a href="#" className="underline hover:text-slate-800 dark:hover:text-slate-200">
                 Privacy Policy
               </a>
             </p>
@@ -257,7 +257,7 @@ export default function RegisterPage() {
           <div className="text-center">
             <Link
               href="/login"
-              className="inline-flex items-center gap-2 text-sm font-semibold transition-colors"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-[#81604a] dark:text-[#c4a48f] hover:text-[#6f503c] dark:hover:text-[#d3bcae] transition-colors"
             >
               Sign in instead
               <svg

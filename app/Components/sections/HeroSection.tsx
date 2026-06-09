@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 export default function HeroSection() {
   const router = useRouter();
   return (
-    <section className="relative overflow-hidden bg-[#F6F4F0]">
+    <section className="relative overflow-hidden bg-[#F6F4F0] dark:bg-zinc-950/30">
       <div className="container mx-auto px-4 py-20 lg:py-32">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           {/* Content */}
@@ -118,7 +118,7 @@ export default function HeroSection() {
                 initial={{ opacity: 0, y: 20, scale: 0.9 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 transition={{ delay: 0.6, duration: 0.5 }}
-                className="absolute -bottom-6 -left-6 bg-white rounded-2xl shadow-elegant p-4"
+                className="absolute -bottom-6 -left-6 bg-white dark:bg-zinc-900 rounded-2xl shadow-elegant dark:shadow-black/40 border border-transparent dark:border-zinc-800 p-4"
               >
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center">

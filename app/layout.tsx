@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Footer from "@/components/layout/Footer/Footer";
 import { QueryProvider } from "@/providers/QueryProvider";
 import { Toaster } from "sonner";
 import { Providers } from "./providers";
-import Header from "@/components/layout/Header/Header";
+import { ConditionalShell } from "@/components/layout/ConditionalShell";
+import { ThemeProvider } from "@/components/theme-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -47,27 +47,31 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Providers>
-          <QueryProvider>
-            <Toaster
-              position="top-right"
-              richColors
-              expand={false}
-              closeButton
-              theme="system"
-            />
-            <div className="min-h-dvh bg-white text-black dark:bg-black dark:text-white font-sans">
-              <Header />
-              <main className="w-full">{children}</main>
-              <Footer />
-            </div>
-          </QueryProvider>
-        </Providers>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <Providers>
+            <QueryProvider>
+              <Toaster
+                position="top-right"
+                richColors
+                expand={false}
+                closeButton
+                theme="system"
+              />
+              <ConditionalShell>{children}</ConditionalShell>
+            </QueryProvider>
+          </Providers>
+        </ThemeProvider>
       </body>
     </html>
   );
 }
+

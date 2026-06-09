@@ -131,7 +131,7 @@ function MedicinePageContent() {
         {/* Filter Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <SlidersHorizontal className="h-5 w-5 text-gray-700" />
+            <SlidersHorizontal className="h-5 w-5 text-gray-700  dark:text-white" />
             <h2 className="text-lg font-semibold text-gray-900">Filters</h2>
           </div>
           {activeFiltersCount > 0 && (
@@ -145,27 +145,27 @@ function MedicinePageContent() {
         </div>
 
         {/* Search */}
-        <div className="rounded-xl bg-white p-4 shadow-sm border border-gray-100">
-          <label className="mb-2 block text-sm font-medium text-gray-700">
+        <div className="rounded-xl bg-white p-4 shadow-sm border border-gray-100 dark:bg-white/[.04] dark:border-white/10">
+          <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-white">
             Search
           </label>
           <div className="relative">
             <input
               type="text"
               placeholder="Search products..."
-              className="w-full rounded-lg border border-gray-200 bg-gray-50 py-2.5 pl-10 pr-4 text-sm text-gray-900 placeholder:text-gray-400 transition-colors focus:border-[#AA383A] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#AA383A]/20"
+              className="w-full rounded-lg border border-gray-200 bg-gray-50 py-2.5 pl-10 pr-4 text-sm text-gray-900 placeholder:text-gray-400 transition-colors focus:border-[#AA383A] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#AA383A]/20 dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-white/40"
               value={search}
               onChange={(e) => {
                 setSearch(e.target.value);
                 handleFilterChange();
               }}
             />
-            <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+            <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400 dark:text-white/40" />
           </div>
         </div>
 
         {/* Categories */}
-        <div className="rounded-xl bg-white p-4 shadow-sm border border-gray-100">
+        <div className="rounded-xl bg-white p-4 shadow-sm border border-gray-100 dark:bg-white/[.04] dark:border-white/10">
           <h3 className="mb-3 text-sm font-semibold text-gray-900">
             Categories
           </h3>
@@ -184,7 +184,7 @@ function MedicinePageContent() {
                 />
               </div>
               <span
-                className={`text-sm transition-colors ${selectedCategory === "" ? "text-black font-medium" : "text-gray-600 group-hover:text-gray-900"}`}
+                className={`text-sm transition-colors ${selectedCategory === "" ? "text-black font-medium" : "text-gray-600 dark:text-white/70 group-hover:text-gray-900"}`}
               >
                 All Categories
               </span>
@@ -208,7 +208,7 @@ function MedicinePageContent() {
                   />
                 </div>
                 <span
-                  className={`text-sm transition-colors ${selectedCategory === category.id ? "text-black font-medium" : "text-gray-600 group-hover:text-gray-900"}`}
+                  className={`text-sm transition-colors ${selectedCategory === category.id ? "text-black font-medium" : "text-gray-600 dark:text-white/70 group-hover:text-gray-900"}`}
                 >
                   {category.name}
                 </span>
@@ -219,7 +219,7 @@ function MedicinePageContent() {
 
         {/* Manufacturers */}
         {manufacturers.length > 0 && (
-          <div className="rounded-xl bg-white p-4 shadow-sm border border-gray-100">
+          <div className="rounded-xl bg-white p-4 shadow-sm border border-gray-100 dark:bg-white/[.04] dark:border-white/10">
             <div className="mb-3 flex items-center justify-between">
               <h3 className="text-sm font-semibold text-gray-900">
                 Manufacturers
@@ -251,11 +251,11 @@ function MedicinePageContent() {
                     />
                   </div>
                   <span
-                    className={`text-sm transition-colors truncate flex-1 ${selectedManufacturers.includes(manufacturer) ? "text-black font-medium" : "text-gray-600 group-hover:text-gray-900"}`}
+                    className={`text-sm transition-colors truncate flex-1 ${selectedManufacturers.includes(manufacturer) ? "text-black font-medium" : "text-gray-600 dark:text-white/70 group-hover:text-gray-900"}`}
                   >
                     {manufacturer}
                   </span>
-                  <span className="text-xs text-gray-400">
+                  <span className="text-xs text-gray-400 dark:text-white/40">
                     (
                     {
                       allMedicines.filter(
@@ -271,7 +271,7 @@ function MedicinePageContent() {
         )}
 
         {/* Price Range */}
-        <div className="rounded-xl bg-white p-4 shadow-sm border border-gray-100">
+        <div className="rounded-xl bg-white p-4 shadow-sm border border-gray-100 dark:bg-white/[.04] dark:border-white/10">
           <h3 className="mb-3 text-sm font-semibold text-gray-900">
             Price Range (BDT)
           </h3>
@@ -280,7 +280,7 @@ function MedicinePageContent() {
               <input
                 type="number"
                 placeholder="Min"
-                className="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm transition-colors focus:border-[#AA383A] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#AA383A]/20"
+                className="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm transition-colors focus:border-[#AA383A] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#AA383A]/20 dark:border-white/10 dark:bg-white/5 dark:text-white"
                 value={priceRange.min || ""}
                 onChange={(e) => {
                   setPriceRange({
@@ -290,11 +290,11 @@ function MedicinePageContent() {
                   handleFilterChange();
                 }}
               />
-              <span className="text-gray-400">-</span>
+              <span className="text-gray-400 dark:text-white/40">-</span>
               <input
                 type="number"
                 placeholder="Max"
-                className="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm transition-colors focus:border-[#AA383A] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#AA383A]/20"
+                className="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm transition-colors focus:border-[#AA383A] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#AA383A]/20 dark:border-white/10 dark:bg-white/5 dark:text-white"
                 value={priceRange.max || ""}
                 onChange={(e) => {
                   setPriceRange({
@@ -332,7 +332,7 @@ function MedicinePageContent() {
             </div>
             <div className="flex flex-wrap gap-2 mt-3">
               {search && (
-                <span className="inline-flex items-center gap-1 rounded-full bg-white px-2.5 py-1 text-xs font-medium text-gray-700 border border-gray-200">
+                <span className="inline-flex items-center gap-1 rounded-full bg-white px-2.5 py-1 text-xs font-medium text-gray-700 dark:text-white border border-gray-200">
                   Search: {search.slice(0, 15)}
                   {search.length > 15 ? "..." : ""}
                   <button
@@ -347,7 +347,7 @@ function MedicinePageContent() {
                 </span>
               )}
               {currentCategory && (
-                <span className="inline-flex items-center gap-1 rounded-full bg-white px-2.5 py-1 text-xs font-medium text-gray-700 border border-gray-200">
+                <span className="inline-flex items-center gap-1 rounded-full bg-white px-2.5 py-1 text-xs font-medium text-gray-700 dark:text-white border border-gray-200">
                   {currentCategory.name}
                   <button
                     onClick={() => {
@@ -363,7 +363,7 @@ function MedicinePageContent() {
               {selectedManufacturers.map((manufacturer) => (
                 <span
                   key={manufacturer}
-                  className="inline-flex items-center gap-1 rounded-full bg-white px-2.5 py-1 text-xs font-medium text-gray-700 border border-gray-200"
+                  className="inline-flex items-center gap-1 rounded-full bg-white px-2.5 py-1 text-xs font-medium text-gray-700 dark:text-white border border-gray-200"
                 >
                   {manufacturer.slice(0, 15)}
                   {manufacturer.length > 15 ? "..." : ""}
@@ -376,7 +376,7 @@ function MedicinePageContent() {
                 </span>
               ))}
               {(priceRange.min || priceRange.max) && (
-                <span className="inline-flex items-center gap-1 rounded-full bg-white px-2.5 py-1 text-xs font-medium text-gray-700 border border-gray-200">
+                <span className="inline-flex items-center gap-1 rounded-full bg-white px-2.5 py-1 text-xs font-medium text-gray-700 dark:text-white border border-gray-200">
                   {priceRange.min || 0} - {priceRange.max || "∞"} BDT
                   <button
                     onClick={() => {
@@ -397,26 +397,26 @@ function MedicinePageContent() {
   );
 
   return (
-    <div className="min-h-screen bg-[#FAF8F5] pb-20 pt-8">
+    <div className="min-h-screen bg-[#FAF8F5] dark:bg-[#0a0a0a] pb-20 pt-8">
       <div className="container mx-auto px-4 lg:px-8">
         {/* Breadcrumb */}
         <nav className="mb-6 flex items-center space-x-2 text-sm">
           <Link
             href="/"
-            className="flex items-center text-gray-500 transition-colors hover:text-black"
+            className="flex items-center text-gray-500 dark:text-white/50 transition-colors hover:text-black"
           >
             <Home className="h-4 w-4" />
           </Link>
-          <ChevronRight className="h-4 w-4 text-gray-400" />
+          <ChevronRight className="h-4 w-4 text-gray-400 dark:text-white/40" />
           <Link
             href="/medicine"
-            className={`transition-colors ${!currentCategory && !searchParam ? "font-medium text-black" : "text-gray-500 hover:text-black"}`}
+            className={`transition-colors ${!currentCategory && !searchParam ? "font-medium text-black dark:text-white" : "text-gray-500 hover:text-black dark:text-white/50 dark:hover:text-white"}`}
           >
             All Products
           </Link>
           {searchParam && (
             <>
-              <ChevronRight className="h-4 w-4 text-gray-400" />
+              <ChevronRight className="h-4 w-4 text-gray-400 dark:text-white/40" />
               <span className="font-medium text-black">
                 Search: "{searchParam}"
               </span>
@@ -434,14 +434,14 @@ function MedicinePageContent() {
 
         {/* Page Header */}
         <div className="mb-10 text-center">
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+          <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
             {searchParam
               ? `Search Results for "${searchParam}"`
               : currentCategory
                 ? currentCategory.name
                 : "Our Collection"}
           </h1>
-          <p className="mt-4 text-gray-500 max-w-2xl mx-auto text-sm sm:text-base">
+          <p className="mt-4 text-gray-500 dark:text-white/50 max-w-2xl mx-auto text-sm sm:text-base">
             {searchParam
               ? `Found ${totalCount} product${totalCount !== 1 ? "s" : ""} matching your search.`
               : currentCategory
@@ -454,7 +454,7 @@ function MedicinePageContent() {
         <div className="mb-6 lg:hidden">
           <button
             onClick={() => setIsMobileFilterOpen(true)}
-            className="flex w-full items-center justify-center gap-2 rounded-lg bg-white px-4 py-3 text-sm font-medium text-gray-900 shadow-sm border border-gray-200 hover:bg-gray-50"
+            className="flex w-full items-center justify-center gap-2 rounded-lg bg-white px-4 py-3 text-sm font-medium text-gray-900 shadow-sm border border-gray-200 hover:bg-gray-50 dark:bg-white/[.04] dark:border-white/10 dark:text-white"
           >
             <SlidersHorizontal className="h-5 w-5" />
             Filters
@@ -491,13 +491,13 @@ function MedicinePageContent() {
                   animate={{ x: 0 }}
                   exit={{ x: "-100%" }}
                   transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                  className="fixed inset-y-0 left-0 z-50 w-80 overflow-y-auto bg-[#FAF8F5] p-6 shadow-xl lg:hidden"
+                  className="fixed inset-y-0 left-0 z-50 w-80 overflow-y-auto bg-[#FAF8F5] dark:bg-[#0a0a0a] p-6 shadow-xl lg:hidden"
                 >
                   <div className="mb-6 flex items-center justify-between">
                     <h2 className="text-lg font-semibold">Filters</h2>
                     <button
                       onClick={() => setIsMobileFilterOpen(false)}
-                      className="rounded-lg p-2 hover:bg-gray-200"
+                      className="rounded-lg p-2 hover:bg-gray-200 dark:hover:bg-white/10"
                     >
                       <X className="h-5 w-5" />
                     </button>
@@ -512,7 +512,7 @@ function MedicinePageContent() {
           <main className="flex-1">
             {isLoadingMedicines ? (
               <div className="flex h-64 w-full items-center justify-center">
-                <Loader2 className="h-8 w-8 animate-spin text-gray-300" />
+                <Loader2 className="h-8 w-8 animate-spin text-gray-300 dark:text-white/5" />
               </div>
             ) : displayedMedicines && displayedMedicines.length > 0 ? (
               <>
@@ -524,12 +524,12 @@ function MedicinePageContent() {
 
                 {/* Pagination Section */}
                 <div className="mt-12 flex flex-col items-center space-y-4">
-                  <p className="text-lg text-gray-900">
+                  <p className="text-lg text-gray-900 dark:text-white">
                     You've viewed {displayedMedicines.length} of {totalCount}{" "}
                     products
                   </p>
 
-                  <div className="relative h-2 w-full max-w-md overflow-hidden rounded-full bg-gray-100">
+                  <div className="relative h-2 w-full max-w-md overflow-hidden rounded-full bg-gray-100 dark:bg-white/10">
                     <div
                       className="absolute left-0 top-0 h-full bg-[#AA383A] transition-all duration-300 ease-out"
                       style={{
@@ -549,11 +549,11 @@ function MedicinePageContent() {
                 </div>
               </>
             ) : (
-              <div className="flex h-64 flex-col items-center justify-center rounded-2xl bg-gray-50 text-center">
-                <h3 className="text-lg font-medium text-gray-900">
+              <div className="flex h-64 flex-col items-center justify-center rounded-2xl bg-gray-50 text-center dark:bg-white/5 dark:text-white">
+                <h3 className="text-lg font-medium text-gray-900 dark:text-white">
                   No products found
                 </h3>
-                <p className="mt-1 text-gray-500">
+                <p className="mt-1 text-gray-500 dark:text-white/40">
                   Try adjusting your search or filters.
                 </p>
                 <button
@@ -575,7 +575,7 @@ export default function MedicinePage() {
   return (
     <Suspense
       fallback={
-        <div className="flex h-screen w-full items-center justify-center bg-[#FAF8F5]">
+        <div className="flex h-screen w-full items-center justify-center bg-[#FAF8F5] dark:bg-[#0a0a0a]">
           <Loader2 className="h-10 w-10 animate-spin text-[#AA383A]" />
         </div>
       }

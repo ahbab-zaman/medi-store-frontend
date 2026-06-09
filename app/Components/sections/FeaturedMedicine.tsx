@@ -16,7 +16,7 @@ export default function FeaturedMedicine() {
   const medicines = data?.data?.slice(0, 6) || [];
 
   return (
-    <section className="py-20 lg:py-28 bg-[#FAF8F5]">
+    <section className="py-20 lg:py-28 bg-[#FAF8F5] dark:bg-zinc-950/20">
       <div className="container mx-auto px-4">
         {/* Header */}
         <motion.div
@@ -51,13 +51,26 @@ export default function FeaturedMedicine() {
         <div className="grid grid-cols-2 lg:grid-cols-6 gap-6">
           {isLoading
             ? Array.from({ length: 6 }).map((_, index) => (
-                <motion.div
+                <div
                   key={index}
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: index * 0.1 }}
-                  className="h-[340px] rounded-lg bg-gray-100 animate-pulse"
-                />
+                  className="relative overflow-hidden rounded-lg bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800"
+                >
+                  {/* Shimmer sweep */}
+                  <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/60 to-transparent z-10" />
+
+                  {/* Image skeleton */}
+                  <div className="aspect-square bg-gray-200" />
+
+                  {/* Content skeleton */}
+                  <div className="p-4 space-y-3">
+                    <div className="h-3 w-20 bg-gray-200 rounded" />
+                    <div className="h-5 w-full bg-gray-200 rounded" />
+                    <div className="flex items-center justify-between mt-3">
+                      <div className="h-6 w-20 bg-gray-200 rounded" />
+                      <div className="h-9 w-9 rounded-full bg-gray-200" />
+                    </div>
+                  </div>
+                </div>
               ))
             : medicines.map((medicine, index) => (
                 <motion.div
@@ -72,6 +85,14 @@ export default function FeaturedMedicine() {
               ))}
         </div>
       </div>
+
+      <style jsx>{`
+        @keyframes shimmer {
+          100% {
+            transform: translateX(100%);
+          }
+        }
+      `}</style>
     </section>
   );
 }

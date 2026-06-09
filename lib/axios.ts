@@ -107,6 +107,8 @@ apiClient.interceptors.response.use(
           } else {
             // Refresh failed - clear auth and redirect
             useAuthStore.getState().clearAuth();
+            // Clear httpOnly cookies from server-side by calling the logout endpoint
+            fetch("/api/auth/logout", { method: "POST" }).catch(() => {});
             if (typeof window !== "undefined") {
               window.location.href = "/login";
             }
@@ -115,6 +117,8 @@ apiClient.interceptors.response.use(
           }
         } catch (refreshError) {
           useAuthStore.getState().clearAuth();
+          // Clear httpOnly cookies from server-side by calling the logout endpoint
+          fetch("/api/auth/logout", { method: "POST" }).catch(() => {});
           if (typeof window !== "undefined") {
             window.location.href = "/login";
           }

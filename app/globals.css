@@ -560,3 +560,49 @@ input[type="checkbox"]:hover {
 .smooth-scroll {
   scroll-behavior: smooth;
 }
+
+/* ===============================
+   Admin Table — Premium Minimal Scrollbar
+   Horizontal-only, ultra-thin, ghost track
+   =============================== */
+.admin-table-scroll {
+  overflow-x: auto;
+  overflow-y: visible;
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.18) transparent;
+}
+
+.dark .admin-table-scroll {
+  scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+}
+
+/* WebKit (Chrome, Safari, Edge) */
+.admin-table-scroll::-webkit-scrollbar {
+  height: 4px;
+}
+
+.admin-table-scroll::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 99px;
+  margin: 0 12px; /* inset from edges */
+}
+
+.admin-table-scroll::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 99px;
+  transition: background 0.25s ease;
+}
+
+.admin-table-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.35);
+}
+
+/* Dark-mode overrides */
+.dark .admin-table-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.dark .admin-table-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.35);
+}

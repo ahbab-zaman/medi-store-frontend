@@ -29,7 +29,7 @@ export default function MyAccountPage() {
   if (!user) return null;
 
   return (
-    <div className="bg-[#FAF8F5]">
+    <div className="bg-[#FAF8F5] dark:bg-zinc-950 min-h-screen">
       <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100">

@@ -137,8 +137,8 @@ export default function AdminDashboardPage() {
   ];
 
   return (
-    <div className="min-h-screen w-full p-4 sm:p-6 lg:p-8 xl:p-10">
-      <div className="mx-auto w-full space-y-6 sm:space-y-8">
+    <div className="w-full p-4 sm:p-6 lg:p-8">
+      <div className="mx-auto w-full max-w-screen-2xl space-y-6 sm:space-y-8">
         {/* Header Section */}
         <div className="space-y-2 sm:space-y-3">
           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-400 bg-clip-text text-transparent">
@@ -150,7 +150,7 @@ export default function AdminDashboardPage() {
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 sm:gap-5 lg:gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 lg:gap-5">
           {statCards.map((card, index) => (
             <div
               key={card.label}
@@ -224,8 +224,8 @@ export default function AdminDashboardPage() {
             </div>
 
             {/* Chart Container */}
-            <div className="w-full overflow-x-auto -mx-2 sm:mx-0">
-              <div className="min-w-[500px] sm:min-w-0 px-2 sm:px-0">
+            <div className="w-full overflow-x-auto">
+              <div className="min-w-[320px]">
                 <SalesChart data={chartData} />
               </div>
             </div>
@@ -233,22 +233,10 @@ export default function AdminDashboardPage() {
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @media (max-width: 475px) {
-          .xs\\:grid-cols-2 {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-          }
+          from { opacity: 0; transform: translateY(16px); }
+          to   { opacity: 1; transform: translateY(0); }
         }
       `}</style>
     </div>

@@ -1,13 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { ShoppingBag, Menu, X } from "lucide-react";
+import { ShoppingBag, Menu, X, Sun, Moon } from "lucide-react";
 import WishlistDropdown from "./WishlistDropdown";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import UserDropdown from "./UserDropdown";
 import { useCart } from "@/hooks";
 import { CartSidebar } from "@/components/ui/CartSidebar";
+import { useTheme } from "next-themes";
 
 import logo from "@/app/favicon.ico";
 import Image from "next/image";
@@ -24,9 +25,16 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showCartSidebar, setShowCartSidebar] = useState(false);
   const { totalItems } = useCart();
+  const { setTheme, resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
 
   return (
-    <header className="sticky top-0 z-90 w-full border-b border-black/5 bg-[#FAF9F5] backdrop-blur-md dark:border-white/5 dark:bg-black/70">
+    <header className="sticky top-0 z-40 w-full border-b border-black/5 bg-[#FAF9F5] backdrop-blur-md dark:border-white/5 dark:bg-black/70">
       {/* ── TOP BAR ── */}
       <div className="mx-auto container flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8 gap-4">
         {/* LEFT – Mobile menu toggle + Logo */}
@@ -61,6 +69,23 @@ export default function Header() {
         {/* RIGHT – Actions */}
         <div className="flex items-center gap-x-1 flex-shrink-0">
           <WishlistDropdown />
+          
+          {mounted ? (
+            <button
+              onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+              className="relative rounded-lg p-2 hover:bg-black/5 dark:hover:bg-white/5 transition-colors duration-200"
+              aria-label="Toggle Theme"
+            >
+              {resolvedTheme === "dark" ? (
+                <Sun size={20} className="text-amber-400 fill-amber-400/20 transition-all duration-300 hover:rotate-45" />
+              ) : (
+                <Moon size={20} className="text-black/70 dark:text-white/70 transition-all duration-300 hover:-rotate-12" />
+              )}
+            </button>
+          ) : (
+            <div className="w-9 h-9" />
+          )}
+
           <UserDropdown />
           <button
             onClick={() => setShowCartSidebar(true)}

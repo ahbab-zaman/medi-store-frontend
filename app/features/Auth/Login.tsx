@@ -46,7 +46,7 @@ export default function LoginClient() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-12 bg-[#FAF9F5] to-indigo-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
+    <div className="min-h-screen flex items-center justify-center px-4 py-12 bg-[#FAF9F5] dark:bg-slate-950 transition-colors duration-300">
       {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-400/20 rounded-full blur-3xl dark:bg-blue-500/10"></div>
@@ -68,7 +68,7 @@ export default function LoginClient() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-3.5 rounded-xl border border-slate-200 text-slate-900 placeholder:text-slate-400 transition-all duration-200"
+                  className="w-full px-4 py-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 transition-all duration-200 outline-none focus:ring-2 focus:ring-[#81604a]/40"
                   placeholder="you@example.com"
                 />
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
@@ -95,7 +95,7 @@ export default function LoginClient() {
                 <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300">
                   Password
                 </label>
-                <a href="#" className="text-sm font-medium transition-colors">
+                <a href="#" className="text-sm font-medium text-slate-550 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors">
                   Forgot?
                 </a>
               </div>
@@ -105,13 +105,13 @@ export default function LoginClient() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3.5 rounded-xl border border-slate-200 text-slate-900 duration-200 pr-10"
+                  className="w-full px-4 py-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 duration-200 pr-10 outline-none focus:ring-2 focus:ring-[#81604a]/40"
                   placeholder="••••••••"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword((prev) => !prev)}
-                  className="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
+                  className="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors cursor-pointer"
                   aria-label={showPassword ? "Hide password" : "Show password"}
                 >
                   {showPassword ? (
@@ -180,7 +180,7 @@ export default function LoginClient() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3.5 px-4 rounded-xl font-semibold text-white bg-[#81604a] disabled:opacity-60 disabled:cursor-not-allowed shadow-lg shadow-blue-500/30 hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98]"
+              className="w-full py-3.5 px-4 rounded-xl font-semibold text-white bg-[#81604a] hover:bg-[#6f503c] dark:bg-[#96735c] dark:hover:bg-[#81604a] disabled:opacity-60 disabled:cursor-not-allowed shadow-lg shadow-blue-500/10 hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
             >
               {isLoading ? (
                 <span className="flex items-center justify-center gap-2">
@@ -224,7 +224,7 @@ export default function LoginClient() {
           <div className="text-center">
             <Link
               href="/register"
-              className="inline-flex items-center gap-2 text-sm font-semibold text-[#81604a] transition-colors"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-[#81604a] dark:text-[#c4a48f] hover:text-[#6f503c] dark:hover:text-[#d3bcae] transition-colors"
             >
               Create an account
               <svg

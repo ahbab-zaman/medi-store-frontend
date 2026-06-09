@@ -50,7 +50,7 @@ const trustFeatures = [
 
 export default function WhyChooseUs() {
   return (
-    <section className="py-20 lg:py-28 bg-[#FAF8F5]">
+    <section className="py-20 lg:py-28 bg-[#FAF8F5] dark:bg-zinc-950/20">
       <div className="container mx-auto px-4">
         {/* Header */}
         <motion.div
@@ -82,13 +82,13 @@ export default function WhyChooseUs() {
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
               whileHover={{ y: -4 }}
-              className="group p-6 lg:p-8 rounded-2xl border border-gray-200 bg-accent/5 shadow-sm hover:shadow-lg hover:border-gray-100 hover:bg-white transition-all duration-300 cursor-pointer"
+              className="group p-6 lg:p-8 rounded-2xl border border-gray-200 dark:border-zinc-800 bg-accent/5 dark:bg-zinc-900/40 shadow-sm hover:shadow-lg hover:border-gray-100 dark:hover:border-zinc-800 hover:bg-white dark:hover:bg-zinc-900 transition-all duration-300 cursor-pointer"
             >
-              <div className="w-12 h-12 rounded-xl bg-gray-100 group-hover:bg-accent/10 flex items-center justify-center mb-5 transition-colors duration-300">
-                <feature.icon className="w-6 h-6 text-gray-500 group-hover:text-accent transition-colors duration-300" />
+              <div className="w-12 h-12 rounded-xl bg-gray-100 dark:bg-zinc-800 group-hover:bg-accent/10 flex items-center justify-center mb-5 transition-colors duration-300">
+                <feature.icon className="w-6 h-6 text-gray-500 dark:text-gray-400 group-hover:text-accent transition-colors duration-300" />
               </div>
               <h3 className="text-lg font-medium mb-2">{feature.title}</h3>
-              <p className="text-gray-600 text-sm leading-relaxed">
+              <p className="text-gray-600 dark:text-zinc-400 text-sm leading-relaxed">
                 {feature.description}
               </p>
             </motion.div>

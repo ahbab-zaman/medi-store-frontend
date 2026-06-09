@@ -42,11 +42,11 @@ export function MedicineCard({ medicine }: MedicineCardProps) {
 
   return (
     <>
-      <div className="group relative block rounded-lg bg-white transition-all duration-300 hover:shadow-lg border border-gray-100">
+      <div className="group relative block rounded-lg bg-white dark:bg-zinc-900 transition-all duration-300 hover:shadow-lg border border-gray-100 dark:border-zinc-800">
         {/* Image Container */}
         <Link
           href={`/medicine/${medicine.id}`}
-          className="block relative aspect-square overflow-hidden rounded-t-lg bg-gray-50"
+          className="block relative aspect-square overflow-hidden rounded-t-lg bg-gray-50 dark:bg-zinc-800"
         >
           {medicine.imageUrl ? (
             <img
@@ -55,7 +55,7 @@ export function MedicineCard({ medicine }: MedicineCardProps) {
               className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
           ) : (
-            <div className="flex h-full w-full items-center justify-center bg-gray-100 text-gray-400">
+            <div className="flex h-full w-full items-center justify-center bg-gray-100 dark:bg-zinc-800 text-gray-400 dark:text-zinc-500">
               No Image
             </div>
           )}
@@ -77,14 +77,14 @@ export function MedicineCard({ medicine }: MedicineCardProps) {
             e.stopPropagation();
             toggleWishlist(medicine);
           }}
-          className="absolute top-3 right-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 hover:bg-white text-gray-600 hover:text-red-500 shadow-md backdrop-blur-sm transition-all duration-300 transform hover:scale-110 active:scale-95"
+          className="absolute top-3 right-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 dark:bg-zinc-900/80 hover:bg-white dark:hover:bg-zinc-800 text-gray-600 dark:text-zinc-400 hover:text-red-500 shadow-md backdrop-blur-sm transition-all duration-300 transform hover:scale-110 active:scale-95"
           title={isWishlisted ? "Remove from Wishlist" : "Add to Wishlist"}
         >
           <Heart
             className={`h-4.5 w-4.5 transition-colors duration-300 ${
               isWishlisted
                 ? "fill-red-500 text-red-500"
-                : "text-gray-600"
+                : "text-gray-600 dark:text-gray-400"
             }`}
           />
         </button>
@@ -92,7 +92,7 @@ export function MedicineCard({ medicine }: MedicineCardProps) {
         {/* Content */}
         <div className="p-4">
           {/* Category & Manufacturer */}
-          <div className="mb-2 flex items-center justify-between text-xs text-gray-500">
+          <div className="mb-2 flex items-center justify-between text-xs text-gray-500 dark:text-zinc-400">
             <span className="font-medium tracking-wider uppercase text-gray-400">
               {medicine.category?.name || "Medicine"}
             </span>
@@ -103,14 +103,14 @@ export function MedicineCard({ medicine }: MedicineCardProps) {
 
           {/* Title */}
           <Link href={`/medicine/${medicine.id}`}>
-            <h3 className="mb-2 text-lg font-medium text-gray-900 transition-colors group-hover:text-black line-clamp-1">
+            <h3 className="mb-2 text-lg font-medium text-gray-900 dark:text-gray-100 transition-colors group-hover:text-black dark:group-hover:text-white line-clamp-1">
               {medicine.name}
             </h3>
           </Link>
 
           {/* Price & Action */}
           <div className="flex items-center justify-between mt-3">
-            <p className="text-gray-900 font-semibold flex items-center gap-1">
+            <p className="text-gray-900 dark:text-gray-100 font-semibold flex items-center gap-1">
               <span>
                 <Image
                   src={bdtImage}
@@ -126,7 +126,7 @@ export function MedicineCard({ medicine }: MedicineCardProps) {
               <button
                 title="Add to Cart"
                 disabled={medicine.stock <= 0 || isAdding}
-                className="flex h-9.5 w-9.5 shadow-xl items-center justify-center rounded-full bg-gray-100 text-black hover:bg-secondary disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="flex h-9.5 w-9.5 shadow-xl items-center justify-center rounded-full bg-gray-100 dark:bg-zinc-800 text-black dark:text-white hover:bg-secondary dark:hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 onClick={(e) => {
                   e.preventDefault();
                   if (medicine.stock > 0 && !isAdding) {
