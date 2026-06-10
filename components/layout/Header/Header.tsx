@@ -38,7 +38,7 @@ export default function Header() {
       {/* ── TOP BAR ── */}
       <div className="mx-auto container flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8 gap-4">
         {/* LEFT – Mobile menu toggle + Logo */}
-        <div className="flex items-center gap-2 flex-shrink-0">
+        <div className="flex items-center gap-2 shrink-0">
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -67,7 +67,7 @@ export default function Header() {
         </div>
 
         {/* RIGHT – Actions */}
-        <div className="flex items-center gap-x-1 flex-shrink-0">
+        <div className="flex items-center gap-x-1 shrink-0">
           <WishlistDropdown />
           
           {mounted ? (
