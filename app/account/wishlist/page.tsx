@@ -7,7 +7,7 @@ import { Heart, LayoutGrid, List, ShoppingCart, Package, Loader2 } from "lucide-
 import { useWishlist, useCart } from "@/hooks";
 import { Medicine, WishlistItem } from "@/types";
 import { getImageUrl } from "@/utils/image-url";
-import bdtImage from "@/public/BDT.png";
+import bdtImage from "../../public/BDT.png";
 import { MedicineCard } from "@/components/ui/MedicineCard";
 import { toast } from "sonner";
 

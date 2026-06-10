@@ -11,7 +11,7 @@ import {
 import Image from "next/image";
 import { useCart } from "@/hooks";
 import { getImageUrl } from "@/utils/image-url";
-import bdtImage from "@/public/BDT.png";
+import bdtImage from "../../public/BDT.png";
 import { useRouter } from "next/navigation";
 
 interface CartModalProps {

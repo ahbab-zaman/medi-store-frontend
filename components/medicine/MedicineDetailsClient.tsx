@@ -14,7 +14,7 @@ import {
 import Link from "next/link";
 import { useState } from "react";
 import { getImageUrl } from "@/utils/image-url";
-import bdtImage from "@/public/BDT.png";
+import bdtImage from "../../public/BDT.png";
 import Image from "next/image";
 import { useCart } from "@/hooks";
 import { CartModal } from "@/components/ui/CartModal";

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { ShoppingBag, Loader2, Heart } from "lucide-react";
 import { Medicine } from "@/types/medicine.types";
 import { getImageUrl } from "@/utils/image-url";
-import bdtImage from "@/public/BDT.png";
+import bdtImage from "../../public/BDT.png";
 import Image from "next/image";
 import { useState } from "react";
 import { QuantitySelector } from "./QuantitySelector";

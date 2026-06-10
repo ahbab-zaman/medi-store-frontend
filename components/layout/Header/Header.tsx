@@ -10,7 +10,7 @@ import { useCart } from "@/hooks";
 import { CartSidebar } from "@/components/ui/CartSidebar";
 import { useTheme } from "next-themes";
 
-import logo from "@/app/favicon.ico";
+import logo from "../../app/favicon.ico";
 import Image from "next/image";
 import { SearchBar } from "@/app/Components/Dropdown/SearchBar";
 import { CategoryNavStrip } from "@/app/Components/Dropdown/CategoryNavStrip";

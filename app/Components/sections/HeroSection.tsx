@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Shield, Truck, Clock } from "lucide-react";
 import { motion } from "framer-motion";
-import heroImage from "@/public/hero-healthcare.jpg";
+import heroImage from "../../public/hero-healthcare.jpg";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 

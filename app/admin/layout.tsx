@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import { Menu, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import logo from "@/app/favicon.ico";
+import logo from "./favicon.ico";
 export default function AdminLayout({
   children,
 }: {
