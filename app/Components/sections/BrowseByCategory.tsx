@@ -67,7 +67,7 @@ export function BrowseByCategory() {
             onClick={handlePrev}
             disabled={!canGoPrev}
             aria-label="Previous categories"
-            className={`hidden md:flex flex-shrink-0 w-10 h-10 rounded-full border items-center justify-center transition-all duration-200 shadow-sm
+            className={`hidden md:flex shrink-0 w-10 h-10 rounded-full border items-center justify-center transition-all duration-200 shadow-sm
               ${
                 canGoPrev
                   ? "bg-white dark:bg-zinc-900 border-[#D2A88A] text-[#D2A88A] hover:bg-[#D2A88A] hover:text-white cursor-pointer"
@@ -84,7 +84,7 @@ export function BrowseByCategory() {
                 {Array.from({ length: visibleCount }).map((_, i) => (
                   <div
                     key={i}
-                    className="flex flex-col items-center gap-2 flex-shrink-0"
+                    className="flex flex-col items-center gap-2 shrink-0"
                   >
                     <Skeleton className="w-16 h-16 md:w-20 md:h-20 rounded-full" />
                   </div>

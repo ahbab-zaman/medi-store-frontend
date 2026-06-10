@@ -1,0 +1,168 @@
+name: Frontend CI Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - "medi-store-frontend/**"
+      - ".github/workflows/frontend-ci.yml"
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - "medi-store-frontend/**"
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}/medi-store-frontend
+
+jobs:
+  lint-and-type-check:
+    name: Lint & Type Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: "medi-store-frontend/package-lock.json"
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: medi-store-frontend
+
+      - name: Run ESLint
+        run: npm run lint
+        working-directory: medi-store-frontend
+        continue-on-error: true
+
+      - name: Check TypeScript
+        run: npx tsc --noEmit
+        working-directory: medi-store-frontend
+
+  security-scan:
+    name: Security & Dependency Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run npm audit
+        run: npm audit --audit-level=moderate
+        working-directory: medi-store-frontend
+        continue-on-error: true
+
+      - name: Run Snyk scan (optional)
+        uses: snyk/actions/node@master
+        with:
+          args: --severity-threshold=high --file=medi-store-frontend/package.json
+        continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+  build:
+    name: Build Frontend
+    runs-on: ubuntu-latest
+    needs: [lint-and-type-check]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: "medi-store-frontend/package-lock.json"
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: medi-store-frontend
+
+      - name: Build Next.js
+        run: npm run build
+        working-directory: medi-store-frontend
+        env:
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-build
+          path: medi-store-frontend/.next/
+          retention-days: 5
+
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    needs: [lint-and-type-check]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: "medi-store-frontend/package-lock.json"
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: medi-store-frontend
+
+      - name: Run tests
+        run: npm test
+        working-directory: medi-store-frontend
+        continue-on-error: true
+
+  build-docker:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+    needs: [lint-and-type-check, security-scan]
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./medi-store-frontend
+          file: ./medi-store-frontend/Dockerfile
+          push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

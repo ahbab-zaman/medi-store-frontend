@@ -65,7 +65,7 @@ export function SearchBar() {
     router.push(`/medicine/${medicine.id}`);
   };
 
-  const showDropdown = isOpen && (isLoading || suggestions.length > 0);
+  const showDropdown = isOpen && (isLoading || suggestions.length > 0 || (query.trim().length > 0 && !isLoading));
 
   return (
     <div ref={containerRef} className="relative w-full">

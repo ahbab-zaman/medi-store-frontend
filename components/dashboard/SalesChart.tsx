@@ -16,7 +16,7 @@ interface SalesChartProps {
 
 export function SalesChart({ data }: SalesChartProps) {
   return (
-    <div className="h-[300px] w-full">
+    <div className="h-75 w-full">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
           data={data}

@@ -68,11 +68,16 @@ export function MedicineDetailsClient({
       <div className="container mx-auto px-4 lg:px-8">
         {/* Breadcrumb */}
         <nav className="mb-8 flex items-center gap-2 text-sm text-gray-500 dark:text-zinc-400">
-          <Link href="/medicine" className="hover:text-black dark:hover:text-white transition-colors">
+          <Link
+            href="/medicine"
+            className="hover:text-black dark:hover:text-white transition-colors"
+          >
             Medicines
           </Link>
           <span>/</span>
-          <span className="text-black dark:text-white font-medium">{medicine.name}</span>
+          <span className="text-black dark:text-white font-medium">
+            {medicine.name}
+          </span>
         </nav>
 
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
@@ -154,7 +159,7 @@ export function MedicineDetailsClient({
                     <button
                       onClick={handleDecrement}
                       disabled={quantity <= 1}
-                      className="text-gray-500 hover:text-black dark:hover:text-white disabled:opacity-30 cursor-pointer"
+                      className="text-gray-500 dark:text-zinc-400 hover:text-black dark:hover:text-white disabled:opacity-30 cursor-pointer"
                     >
                       <Minus className="h-4 w-4" />
                     </button>
@@ -164,7 +169,7 @@ export function MedicineDetailsClient({
                     <button
                       onClick={handleIncrement}
                       disabled={quantity >= medicine.stock}
-                      className="text-gray-500 hover:text-black dark:hover:text-white disabled:opacity-30 cursor-pointer"
+                      className="text-gray-500 dark:text-zinc-400 hover:text-black dark:hover:text-white disabled:opacity-30 cursor-pointer"
                     >
                       <Plus className="h-4 w-4" />
                     </button>
@@ -174,7 +179,7 @@ export function MedicineDetailsClient({
                 {/* Add to Cart */}
                 <button
                   onClick={handleAddToCart}
-                  className="flex-1 h-12 flex items-center justify-center gap-2 rounded-full bg-black dark:bg-gray-100 dark:text-black px-8 text-sm font-semibold text-white transition-transform hover:scale-[1.02] active:scale-[0.98] disabled:bg-gray-200 dark:disabled:bg-zinc-800 disabled:text-gray-400 disabled:cursor-not-allowed cursor-pointer"
+                  className="flex-1 h-12 flex items-center justify-center gap-2 rounded-full bg-black dark:bg-gray-400 dark:text-black px-8  py-4 text-sm font-semibold text-white transition-transform hover:scale-[1.02] active:scale-[0.98] disabled:bg-gray-200 dark:disabled:bg-zinc-800 disabled:text-gray-400 disabled:cursor-not-allowed cursor-pointer"
                   disabled={medicine.stock <= 0 || isAdding}
                 >
                   {isAdding ? (
@@ -214,14 +219,18 @@ export function MedicineDetailsClient({
                 <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
                   Fast Delivery
                 </span>
-                <span className="text-xs text-gray-500 dark:text-zinc-400">1-2 business days</span>
+                <span className="text-xs text-gray-500 dark:text-zinc-400">
+                  1-2 business days
+                </span>
               </div>
               <div className="flex flex-col gap-2">
                 <ShieldCheck className="h-5 w-5 text-gray-400 dark:text-zinc-500" />
                 <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
                   Quality Check
                 </span>
-                <span className="text-xs text-gray-500 dark:text-zinc-400">100% Certified</span>
+                <span className="text-xs text-gray-500 dark:text-zinc-400">
+                  100% Certified
+                </span>
               </div>
               {medicine.expiryDate && (
                 <div className="flex flex-col gap-2">
