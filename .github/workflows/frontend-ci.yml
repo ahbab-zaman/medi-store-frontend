@@ -3,17 +3,12 @@ name: Frontend CI Pipeline
 on:
   push:
     branches: [main, develop]
-    paths:
-      - "medi-store-frontend/**"
-      - ".github/workflows/frontend-ci.yml"
   pull_request:
     branches: [main, develop]
-    paths:
-      - "medi-store-frontend/**"
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}/medi-store-frontend
+  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
   lint-and-type-check:
@@ -33,16 +28,13 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-        working-directory: medi-store-frontend
 
       - name: Run ESLint
         run: npm run lint
-        working-directory: medi-store-frontend
         continue-on-error: true
 
       - name: Check TypeScript
         run: npx tsc --noEmit
-        working-directory: medi-store-frontend
 
   security-scan:
     name: Security & Dependency Scan
@@ -54,13 +46,12 @@ jobs:
 
       - name: Run npm audit
         run: npm audit --audit-level=moderate
-        working-directory: medi-store-frontend
         continue-on-error: true
 
       - name: Run Snyk scan (optional)
         uses: snyk/actions/node@master
         with:
-          args: --severity-threshold=high --file=medi-store-frontend/package.json
+          args: --severity-threshold=high --file=package.json
         continue-on-error: true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
@@ -83,11 +74,9 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-        working-directory: medi-store-frontend
 
       - name: Build Next.js
         run: npm run build
-        working-directory: medi-store-frontend
         env:
           NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
 
@@ -95,7 +84,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: frontend-build
-          path: medi-store-frontend/.next/
+          path: .next/
           retention-days: 5
 
   test:
@@ -112,15 +101,13 @@ jobs:
         with:
           node-version: "20"
           cache: "npm"
-          cache-dependency-path: "medi-store-frontend/package-lock.json"
+          cache-dependency-path: "**/package-lock.json"
 
       - name: Install dependencies
         run: npm ci
-        working-directory: medi-store-frontend
 
       - name: Run tests
         run: npm test
-        working-directory: medi-store-frontend
         continue-on-error: true
 
   build-docker:
