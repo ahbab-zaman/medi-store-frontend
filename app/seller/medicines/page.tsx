@@ -17,7 +17,7 @@ import { MedicineForm } from "@/components/seller/MedicineForm";
 import { Medicine } from "@/types";
 import { getImageUrl } from "@/utils/image-url";
 import Image from "next/image";
-import bdtImage from "../../public/BDT.png";
+import bdtImage from "@/public/BDT.png";
 export default function SellerMedicinesPage() {
   const [search, setSearch] = useState("");
   const { user } = useAuth();

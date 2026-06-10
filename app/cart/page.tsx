@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import Image from "next/image";
 import { useCart } from "@/hooks";
 import { getImageUrl } from "@/utils/image-url";
-import bdtImage from "../public/BDT.png";
+import bdtImage from "@/public/BDT.png";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -96,7 +96,7 @@ export default function CartPage() {
                       <div className="col-span-1 sm:col-span-6">
                         <div className="flex gap-4">
                           {/* Image */}
-                          <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg bg-gray-50 dark:bg-zinc-800">
+                          <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg bg-gray-50 dark:bg-zinc-800">
                             {item.medicine.imageUrl ? (
                               <img
                                 src={getImageUrl(item.medicine.imageUrl)}

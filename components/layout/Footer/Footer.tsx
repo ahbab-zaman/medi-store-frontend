@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Facebook, Twitter, Instagram, Mail } from "lucide-react";
-import logo from "../../public/medicine-symbol (1).png";
+import logo from "@/public/medicine-symbol.png";
 import Image from "next/image";
 export default function Footer() {
   const currentYear = new Date().getFullYear();
