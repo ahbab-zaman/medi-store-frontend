@@ -6,10 +6,12 @@ interface AuthState {
   user: User | null;
   accessToken: string | null;
   isAuthenticated: boolean;
+  authReady: boolean;
   setUser: (user: User | null, accessToken?: string | null) => void;
   logout: () => void;
   setAccessToken: (token: string) => void;
   clearAuth: () => void;
+  markAuthReady: () => void;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -18,6 +20,7 @@ export const useAuthStore = create<AuthState>()(
       user: null,
       accessToken: null,
       isAuthenticated: false,
+      authReady: false,
 
       setUser: (user, accessToken = null) =>
         set({
@@ -36,9 +39,16 @@ export const useAuthStore = create<AuthState>()(
 
       clearAuth: () =>
         set({ accessToken: null, user: null, isAuthenticated: false }),
+
+      markAuthReady: () => set({ authReady: true }),
     }),
     {
       name: "auth-storage", // localStorage key
+      partialize: (state) => ({
+        user: state.user,
+        accessToken: state.accessToken,
+        isAuthenticated: state.isAuthenticated,
+      }),
     },
   ),
 );

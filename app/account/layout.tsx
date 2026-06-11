@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/auth.store";
-import { getMe, logoutUser } from "@/services/auth.service";
+import { logoutUser } from "@/services/auth.service";
 import {
   User,
   Lock,
@@ -14,7 +14,6 @@ import {
   LogOut,
   ChevronRight,
   LayoutDashboard,
-  Gift,
 } from "lucide-react";
 import clsx from "clsx";
 
@@ -34,44 +33,22 @@ export default function AccountLayout({
 }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { user, isAuthenticated, setUser, clearAuth, logout } = useAuthStore();
+  const { user, authReady, clearAuth, logout } = useAuthStore();
   const [isBootstrapping, setIsBootstrapping] = useState(true);
   const fullName = user?.name?.trim() || "User";
 
   useEffect(() => {
-    let isMounted = true;
+    if (!authReady) return;
 
-    const bootstrapAccount = async () => {
-      if (user && isAuthenticated) {
-        if (isMounted) setIsBootstrapping(false);
-        return;
-      }
+    if (user) {
+      setIsBootstrapping(false);
+      return;
+    }
 
-      try {
-        const me = await getMe();
-
-        if (me?.success && me.data) {
-          setUser(me.data);
-          if (isMounted) setIsBootstrapping(false);
-          return;
-        }
-
-        clearAuth();
-        router.replace("/login?next=/account");
-      } catch {
-        clearAuth();
-        router.replace("/login?next=/account");
-      } finally {
-        if (isMounted) setIsBootstrapping(false);
-      }
-    };
-
-    bootstrapAccount();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [router, user, isAuthenticated, setUser, clearAuth]);
+    clearAuth();
+    router.replace("/login?next=/account");
+    setIsBootstrapping(false);
+  }, [authReady, router, user, clearAuth]);
 
   if (isBootstrapping) {
     return (
@@ -85,7 +62,7 @@ export default function AccountLayout({
     );
   }
 
-  if (!isAuthenticated && !user) return null;
+  if (!user) return null;
 
   const handleLogout = async () => {
     try {

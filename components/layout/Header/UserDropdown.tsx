@@ -6,7 +6,6 @@ import {
   LogOut,
   LayoutDashboard,
   User as UserIcon,
-  Loader2,
   ChevronDown,
   ShoppingBag,
 } from "lucide-react";
@@ -20,7 +19,7 @@ function roleDashboard(role?: Role) {
 }
 
 export default function UserDropdown() {
-  const { user, logout, isAuthenticated, isLoading } = useAuth();
+  const { user, logout, isAuthenticated, authReady } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -38,9 +37,9 @@ export default function UserDropdown() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  if (isLoading) {
+  if (!authReady) {
     return (
-      <Loader2 className="h-5 w-5 animate-spin text-black/50 dark:text-white/50" />
+      <div className="h-5 w-5 rounded-full border border-black/10 dark:border-white/10" />
     );
   }
 

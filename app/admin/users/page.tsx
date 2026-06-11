@@ -46,6 +46,7 @@ export default function AdminUsersPage() {
   };
 
   return (
+    <div className="w-full p-4 sm:p-6 lg:p-8">
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">Manage Users</h1>
       <div className="rounded-xl border border-black/10 bg-white dark:border-white/10 dark:bg-white/[.04] w-full admin-table-scroll">
@@ -158,6 +159,7 @@ export default function AdminUsersPage() {
         title="Delete User"
         description="Are you sure you want to delete this user? This action cannot be undone."
       />
+    </div>
     </div>
   );
 }

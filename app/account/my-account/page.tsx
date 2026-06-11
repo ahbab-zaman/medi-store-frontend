@@ -1,24 +1,24 @@
 "use client";
 
 import { useAuth } from "@/hooks";
-import { Loader2, Mail, Phone, MapPin, User, Shield } from "lucide-react";
+import { Loader2, Mail, Phone, MapPin, Shield } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import EditProfileModal from "@/components/MyAccount/EditProfileModal";
 
 export default function MyAccountPage() {
-  const { user, isAuthenticated, isLoading } = useAuth();
+  const { user, isAuthenticated, authReady } = useAuth();
   const router = useRouter();
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
+    if (authReady && !isAuthenticated) {
       router.push("/login");
     }
-  }, [isLoading, isAuthenticated, router]);
+  }, [authReady, isAuthenticated, router]);
 
-  if (isLoading) {
+  if (!authReady) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-gray-500" />

@@ -10,11 +10,25 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
+type ChartPoint = {
+  name: string;
+  [key: string]: string | number;
+};
+
 interface SalesChartProps {
-  data: any[];
+  data: ChartPoint[];
+  dataKey?: keyof ChartPoint;
+  valueFormatter?: (value: number) => string;
 }
 
-export function SalesChart({ data }: SalesChartProps) {
+export function SalesChart({
+  data,
+  dataKey = "daily",
+  valueFormatter = (value) => `$${value}`,
+}: SalesChartProps) {
+  const formatValue = (value: string | number) =>
+    valueFormatter(Number(value || 0));
+
   return (
     <div className="h-75 w-full">
       <ResponsiveContainer width="100%" height="100%">
@@ -43,9 +57,10 @@ export function SalesChart({ data }: SalesChartProps) {
             axisLine={false}
             tickLine={false}
             tick={{ fill: "#6B7280", fontSize: 12 }}
-            tickFormatter={(value) => `$${value}`}
+            tickFormatter={(value) => formatValue(value)}
           />
           <Tooltip
+            formatter={(value: string | number) => formatValue(value)}
             contentStyle={{
               backgroundColor: "#fff",
               borderRadius: "8px",
@@ -55,7 +70,7 @@ export function SalesChart({ data }: SalesChartProps) {
           />
           <Line
             type="monotone"
-            dataKey="daily"
+            dataKey={dataKey}
             stroke="#2563EB"
             strokeWidth={3}
             dot={{ r: 4, fill: "#2563EB", strokeWidth: 2, stroke: "#fff" }}

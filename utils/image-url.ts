@@ -2,7 +2,7 @@ export const getImageUrl = (imagePath: string | null | undefined): string => {
   if (!imagePath) return "";
   if (imagePath.startsWith("http")) return imagePath;
 
-  // Support both env vars (production may use NEXT_PUBLIC_BACKEND_API_BASE_URL only)
+  // Support both env vars (production may use NEXT_PUBLIC_NEXT_PUBLIC_BACKEND_API_BASE_URL only)
   const apiUrl =
     process.env.NEXT_PUBLIC_API_URL ||
     process.env.NEXT_PUBLIC_BACKEND_API_BASE_URL;

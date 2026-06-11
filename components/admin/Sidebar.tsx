@@ -14,6 +14,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/utils/cn";
 import Image from "next/image";
+import logo from "@/app/favicon.ico";
 
 interface SidebarProps {
   className?: string;
@@ -74,30 +75,24 @@ export function Sidebar({ className, isOpen = false, onClose }: SidebarProps) {
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#B8865D]/[0.04] via-transparent to-purple-500/[0.02]" />
 
         {/* ── Logo + close button ────────────────────── */}
-        <div className="relative flex items-center justify-between px-5 py-5 border-b border-black/[0.06] dark:border-white/[0.06]">
+        <div className="relative flex items-center justify-between gap-3 border-b border-black/[0.06] px-5 py-5 dark:border-white/[0.06]">
+
           <Link
-            href="/admin/dashboard"
-            className="flex items-center gap-2.5"
-            onClick={onClose}
+            href="/"
+            title="Go to MediStore website"
+            className="group flex items-center gap-2.5"
           >
-            {/* Pill icon badge */}
-            <Link
-              href="/"
-              title="Go to MediStore website"
-              className="group flex items-center gap-2.5"
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <Image
-                src="/medicine-symbol (1).png"
-                alt="MediStore"
-                width={32}
-                height={32}
-                className="object-contain transition-transform duration-200 group-hover:scale-110"
-              />
-              <span className="text-base font-extrabold tracking-tight text-[#B8865D] dark:text-[#d4a574]">
-                MediStore
-              </span>
-            </Link>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <Image
+              src={logo}
+              alt="MediStore"
+              width={32}
+              height={32}
+              className="object-contain transition-transform duration-200 group-hover:scale-110"
+            />
+            <span className="text-base font-extrabold tracking-tight text-[#B8865D] dark:text-[#d4a574]">
+              MediStore
+            </span>
           </Link>
 
           {/* Close button – mobile only */}
@@ -112,10 +107,7 @@ export function Sidebar({ className, isOpen = false, onClose }: SidebarProps) {
 
         {/* ── Navigation ─────────────────────────────── */}
         <nav className="relative flex-1 overflow-y-auto px-3 py-4 space-y-0.5">
-          <p className="mb-3 px-3 text-[10px] font-semibold uppercase tracking-widest text-black/30 dark:text-white/30">
-            Navigation
-          </p>
-
+          
           {items.map((item, index) => {
             const isActive = pathname === item.href;
 
@@ -162,14 +154,14 @@ export function Sidebar({ className, isOpen = false, onClose }: SidebarProps) {
           <Link
             href="/"
             onClick={onClose}
-            className="group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200 text-black/65 dark:text-white/65 hover:bg-black/[0.04] dark:hover:bg-white/[0.04] hover:text-black dark:hover:text-white"
+            className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200 "
           >
-            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-black/[0.05] dark:bg-white/[0.05] transition-all duration-200 group-hover:bg-[#B8865D]/10">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg  transition-all duration-200 ">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/medicine-symbol (1).png"
+              <Image
+                src={logo}
                 alt="MediStore logo"
-                className="h-5 w-5 object-contain opacity-60 group-hover:opacity-90 transition-opacity"
+                className="h-5 w-5 object-contain"
               />
             </span>
             <span className="truncate">Back to Website</span>

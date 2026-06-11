@@ -17,7 +17,13 @@ export async function GET() {
 
   const data = await upstream.json().catch(() => null);
 
-  return NextResponse.json(data ?? { message: "Failed to load profile" }, {
-    status: upstream.status,
-  });
+  return NextResponse.json(
+    {
+      ...(data ?? { message: "Failed to load profile" }),
+      accessToken,
+    },
+    {
+      status: upstream.status,
+    },
+  );
 }

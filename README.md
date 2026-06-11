@@ -57,6 +57,7 @@ We believe in **Rich Aesthetics**. The application utilizes:
    Configure `.env.local`:
 
    ```env
+   BACKEND_API_BASE_URL="http://localhost:4000/api"
    NEXT_PUBLIC_BACKEND_API_BASE_URL="http://localhost:4000/api"
    ```
 

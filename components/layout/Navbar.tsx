@@ -1,6 +1,12 @@
+"use client";
+
 import Link from "next/link";
+import { useAuth } from "@/hooks";
+import UserDropdown from "./Header/UserDropdown";
 
 export default function Navbar() {
+  const { isAuthenticated } = useAuth();
+
   return (
     <header className="border-b border-black/10 bg-white/80 backdrop-blur dark:border-white/10 dark:bg-black/40">
       <div className="mx-auto flex w-full items-center justify-between px-4 py-4">
@@ -9,18 +15,24 @@ export default function Navbar() {
         </Link>
 
         <nav className="flex items-center gap-3">
-          <Link
-            href="/login"
-            className="rounded-full px-4 py-2 text-sm font-medium hover:bg-black/4 dark:hover:bg-white/8"
-          >
-            Login
-          </Link>
-          <Link
-            href="/register"
-            className="rounded-full bg-black px-4 py-2 text-sm font-medium text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90"
-          >
-            Register
-          </Link>
+          {isAuthenticated ? (
+            <UserDropdown />
+          ) : (
+            <>
+              <Link
+                href="/login"
+                className="rounded-full px-4 py-2 text-sm font-medium hover:bg-black/4 dark:hover:bg-white/8"
+              >
+                Login
+              </Link>
+              <Link
+                href="/register"
+                className="rounded-full bg-black px-4 py-2 text-sm font-medium text-white hover:bg-black/90 dark:bg-white dark:text-black dark:hover:bg-white/90"
+              >
+                Register
+              </Link>
+            </>
+          )}
         </nav>
       </div>
     </header>
