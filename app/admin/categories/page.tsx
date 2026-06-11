@@ -582,7 +582,7 @@ export default function AdminCategoriesPage() {
                   </label>
                   <textarea
                     name="description"
-                    defaultValue={editingCategory?.description}
+                    defaultValue={editingCategory?.description ?? undefined}
                     disabled={isSubmitting}
                     className="min-h-[100px] w-full rounded-lg border border-black/10 bg-transparent px-4 py-2 outline-none transition-colors focus:border-black/30 disabled:opacity-50 dark:border-white/10 dark:focus:border-white/30"
                     placeholder="Enter category description (optional)"
