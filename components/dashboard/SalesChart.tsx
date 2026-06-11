@@ -26,7 +26,7 @@ export function SalesChart({
   dataKey = "daily",
   valueFormatter = (value) => `$${value}`,
 }: SalesChartProps) {
-  const formatValue = (value: string | number) =>
+  const formatValue = (value: string | number | undefined) =>
     valueFormatter(Number(value || 0));
 
   return (
@@ -60,7 +60,7 @@ export function SalesChart({
             tickFormatter={(value) => formatValue(value)}
           />
           <Tooltip
-            formatter={(value: string | number) => formatValue(value)}
+            formatter={(value: string | number | undefined) => formatValue(value)}
             contentStyle={{
               backgroundColor: "#fff",
               borderRadius: "8px",

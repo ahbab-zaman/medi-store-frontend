@@ -60,8 +60,10 @@ export function SearchBar() {
   };
 
   const handleSelect = (medicine: Medicine) => {
-    setQuery(medicine.name);
+    setQuery("");
     setIsOpen(false);
+    setIsFocused(false);
+    inputRef.current?.blur();
     router.push(`/medicine/${medicine.id}`);
   };
 
