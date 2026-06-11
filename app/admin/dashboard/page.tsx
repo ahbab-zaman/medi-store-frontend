@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { useMemo, useState } from "react";
 import {
   useAdminUsers,
@@ -20,7 +21,6 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { Skeleton } from "@/components/ui/Skeleton";
-import { SalesChart } from "@/components/dashboard/SalesChart";
 import { addHours, format, isSameDay, subDays } from "date-fns";
 
 type RevenueRange = "daily" | "weekly" | "monthly";
@@ -192,7 +192,7 @@ export default function AdminDashboardPage() {
 
   const recentOrders = useMemo(() => sortedOrders.slice(0, 5), [sortedOrders]);
 
-  const statCards: StatCard[] = [
+const statCards: StatCard[] = [
     {
       label: "Total Users",
       value: stats.users,
@@ -258,7 +258,17 @@ export default function AdminDashboardPage() {
       gradientTo: "to-emerald-600/5",
       loading: isLoadingOrders,
     },
-  ];
+];
+
+const SalesChart = dynamic(
+  () =>
+    import("@/components/dashboard/SalesChart").then(
+      (mod) => mod.SalesChart,
+    ),
+  {
+    ssr: false,
+  },
+);
 
   return (
     <div className="w-full p-4 sm:p-6 lg:p-8">

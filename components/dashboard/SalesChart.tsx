@@ -30,7 +30,7 @@ export function SalesChart({
     valueFormatter(Number(value || 0));
 
   return (
-    <div className="h-75 w-full">
+    <div className="h-[320px] w-full">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
           data={data}

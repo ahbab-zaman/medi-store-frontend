@@ -1,13 +1,29 @@
 "use client";
 
+import dynamic from "next/dynamic";
+import Link from "next/link";
 import { useSellerOrders } from "@/hooks/useSellerOrders";
 import { useMedicines } from "@/hooks/useMedicines";
 import { useAuth } from "@/hooks/useAuth";
 import { ShoppingBag, Pill, DollarSign } from "lucide-react";
 import { Skeleton } from "@/components/ui/Skeleton";
-import Link from "next/link";
-import { SalesChart } from "@/components/dashboard/SalesChart";
 import { format, subDays } from "date-fns";
+
+const SalesChart = dynamic(
+  () =>
+    import("@/components/dashboard/SalesChart").then(
+      (mod) => mod.SalesChart,
+    ),
+  {
+    ssr: false,
+  },
+);
+
+type SellerOrder = {
+  createdAt: string;
+  status: string;
+  totalAmount?: number | string;
+};
 
 export default function SellerDashboardPage() {
   const { user } = useAuth();
@@ -18,15 +34,15 @@ export default function SellerDashboardPage() {
   const medicines = medicinesRes?.data || [];
 
   const { data: ordersRes, isLoading: isLoadingOrders } = useSellerOrders();
-  const orders = ordersRes?.data || [];
+  const orders = (ordersRes?.data || []) as SellerOrder[];
 
   const stats = {
     orders: orders.length || 0,
     medicines: medicines.length || 0,
     revenue:
-      orders.reduce(
-        (acc: number, order: any) =>
-          order.status === "DELIVERED" ? acc + order.totalAmount : acc,
+    orders.reduce(
+        (acc: number, order: SellerOrder) =>
+          order.status === "DELIVERED" ? acc + Number(order.totalAmount || 0) : acc,
         0,
       ) || 0,
   };
@@ -39,12 +55,12 @@ export default function SellerDashboardPage() {
 
   const chartData = last7Days.map((day) => {
     const dayOrders = orders.filter(
-      (order: any) =>
+      (order: SellerOrder) =>
         format(new Date(order.createdAt), "MMM dd") === day &&
         order.status === "DELIVERED",
     );
     const dailyRevenue = dayOrders.reduce(
-      (acc: number, order: any) => acc + order.totalAmount,
+      (acc: number, order: SellerOrder) => acc + Number(order.totalAmount || 0),
       0,
     );
     return {
