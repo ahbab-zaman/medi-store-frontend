@@ -13,13 +13,13 @@ export default function RegisterPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState<Role>(Role.CUSTOMER);
   const [showPassword, setShowPassword] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     try {
-      await register({ name, email, password, role });
+      // Role is always CUSTOMER — no user selection needed
+      await register({ name, email, password, role: Role.CUSTOMER });
       router.push("/login");
     } catch (err) {
       // Error handling managed by useAuth hook and registerError
@@ -170,48 +170,6 @@ export default function RegisterPage() {
                     </svg>
                   )}
                 </button>
-              </div>
-            </div>
-
-            {/* Role Selection */}
-            <div className="space-y-2">
-              <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300">
-                Account Type
-              </label>
-              <div className="relative">
-                <select
-                  value={role}
-                  onChange={(e) => setRole(e.target.value as Role)}
-                  className="w-full px-4 py-3.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 transition-all duration-200 appearance-none cursor-pointer outline-none focus:ring-2 focus:ring-[#81604a]/40"
-                >
-                  <option
-                    value={Role.CUSTOMER}
-                    className="dark:bg-slate-900 dark:text-slate-100"
-                  >
-                    Customer - Browse and purchase
-                  </option>
-                  <option
-                    value={Role.SELLER}
-                    className="dark:bg-slate-900 dark:text-slate-100"
-                  >
-                    Seller - List and sell products
-                  </option>
-                </select>
-                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                  <svg
-                    className="w-5 h-5 text-slate-400"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 9l-7 7-7-7"
-                    />
-                  </svg>
-                </div>
               </div>
             </div>
 

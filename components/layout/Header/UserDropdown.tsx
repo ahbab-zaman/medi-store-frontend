@@ -54,6 +54,8 @@ export default function UserDropdown() {
     );
   }
 
+  const isAdminOrSeller = user.role === Role.ADMIN || user.role === Role.SELLER;
+
   return (
     <div className="relative" ref={dropdownRef}>
       <button
@@ -81,14 +83,17 @@ export default function UserDropdown() {
             </p>
           </div>
 
-          <Link
-            href={roleDashboard(user.role)}
-            onClick={() => setIsOpen(false)}
-            className="flex items-center gap-x-2 rounded-xl px-3 py-2 text-sm text-black/70 hover:bg-black/5 hover:text-black dark:text-white/70 dark:hover:bg-white/5 dark:hover:text-white"
-          >
-            <LayoutDashboard size={16} />
-            Dashboard
-          </Link>
+          {/* Only show Dashboard for ADMIN and SELLER */}
+          {isAdminOrSeller && (
+            <Link
+              href={roleDashboard(user.role)}
+              onClick={() => setIsOpen(false)}
+              className="flex items-center gap-x-2 rounded-xl px-3 py-2 text-sm text-black/70 hover:bg-black/5 hover:text-black dark:text-white/70 dark:hover:bg-white/5 dark:hover:text-white"
+            >
+              <LayoutDashboard size={16} />
+              Dashboard
+            </Link>
+          )}
 
           <Link
             href="/account/my-account"
