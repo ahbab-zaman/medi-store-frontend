@@ -60,8 +60,8 @@ export function CategoryNavStrip() {
             onClick={() => scroll("left")}
             className={[
               "flex-shrink-0 z-10 flex items-center justify-center",
-              "w-7 h-7 rounded-full border border-black/10 bg-white shadow-sm",
-              "text-black/60 hover:bg-[#C48C64] hover:text-white hover:border-[#C48C64]",
+              "w-7 h-7 rounded-full border border-black/10 bg-white dark:bg-zinc-800 dark:border-white/10 shadow-sm",
+              "text-black/60 dark:text-white/60 hover:bg-[#C48C64] hover:text-white hover:border-[#C48C64]",
               "transition-all duration-150",
               showLeft
                 ? "opacity-100 pointer-events-auto"
@@ -121,15 +121,15 @@ export function CategoryNavStrip() {
                     ].join(" ")}
                   >
                     {/* Tiny category image / initial */}
-                    <span className="flex-shrink-0 w-4 h-4 rounded overflow-hidden bg-gray-100 dark:bg-gray-800">
+                    <span className="flex-shrink-0 w-4 h-4 rounded overflow-hidden bg-gray-100 dark:bg-zinc-700">
                       {category.image ? (
                         <img
                           src={getImageUrl(category.image)}
                           alt=""
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover dark:invert dark:brightness-200"
                         />
                       ) : (
-                        <span className="flex items-center justify-center w-full h-full text-[9px] font-bold text-gray-500 bg-gradient-to-br from-[#C48C64]/30 to-[#A67C52]/30">
+                        <span className="flex items-center justify-center w-full h-full text-[9px] font-bold text-gray-500 dark:text-white/60 bg-gradient-to-br from-[#C48C64]/30 to-[#A67C52]/30">
                           {category.name.charAt(0)}
                         </span>
                       )}
@@ -155,8 +155,8 @@ export function CategoryNavStrip() {
             onClick={() => scroll("right")}
             className={[
               "flex-shrink-0 z-10 flex items-center justify-center",
-              "w-7 h-7 rounded-full border border-black/10 bg-white shadow-sm",
-              "text-black/60 hover:bg-[#C48C64] hover:text-white hover:border-[#C48C64]",
+              "w-7 h-7 rounded-full border border-black/10 bg-white dark:bg-zinc-800 dark:border-white/10 shadow-sm",
+              "text-black/60 dark:text-white/60 hover:bg-[#C48C64] hover:text-white hover:border-[#C48C64]",
               "transition-all duration-150",
               showRight
                 ? "opacity-100 pointer-events-auto"

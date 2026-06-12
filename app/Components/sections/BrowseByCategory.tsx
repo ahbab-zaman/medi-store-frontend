@@ -35,7 +35,7 @@ export function BrowseByCategory() {
 
   const visibleCategories = categories.slice(
     startIndex,
-    startIndex + visibleCount
+    startIndex + visibleCount,
   );
 
   return (
@@ -100,12 +100,12 @@ export function BrowseByCategory() {
                       href={`/medicine?category=${category.id}`}
                       className="flex flex-col items-center gap-2 flex-shrink-0 group"
                     >
-                      <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-transparent group-hover:border-[#D2A88A] transition-all duration-300 shadow-md bg-white dark:bg-zinc-900 flex items-center justify-center p-2">
+                      <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-transparent group-hover:border-[#D2A88A] transition-all duration-300 shadow-md bg-white dark:bg-zinc-800 flex items-center justify-center p-2">
                         {category.image ? (
                           <img
                             src={getImageUrl(category.image)}
                             alt={category.name}
-                            className="w-[85%] h-[85%] object-contain"
+                            className="w-[85%] h-[85%] object-contain dark:invert dark:brightness-200"
                           />
                         ) : (
                           <Package className="w-7 h-7 text-muted-foreground text-muted group-hover:text-[#D2A88A] transition-colors duration-300" />
@@ -137,13 +137,13 @@ export function BrowseByCategory() {
                         <motion.div
                           whileHover={{ scale: 1.08 }}
                           whileTap={{ scale: 0.95 }}
-                          className="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden border-2 border-transparent group-hover:border-[#D2A88A] transition-all duration-300 shadow-md bg-white dark:bg-zinc-900 flex items-center justify-center p-2"
+                          className="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden border-2 border-transparent group-hover:border-[#D2A88A] transition-all duration-300 shadow-md bg-white dark:bg-zinc-800 flex items-center justify-center p-2"
                         >
                           {category.image ? (
                             <img
                               src={getImageUrl(category.image)}
                               alt={category.name}
-                              className="w-[85%] h-[85%] object-contain"
+                              className="w-[85%] h-[85%] object-contain dark:invert dark:brightness-200"
                             />
                           ) : (
                             <Package className="w-7 h-7 text-muted-foreground text-muted group-hover:text-[#D2A88A] transition-colors duration-300" />
