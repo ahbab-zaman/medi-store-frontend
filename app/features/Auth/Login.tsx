@@ -95,8 +95,8 @@ export default function LoginClient() {
                 <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300">
                   Password
                 </label>
-                <a href="#" className="text-sm font-medium text-slate-550 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors">
-                  Forgot?
+                <a href="/forgot-password" className="text-sm font-medium text-slate-550 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors">
+                  Forgot Password?
                 </a>
               </div>
               <div className="relative">
